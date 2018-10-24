@@ -8,7 +8,7 @@
 
 ### List all tokens
 
-````js
+```js
 (async () => {
   try {
     let list = await SLP.list();
@@ -79,7 +79,7 @@
   slpAddress: 'simpleledger:qz9tzs6d5097ejpg279rg0rnlhz546q4fsnck9wh5m',
   cashAddress: 'bitcoincash:qz9tzs6d5097ejpg279rg0rnlhz546q4fslra7mh29',
   legacyAddress: '1DeLbv5EMzLEFDvQ8wZiKeSuPGGtSSz5HP' }
-````
+```
 
 ### Balance
 
