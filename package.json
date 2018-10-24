@@ -1,7 +1,7 @@
 {
-  "name": "wormhole-sdk",
-  "version": "1.2.3",
-  "description": "BITBOX lib for Wormhole",
+  "name": "slp-sdk",
+  "version": "0.0.1",
+  "description": "BITBOX lib for SLP",
   "main": "index.js",
   "scripts": {
     "build": "babel src/ -d lib/",
@@ -10,7 +10,7 @@
     "coverage": "nyc report --reporter=text-lcov | coveralls",
     "coverage:report": "nyc --reporter=html mocha --require babel-core/register --timeout 10000"
   },
-  "author": "Gabriel Cardona @ bitcoin.com",
+  "author": "Gabriel Cardona @ bitcoin.com. James Cramer @ SLP",
   "license": "MIT",
   "engines": {
     "node": ">=8.11.0"
@@ -20,7 +20,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Bitcoin-com/wormhole-sdk.git"
+    "url": "git+https://github.com/Bitcoin-com/slp-sdk.git"
   },
   "dependencies": {
     "babel-cli": "^6.26.0",
