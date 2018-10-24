@@ -14,7 +14,7 @@ const repl = require("repl");
 const SLP = require("./lib/SLP").default;
 const clone = require("git-clone");
 
-program.version("0.0.4", "-v, --version");
+program.version("0.0.5", "-v, --version");
 
 program
   .command("new <name>")
@@ -103,7 +103,7 @@ program
     clear();
     console.log(
       chalk.blue(
-        figlet.textSync("Wormhole", {
+        figlet.textSync("SLP", {
           font: "3-D",
           horizontalLayout: "full"
         })
@@ -118,15 +118,13 @@ program
     mkdirp(`./${name}/tests`, err => {});
 
     console.log(
-      chalk.green(
-        `Creating wormhole.js configuration file: ./${name}/wormhole.js`
-      )
+      chalk.green(`Creating slp.js configuration file: ./${name}/slp.js`)
     );
 
     mkdirp(`./${name}`, err => {});
-    touch(`./${name}/wormhole.js`);
+    touch(`./${name}/slp.js`);
     fs.writeFileSync(
-      `./${name}/wormhole.js`,
+      `./${name}/slp.js`,
       `exports.config = {
   networks: {
     ${environment}: {
