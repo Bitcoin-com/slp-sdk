@@ -14,7 +14,7 @@ const repl = require("repl");
 const SLP = require("./lib/SLP").default;
 const clone = require("git-clone");
 
-program.version("0.0.5", "-v, --version");
+program.version("0.0.6", "-v, --version");
 
 program
   .command("new <name>")
@@ -72,7 +72,7 @@ program
       clear();
       console.log(
         chalk.blue(
-          figlet.textSync("Wormhole", {
+          figlet.textSync("SLP", {
             font: "3-D",
             horizontalLayout: "full"
           })
@@ -154,7 +154,7 @@ program
   .action(options => {
     let config;
     try {
-      config = require(`${process.cwd()}/wormhole.js`).config;
+      config = require(`${process.cwd()}/slp.js`).config;
     } catch (err) {
       console.log(
         chalk.red("Console command must be run inside an slp-sdk project")
