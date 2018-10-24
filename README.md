@@ -147,3 +147,19 @@ Open a node repl w/ full SLP and BITBOX API build in
 
 { slpAddress: 'simpleledger:qz9tzs6d5097ejpg279rg0rnlhz546q4fsnck9wh5m', cashAddress: 'bitcoincash:qz9tzs6d5097ejpg279rg0rnlhz546q4fslra7mh29', legacyAddress: '1DeLbv5EMzLEFDvQ8wZiKeSuPGGtSSz5HP' }
 ```
+
+## Scaffolds
+
+Create SLP apps in popular frameworks in less than a minute.
+
+- [angular](https://github.com/Bitcoin-com/slp-scaffold-angular)
+- [next](https://github.com/Bitcoin-com/slp-scaffold-next)
+- [node](https://github.com/Bitcoin-com/slp-scaffold-node)
+- [react](https://github.com/Bitcoin-com/slp-scaffold-react)
+- [vue](https://github.com/Bitcoin-com/slp-scaffold-vue)
+
+To create a new app
+
+```
+slp new myApp --scaffold react
+```
