@@ -1,0 +1,26 @@
+{
+  "groups": {
+    "default": {
+      "packages": [
+        "examples/burn-bch/package.json",
+        "examples/change-managed-token-issuer/package.json",
+        "examples/check-balance/package.json",
+        "examples/create-fixed-token/package.json",
+        "examples/create-managed-token/package.json",
+        "examples/create-wallet/package.json",
+        "examples/fixed-token-info-from-tx/package.json",
+        "examples/issue-managed-tokens/package.json",
+        "examples/list-all-tokens/package.json",
+        "examples/list-issuances/package.json",
+        "examples/lookup-token/package.json",
+        "examples/managed-token-info-from-tx/package.json",
+        "examples/ping-wh-node/package.json",
+        "examples/revoke-managed-tokens/package.json",
+        "examples/send-bch/package.json",
+        "examples/send-tokens/package.json",
+        "examples/token-balance/package.json",
+        "package.json"
+      ]
+    }
+  }
+}

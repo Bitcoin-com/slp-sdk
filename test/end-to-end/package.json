@@ -1,0 +1,27 @@
+{
+  "name": "fixed-token.js",
+  "version": "1.0.0",
+  "description": "End-to-end test for fixed tokens",
+  "main": "fixed-token.js",
+  "scripts": {
+    "test": "echo no tests yet",
+    "start": "node fixed-token.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Bitcoin-com/wormhole-sdk.git"
+  },
+  "keywords": [
+    "wormhole-sdk",
+    "example"
+  ],
+  "author": "Chris Troutner <chris.troutner@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Bitcoin-com/wormhole-sdk/issues"
+  },
+  "homepage": "https://github.com/Bitcoin-com/wormhole-sdk#readme",
+  "dependencies": {
+    "wormhole-sdk": "^1.0.4"
+  }
+}
