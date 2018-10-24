@@ -4,6 +4,10 @@
 
 [SLP SDK](https://developer.bitcoin.com/slp) is powered by [BITBOX](https://developer.bitcoin.com/bitbox).
 
+## Installation
+
+`npm install slp-sdk --global`
+
 ## REST integration
 
 ### List all tokens
