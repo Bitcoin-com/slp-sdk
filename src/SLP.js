@@ -1,5 +1,6 @@
 const BITBOXSDK = require("bitbox-sdk/lib/bitbox-sdk").default;
 import List from "./List";
+import Conversion from "./Conversion";
 import RawTransactions from "./RawTransactions";
 import axios from "axios";
 
@@ -11,6 +12,7 @@ class SLP extends BITBOXSDK {
     else this.restURL = "https://rest.bitcoin.com/v1/";
 
     this.List = new List(this.restURL);
+    this.Conversion = new Conversion();
     this.RawTransactions = new RawTransactions(
       this.restURL,
       this.RawTransactions
