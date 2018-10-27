@@ -1,7 +1,6 @@
 const BITBOXSDK = require("bitbox-sdk/lib/bitbox-sdk").default;
 import List from "./List";
 import Conversion from "./Conversion";
-import RawTransactions from "./RawTransactions";
 import axios from "axios";
 let slp = require("slpjs").slp;
 let bitboxproxy = require("slpjs").bitbox;
@@ -19,10 +18,6 @@ class SLP extends BITBOXSDK {
     this.bitbox = bitboxproxy;
     this.slp = slp;
     this.biddb = bitdb;
-    this.RawTransactions = new RawTransactions(
-      this.restURL,
-      this.RawTransactions
-    );
   }
 
   async list(id) {
