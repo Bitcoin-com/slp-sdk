@@ -1,6 +1,6 @@
 {
   "name": "slp-sdk",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "BITBOX lib for SLP",
   "main": "index.js",
   "scripts": {

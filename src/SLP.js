@@ -3,6 +3,9 @@ import List from "./List";
 import Conversion from "./Conversion";
 import RawTransactions from "./RawTransactions";
 import axios from "axios";
+let slp = require("slpjs").slp;
+let bitboxproxy = require("slpjs").bitbox;
+let bitdb = require("slpjs").bitdb;
 
 class SLP extends BITBOXSDK {
   constructor(config) {
@@ -13,6 +16,9 @@ class SLP extends BITBOXSDK {
 
     this.List = new List(this.restURL);
     this.Conversion = new Conversion();
+    this.bitbox = bitboxproxy;
+    this.slp = slp;
+    this.biddb = bitdb;
     this.RawTransactions = new RawTransactions(
       this.restURL,
       this.RawTransactions
