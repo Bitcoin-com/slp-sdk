@@ -1,12 +1,12 @@
 import { List } from "./List";
-import { RawTransactions } from "./RawTransactions";
+import { Conversion } from "./Conversion";
 import BITBOXSDK from "bitbox-sdk/lib/bitbox-sdk";
 
 declare class SLP extends BITBOXSDK {
   constructor(config?: Config);
 
   List: List;
-  RawTransactions: RawTransactions;
+  Conversion: Conversion;
 }
 
 export declare interface Config {
