@@ -1,7 +1,7 @@
-let SLPSDK = require("slp-sdk/lib/SLP").default;
-let SLP = new SLPSDK();
+const BITBOXSDK = require("bitbox-sdk/lib/bitbox-sdk").default;
+let BITBOX = new BITBOXSDK();
+let utils = require("slpjs").utils;
 
-let utils = SLP.slp.utils;
 class Conversion {
   toSLPAddress(address) {
     return utils.toSlpAddress(address);
@@ -13,7 +13,7 @@ class Conversion {
 
   toLegacyAddress(address) {
     let cashAddr = utils.toCashAddress(address);
-    return SLP.Address.toLegacyAddress(cashAddr);
+    return BITBOX.Address.toLegacyAddress(cashAddr);
   }
 }
 
