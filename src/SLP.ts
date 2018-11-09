@@ -1,27 +1,26 @@
 const BITBOXSDK = require("bitbox-sdk/lib/bitbox-sdk").default
-import List from "./List"
 import Conversion from "./Conversion"
 import axios from "axios"
 let slp = require("slpjs").slp
 let bitboxproxy = require("slpjs").bitbox
 let bitdb = require("slpjs").bitdb
+import { IConfig } from "./interfaces/IConfig"
 
 class SLP extends BITBOXSDK {
-  constructor(config) {
+  constructor(config: IConfig) {
     super(config)
     if (config && config.restURL && config.restURL !== "")
       this.restURL = config.restURL
     else this.restURL = "https://rest.bitcoin.com/v1/"
 
-    this.List = new List(this.restURL)
     this.Conversion = new Conversion()
     this.bitbox = bitboxproxy
     this.slp = slp
     this.biddb = bitdb
   }
 
-  async list(id) {
-    let path
+  async list(id: string): Promise<Object | Array<Object>> {
+    let path: string
     if (!id) {
       path = `${this.restURL}slp/list`
     } else {
@@ -36,7 +35,7 @@ class SLP extends BITBOXSDK {
     }
   }
 
-  async balancesForAddress(address) {
+  async balancesForAddress(address: string): Promise<Object> {
     try {
       const response = await axios.get(
         `${this.restURL}slp/balancesForAddress/${address}`
@@ -48,7 +47,7 @@ class SLP extends BITBOXSDK {
     }
   }
 
-  async balance(address, id) {
+  async balance(address: string, id: string): Promise<Object> {
     try {
       const response = await axios.get(
         `${this.restURL}slp/balance/${address}/${id}`
@@ -60,7 +59,7 @@ class SLP extends BITBOXSDK {
     }
   }
 
-  async convert(address) {
+  async convert(address: string): Promise<Object> {
     try {
       const response = await axios.get(
         `${this.restURL}slp/address/convert/${address}`

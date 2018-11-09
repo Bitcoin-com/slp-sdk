@@ -1,16 +1,14 @@
-import { List } from "./List";
-import { Conversion } from "./Conversion";
-import BITBOXSDK from "bitbox-sdk/lib/bitbox-sdk";
+import { Conversion } from "./Conversion"
+import BITBOXSDK from "bitbox-sdk/lib/bitbox-sdk"
 
 declare class SLP extends BITBOXSDK {
-  constructor(config?: Config);
+  constructor(config?: Config)
 
-  List: List;
-  Conversion: Conversion;
+  Conversion: Conversion
 }
 
 export declare interface Config {
-  restURL?: string;
+  restURL?: string
 }
 
-export default SLP;
+export default SLP
