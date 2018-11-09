@@ -22,6 +22,7 @@
     "url": "git+https://github.com/Bitcoin-com/slp-sdk.git"
   },
   "dependencies": {
+    "babel-register": "^6.26.0",
     "bigi": "^1.4.2",
     "bignumber.js": "^7.2.1",
     "bitbox-sdk": "^2.2.0",
