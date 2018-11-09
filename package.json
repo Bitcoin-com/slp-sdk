@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "build": "node ./node_modules/gulp/bin/gulp.js build && ./node_modules/typescript/bin/tsc",
-    "test": "nyc --reporter=text mocha --require babel-core/register --timeout 10000",
+    "test": "nyc --reporter=text mocha --require babel-core/register --timeout 10000 test/",
     "coverage": "nyc report --reporter=text-lcov | coveralls",
     "coverage:report": "nyc --reporter=html mocha --require babel-core/register --timeout 10000"
   },
@@ -34,7 +34,6 @@
     "figlet": "^1.2.1",
     "git-clone": "^0.1.0",
     "mkdirp": "^0.5.1",
-    "mocha": "^5.0.1",
     "node-emoji": "^1.8.1",
     "qrcode": "^1.3.0",
     "repl.history": "^0.1.4",
