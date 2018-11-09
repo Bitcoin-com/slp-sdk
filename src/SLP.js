@@ -1,38 +1,38 @@
-const BITBOXSDK = require("bitbox-sdk/lib/bitbox-sdk").default;
-import List from "./List";
-import Conversion from "./Conversion";
-import axios from "axios";
-let slp = require("slpjs").slp;
-let bitboxproxy = require("slpjs").bitbox;
-let bitdb = require("slpjs").bitdb;
+const BITBOXSDK = require("bitbox-sdk/lib/bitbox-sdk").default
+import List from "./List"
+import Conversion from "./Conversion"
+import axios from "axios"
+let slp = require("slpjs").slp
+let bitboxproxy = require("slpjs").bitbox
+let bitdb = require("slpjs").bitdb
 
 class SLP extends BITBOXSDK {
   constructor(config) {
-    super(config);
+    super(config)
     if (config && config.restURL && config.restURL !== "")
-      this.restURL = config.restURL;
-    else this.restURL = "https://rest.bitcoin.com/v1/";
+      this.restURL = config.restURL
+    else this.restURL = "https://rest.bitcoin.com/v1/"
 
-    this.List = new List(this.restURL);
-    this.Conversion = new Conversion();
-    this.bitbox = bitboxproxy;
-    this.slp = slp;
-    this.biddb = bitdb;
+    this.List = new List(this.restURL)
+    this.Conversion = new Conversion()
+    this.bitbox = bitboxproxy
+    this.slp = slp
+    this.biddb = bitdb
   }
 
   async list(id) {
-    let path;
+    let path
     if (!id) {
-      path = `${this.restURL}slp/list`;
+      path = `${this.restURL}slp/list`
     } else {
-      path = `${this.restURL}slp/list/${id}`;
+      path = `${this.restURL}slp/list/${id}`
     }
     try {
-      const response = await axios.get(path);
-      return response.data;
+      const response = await axios.get(path)
+      return response.data
     } catch (error) {
-      if (error.response && error.response.data) throw error.response.data;
-      throw error;
+      if (error.response && error.response.data) throw error.response.data
+      throw error
     }
   }
 
@@ -40,11 +40,11 @@ class SLP extends BITBOXSDK {
     try {
       const response = await axios.get(
         `${this.restURL}slp/balancesForAddress/${address}`
-      );
-      return response.data;
+      )
+      return response.data
     } catch (error) {
-      if (error.response && error.response.data) throw error.response.data;
-      throw error;
+      if (error.response && error.response.data) throw error.response.data
+      throw error
     }
   }
 
@@ -52,11 +52,11 @@ class SLP extends BITBOXSDK {
     try {
       const response = await axios.get(
         `${this.restURL}slp/balance/${address}/${id}`
-      );
-      return response.data;
+      )
+      return response.data
     } catch (error) {
-      if (error.response && error.response.data) throw error.response.data;
-      throw error;
+      if (error.response && error.response.data) throw error.response.data
+      throw error
     }
   }
 
@@ -64,13 +64,13 @@ class SLP extends BITBOXSDK {
     try {
       const response = await axios.get(
         `${this.restURL}slp/address/convert/${address}`
-      );
-      return response.data;
+      )
+      return response.data
     } catch (error) {
-      if (error.response && error.response.data) throw error.response.data;
-      throw error;
+      if (error.response && error.response.data) throw error.response.data
+      throw error
     }
   }
 }
 
-export default SLP;
+export default SLP
