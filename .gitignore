@@ -5,5 +5,4 @@ start-local-server
 test-local-server
 coverage
 start-my-infra
-
 .DS_STORE
