@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+"use strict"
 
 require("babel-register")
 const path = require("path")

@@ -4,6 +4,7 @@ import axios from "axios"
 let slp = require("slpjs").slp
 let bitboxproxy = require("slpjs").bitbox
 let bitdb = require("slpjs").bitdb
+const BigNumber = require("bignumber.js")
 import { IConfig } from "./interfaces/IConfig"
 
 class SLP extends BITBOXSDK {
@@ -16,6 +17,7 @@ class SLP extends BITBOXSDK {
     this.Conversion = new Conversion()
     this.bitbox = bitboxproxy
     this.slp = slp
+    this.BigNumber = BigNumber
     this.biddb = bitdb
   }
 
