@@ -17,7 +17,7 @@ else SLP = new SLPSDK({ restURL: `https://trest.bitcoin.com/v1/` })
 
 async function listAllTokens() {
   try {
-    const properties = await SLP.list()
+    const properties = await SLP.Utils.list()
     console.log(properties)
   } catch (err) {
     console.error(`Error in getTokenInfo: `, err)

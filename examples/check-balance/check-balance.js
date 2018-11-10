@@ -55,7 +55,7 @@ async function getBalance() {
 
     // get token balances
     try {
-      const tokens = await SLP.balancesForAddress(slpAddress)
+      const tokens = await SLP.Utils.balancesForAddress(slpAddress)
 
       console.log(JSON.stringify(tokens, null, 2))
     } catch (error) {
