@@ -1,5 +1,6 @@
 const BITBOXSDK = require("bitbox-sdk/lib/bitbox-sdk").default
 import Utils from "./Utils"
+import SlpTokenType1 from "./SlpTokenType1"
 import axios from "axios"
 let slp = require("slpjs").slp
 let bitboxproxy = require("slpjs").bitbox
