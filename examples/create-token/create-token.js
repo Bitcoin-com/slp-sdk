@@ -57,15 +57,15 @@ async function createToken() {
     const decimals = 9
     const initialQty = new SLP.BigNumber(1000).times(10 ** decimals)
 
-    const genesisOpReturn = SLP.SlpTokenType1.buildGenesisOpReturn({
-      ticker: "TRUST3",
-      name: "Trustafari",
-      urlOrEmail: "developer.bitcoin.com",
-      hash: null,
-      decimals: decimals,
-      batonVout: 2,
-      initialQuantity: initialQty
-    })
+    const genesisOpReturn = SLP.SlpTokenType1.buildGenesisOpReturn(
+      "TRUST3",
+      "Trustafari",
+      "developer.bitcoin.com",
+      null,
+      decimals,
+      2,
+      initialQty
+    )
 
     const genesisTxHex = SLP.SlpTokenType1.buildRawGenesisTx({
       slpGenesisOpReturn: genesisOpReturn,

@@ -1,4 +1,5 @@
 const slptokentype1 = require("slpjs/lib/slptokentype1")
+const slp = require("slpjs").slp
 
 class SlpTokenType1 {
   lokadIdHex(): string {
@@ -30,7 +31,7 @@ class SlpTokenType1 {
   }
 
   buildRawGenesisTx(config: any, type: any): any {
-    return slptokentype1.buildSendOpReturn(config, type)
+    return slp.buildRawGenesisTx(config, type)
   }
 
   buildRawSendTx(config: any, type: any): any {
