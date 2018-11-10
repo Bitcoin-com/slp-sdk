@@ -30,11 +30,11 @@ class SlpTokenType1 {
   }
 
   buildRawGenesisTx(config: any, type: any): any {
-    return slptokentype1.buildSendOpReturn(config, (type = 0x01))
+    return slptokentype1.buildSendOpReturn(config, type)
   }
 
   buildRawSendTx(config: any, type: any): any {
-    return slptokentype1.buildRawSendTx(config, (type = 0x01))
+    return slptokentype1.buildRawSendTx(config, type)
   }
 
   decodeTxOut(txOut: any): any {
