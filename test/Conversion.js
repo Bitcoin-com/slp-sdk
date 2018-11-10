@@ -1,14 +1,15 @@
+"use strict"
 const assert = require("assert")
 const slp = require("./../lib/SLP").default
 const SLP = new slp({
   restURL: "https://rest.bitcoin.com/v1/"
 })
 
-describe("#Conversion", () => {
+describe("#Utils", () => {
   describe("#toSLPAddress", () => {
     it(`should convert cashAddr to slpAddr`, async () => {
       try {
-        const slpAddr = await SLP.Conversion.toSLPAddress(
+        const slpAddr = await SLP.Utils.toSLPAddress(
           "bitcoincash:qz9tzs6d5097ejpg279rg0rnlhz546q4fslra7mh29"
         )
         assert.equal(
@@ -22,7 +23,7 @@ describe("#Conversion", () => {
 
     it(`should convert legacyAddr to slpAddr`, async () => {
       try {
-        const slpAddr = await SLP.Conversion.toSLPAddress(
+        const slpAddr = await SLP.Utils.toSLPAddress(
           "1DeLbv5EMzLEFDvQ8wZiKeSuPGGtSSz5HP"
         )
         assert.equal(
@@ -38,7 +39,7 @@ describe("#Conversion", () => {
   describe("#toCashAddress", () => {
     it(`should convert slpAddr to cashAddr`, async () => {
       try {
-        const cashAddr = await SLP.Conversion.toCashAddress(
+        const cashAddr = await SLP.Utils.toCashAddress(
           "simpleledger:qz9tzs6d5097ejpg279rg0rnlhz546q4fsnck9wh5m"
         )
         assert.equal(
@@ -52,7 +53,7 @@ describe("#Conversion", () => {
 
     it(`should convert legacyAddr to cashAddr`, async () => {
       try {
-        const cashAddr = await SLP.Conversion.toCashAddress(
+        const cashAddr = await SLP.Utils.toCashAddress(
           "1DeLbv5EMzLEFDvQ8wZiKeSuPGGtSSz5HP"
         )
         assert.equal(
@@ -68,7 +69,7 @@ describe("#Conversion", () => {
   describe("#toLegacyAddress", () => {
     it(`should convert slpAddr to legacyAddr`, async () => {
       try {
-        const legacyAddr = await SLP.Conversion.toLegacyAddress(
+        const legacyAddr = await SLP.Utils.toLegacyAddress(
           "simpleledger:qz9tzs6d5097ejpg279rg0rnlhz546q4fsnck9wh5m"
         )
         assert.equal(legacyAddr, "1DeLbv5EMzLEFDvQ8wZiKeSuPGGtSSz5HP")
@@ -79,7 +80,7 @@ describe("#Conversion", () => {
 
     it(`should convert cashAddr to legacyAddr`, async () => {
       try {
-        const legacyAddr = await SLP.Conversion.toLegacyAddress(
+        const legacyAddr = await SLP.Utils.toLegacyAddress(
           "bitcoincash:qz9tzs6d5097ejpg279rg0rnlhz546q4fslra7mh29"
         )
         assert.equal(legacyAddr, "1DeLbv5EMzLEFDvQ8wZiKeSuPGGtSSz5HP")

@@ -44,14 +44,13 @@ async function getBalance() {
 
     // get the cash address
     const cashAddress = SLP.HDNode.toCashAddress(change)
-    const slpAddress = SLP.Conversion.toSLPAddress(cashAddress)
+    const slpAddress = SLP.Utils.toSLPAddress(cashAddress)
 
     // first get BCH balance
     const balance = await SLP.Address.details(cashAddress)
 
     console.log(`BCH Balance information for ${slpAddress}:`)
     console.log(balance)
-    console.log(``)
     console.log(`SLP Token information:`)
 
     // get token balances

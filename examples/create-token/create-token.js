@@ -44,7 +44,7 @@ async function createToken() {
 
     // get the cash address
     const cashAddress = SLP.HDNode.toCashAddress(change)
-    const slpAddress = SLP.Conversion.toSLPAddress(cashAddress)
+    const slpAddress = SLP.Utils.toSLPAddress(cashAddress)
     const u = await SLP.Address.utxo(cashAddress)
     const utxo = u[0]
 

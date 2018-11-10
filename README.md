@@ -8,43 +8,41 @@
 
 `npm install slp-sdk --global`
 
-## Conversion
+## Utils
 
 To slp address
 
 ```js
-SLP.Conversion.toSLPAddress(
-  "bitcoincash:qrxwdlhfx5f4xsfnl0g887e5ccs5puy8sgj0z0md6k"
-);
+SLP.Utils.toSLPAddress("bitcoincash:qrxwdlhfx5f4xsfnl0g887e5ccs5puy8sgj0z0md6k")
 // "simpleledger:qrxwdlhfx5f4xsfnl0g887e5ccs5puy8sg75f5wdyg"
 
-SLP.Conversion.toSLPAddress("1KgRZzxLUvZqL8EuufmdxqSjh3tgURwD6d");
+SLP.Utils.toSLPAddress("1KgRZzxLUvZqL8EuufmdxqSjh3tgURwD6d")
 //"simpleledger:qrxwdlhfx5f4xsfnl0g887e5ccs5puy8sg75f5wdyg"
 ```
 
 To legacy
 
 ```js
-SLP.Conversion.toLegacyAddress(
+SLP.Utils.toLegacyAddress(
   "simpleledger:qrxwdlhfx5f4xsfnl0g887e5ccs5puy8sg75f5wdyg"
-);
+)
 //'1KgRZzxLUvZqL8EuufmdxqSjh3tgURwD6d'
 
-SLP.Conversion.toLegacyAddress(
+SLP.Utils.toLegacyAddress(
   "bitcoincash:qrxwdlhfx5f4xsfnl0g887e5ccs5puy8sgj0z0md6k"
-);
+)
 // "1KgRZzxLUvZqL8EuufmdxqSjh3tgURwD6d"
 ```
 
 To Cash Address
 
 ```js
-SLP.Conversion.toCashAddress(
+SLP.Utils.toCashAddress(
   "simpleledger:qrxwdlhfx5f4xsfnl0g887e5ccs5puy8sg75f5wdyg"
-);
+)
 // 'bitcoincash:qrxwdlhfx5f4xsfnl0g887e5ccs5puy8sgj0z0md6k'
 
-SLP.Conversion.toCashAddress("1KgRZzxLUvZqL8EuufmdxqSjh3tgURwD6d");
+SLP.Utils.toCashAddress("1KgRZzxLUvZqL8EuufmdxqSjh3tgURwD6d")
 // 'bitcoincash:qrxwdlhfx5f4xsfnl0g887e5ccs5puy8sgj0z0md6k'
 ```
 

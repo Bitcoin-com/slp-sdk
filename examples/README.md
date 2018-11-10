@@ -16,8 +16,10 @@ You can run each example script by entering its directory and executing `npm sta
 
 ## SLP Token Functions
 
+- [create-token](create-token) - Create an SLP token.
+
 - [lookup-token](lookup-token) Lookup token information based on the token `id`.
 
 - [list-all-tokens](list-all-tokens) List every token in existence.
 
-- [create-token](create-token) - Create an SLP token.
+- [conversion](conversion) -.Convert between address formats.

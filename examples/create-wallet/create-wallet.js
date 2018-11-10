@@ -49,8 +49,8 @@ for (let i = 0; i < 10; i++) {
 
   if (i === 0) {
     outObj.cashAddress = SLP.HDNode.toCashAddress(childNode)
-    outObj.slpAddress = SLP.Conversion.toSLPAddress(outObj.cashAddress)
-    outObj.legacyAddress = SLP.Conversion.toLegacyAddress(outObj.cashAddress)
+    outObj.slpAddress = SLP.Utils.toSLPAddress(outObj.cashAddress)
+    outObj.legacyAddress = SLP.Utils.toLegacyAddress(outObj.cashAddress)
   }
 }
 

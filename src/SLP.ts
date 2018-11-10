@@ -1,5 +1,5 @@
 const BITBOXSDK = require("bitbox-sdk/lib/bitbox-sdk").default
-import Conversion from "./Conversion"
+import Utils from "./Utils"
 import axios from "axios"
 let slp = require("slpjs").slp
 let bitboxproxy = require("slpjs").bitbox
@@ -14,7 +14,7 @@ class SLP extends BITBOXSDK {
       this.restURL = config.restURL
     else this.restURL = "https://rest.bitcoin.com/v1/"
 
-    this.Conversion = new Conversion()
+    this.Utils = new Utils()
     this.bitbox = bitboxproxy
     this.slp = slp
     this.BigNumber = BigNumber
