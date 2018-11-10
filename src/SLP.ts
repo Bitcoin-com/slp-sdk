@@ -16,6 +16,7 @@ class SLP extends BITBOXSDK {
     else restURL = "https://rest.bitcoin.com/v1/"
 
     this.Utils = new Utils(restURL)
+    this.SlpTokenType1 = SlpTokenType1
     this.bitbox = bitboxproxy
     this.slp = slp
     this.BigNumber = BigNumber
