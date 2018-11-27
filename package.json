@@ -1,6 +1,6 @@
 {
   "name": "slp-sdk",
-  "version": "0.4.9",
+  "version": "0.4.10",
   "description": "BITBOX lib for SLP",
   "main": "index.js",
   "scripts": {
@@ -25,7 +25,7 @@
     "babel-register": "^6.26.0",
     "bigi": "^1.4.2",
     "bignumber.js": "^7.2.1",
-    "bitbox-sdk": "^2.2.2",
+    "bitbox-sdk": "^2.2.3",
     "buffer": "^5.1.0",
     "chalk": "^2.3.0",
     "clear": "0.1.0",
@@ -54,7 +54,6 @@
     "gulp": "^3.9.1",
     "mocha": "^5.2.0",
     "node-mocks-http": "^1.7.2",
-    "nodemon": "^1.8.1",
     "nyc": "^13.0.1",
     "prettier": "^1.14.3",
     "sinon": "^6.3.3",
