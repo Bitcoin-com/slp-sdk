@@ -123,38 +123,38 @@ describe("#Utils", () => {
       }
     })
   })
-
-  describe("#balancesForAddress", () => {
-    it(`should fetch all balances for address: simpleledger:qz9tzs6d5097ejpg279rg0rnlhz546q4fsnck9wh5m`, async () => {
-      try {
-        const balances = await SLP.Utils.balancesForAddress(
-          "simpleledger:qz9tzs6d5097ejpg279rg0rnlhz546q4fsnck9wh5m"
-        )
-        assert.equal(
-          balances[
-            "1cda254d0a995c713b7955298ed246822bee487458cd9747a91d9e81d9d28125"
-          ],
-          995
-        )
-      } catch (error) {
-        throw error
-      }
-    })
-  })
-
-  describe("#balance", () => {
-    it(`should fetch balance of single token for address: simpleledger:qz9tzs6d5097ejpg279rg0rnlhz546q4fsnck9wh5m`, async () => {
-      try {
-        const balance = await SLP.Utils.balance(
-          "simpleledger:qz9tzs6d5097ejpg279rg0rnlhz546q4fsnck9wh5m",
-          "1cda254d0a995c713b7955298ed246822bee487458cd9747a91d9e81d9d28125"
-        )
-        assert.equal(balance.balance, 995)
-      } catch (error) {
-        throw error
-      }
-    })
-  })
+  //
+  // describe("#balancesForAddress", () => {
+  //   it(`should fetch all balances for address: simpleledger:qz9tzs6d5097ejpg279rg0rnlhz546q4fsnck9wh5m`, async () => {
+  //     try {
+  //       const balances = await SLP.Utils.balancesForAddress(
+  //         "simpleledger:qz9tzs6d5097ejpg279rg0rnlhz546q4fsnck9wh5m"
+  //       )
+  //       assert.equal(
+  //         balances[
+  //           "1cda254d0a995c713b7955298ed246822bee487458cd9747a91d9e81d9d28125"
+  //         ],
+  //         995
+  //       )
+  //     } catch (error) {
+  //       throw error
+  //     }
+  //   })
+  // })
+  //
+  // describe("#balance", () => {
+  //   it(`should fetch balance of single token for address: simpleledger:qz9tzs6d5097ejpg279rg0rnlhz546q4fsnck9wh5m`, async () => {
+  //     try {
+  //       const balance = await SLP.Utils.balance(
+  //         "simpleledger:qz9tzs6d5097ejpg279rg0rnlhz546q4fsnck9wh5m",
+  //         "1cda254d0a995c713b7955298ed246822bee487458cd9747a91d9e81d9d28125"
+  //       )
+  //       assert.equal(balance.balance, 995)
+  //     } catch (error) {
+  //       throw error
+  //     }
+  //   })
+  // })
 
   describe("#convert", () => {
     it(`should convert address`, async () => {

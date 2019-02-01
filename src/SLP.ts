@@ -13,7 +13,7 @@ class SLP extends BITBOXSDK {
     let restURL
     if (config && config.restURL && config.restURL !== "")
       restURL = config.restURL
-    else restURL = "https://rest.bitcoin.com/v1/"
+    else restURL = "https://rest.bitcoin.com/v2/"
 
     this.Utils = new Utils(restURL)
     this.SlpTokenType1 = new SlpTokenType1()

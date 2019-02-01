@@ -1,6 +1,7 @@
 const BITBOXSDK = require("bitbox-sdk/lib/bitbox-sdk").default
 const BITBOX = new BITBOXSDK()
-const utils = require("slpjs").utils
+const utils = require("slpjs").slpjs.Utils
+
 import axios from "axios"
 
 class Utils {
