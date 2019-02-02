@@ -144,6 +144,70 @@ class Address extends BITBOXAddress {
     }
   }
 
+  async details(address: string | Array<string>): Promise<Object> {
+    try {
+      if (typeof address === "string") {
+        let cashAddr: string = utils.toCashAddress(address)
+        return BITBOX.Address.details(address)
+      } else {
+        address = address.map((address: string) => {
+          return utils.toCashAddress(address)
+        })
+        return BITBOX.Address.details(address)
+      }
+    } catch (error) {
+      throw error
+    }
+  }
+
+  async utxo(address: string | Array<string>): Promise<Object> {
+    try {
+      if (typeof address === "string") {
+        let cashAddr: string = utils.toCashAddress(address)
+        return BITBOX.Address.utxo(address)
+      } else {
+        address = address.map((address: string) => {
+          return utils.toCashAddress(address)
+        })
+        return BITBOX.Address.utxo(address)
+      }
+    } catch (error) {
+      throw error
+    }
+  }
+
+  async unconfirmed(address: string | Array<string>): Promise<Object> {
+    try {
+      if (typeof address === "string") {
+        let cashAddr: string = utils.toCashAddress(address)
+        return BITBOX.Address.unconfirmed(address)
+      } else {
+        address = address.map((address: string) => {
+          return utils.toCashAddress(address)
+        })
+        return BITBOX.Address.unconfirmed(address)
+      }
+    } catch (error) {
+      throw error
+    }
+  }
+
+  async transactions(address: string | Array<string>): Promise<Object> {
+    try {
+      if (typeof address === "string") {
+        let cashAddr: string = utils.toCashAddress(address)
+        return BITBOX.Address.transactions(address)
+      } else {
+        address = address.map((address: string) => {
+          return utils.toCashAddress(address)
+        })
+        return BITBOX.Address.transactions(address)
+      }
+    } catch (error) {
+      throw error
+    }
+  }
+
   _ensureValidAddress(address: string): any {
     try {
       utils.toCashAddress(address)
