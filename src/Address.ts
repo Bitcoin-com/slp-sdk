@@ -134,6 +134,16 @@ class Address extends BITBOXAddress {
     }
   }
 
+  detectAddressType(address: string): string {
+    try {
+      this._ensureValidAddress(address)
+      let cashAddr: string = utils.toCashAddress(address)
+      return BITBOX.Address.detectAddressType(cashAddr)
+    } catch (err) {
+      return err
+    }
+  }
+
   _ensureValidAddress(address: string): any {
     try {
       utils.toCashAddress(address)

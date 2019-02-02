@@ -383,6 +383,22 @@ describe("#Address", () => {
         })
       })
     })
+
+    describe("#detectAddressType", () => {
+      MAINNET_P2PKH_ADDRESSES.forEach(address => {
+        it(`should detect ${address} is a p2pkh address`, () => {
+          const isp2pkh = SLP.Address.detectAddressType(address)
+          assert.equal(isp2pkh, "p2pkh")
+        })
+      })
+
+      MAINNET_P2SH_ADDRESSES.forEach(address => {
+        it(`should detect ${address} is a p2sh address`, () => {
+          const isp2sh = SLP.Address.detectAddressType(address)
+          assert.equal(isp2sh, "p2sh")
+        })
+      })
+    })
   })
 
   describe("#testnet", () => {
@@ -680,6 +696,24 @@ describe("#Address", () => {
         it(`should detect ${address} is a testnet address`, () => {
           const isTestnet = SLP.Address.detectAddressNetwork(address)
           assert.equal(isTestnet, "testnet")
+        })
+      })
+    })
+
+    describe("#detectAddressType", () => {
+      TESTNET_P2PKH_ADDRESSES.forEach(address => {
+        it(`should detect ${address} is a p2pkh address`, () => {
+          const isp2pkh = SLP.Address.detectAddressType(address)
+          assert.equal(isp2pkh, "p2pkh")
+        })
+      })
+    })
+
+    describe("#detectAddressType", () => {
+      TESTNET_P2SH_ADDRESSES.forEach(address => {
+        it(`should detect ${address} is a p2sh address`, () => {
+          const isp2sh = SLP.Address.detectAddressType(address)
+          assert.equal(isp2sh, "p2sh")
         })
       })
     })
