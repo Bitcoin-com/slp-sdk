@@ -44,7 +44,7 @@ describe("#Address", () => {
   describe("#conversion", () => {
     describe("#mainnet", () => {
       describe("#toLegacyAddress", () => {
-        it("should translate mainnet legacy address format to itself correctly", () => {
+        it("should convert mainnet legacy address format to itself correctly", () => {
           assert.deepEqual(
             LEGACY_MAINNET_ADDRESSES.map(address =>
               SLP.Address.toLegacyAddress(address)
@@ -53,7 +53,27 @@ describe("#Address", () => {
           )
         })
 
-        it("should translate mainnet cash address format to itself correctly", () => {
+        it(`should convert cashAddr to legacyAddr`, async () => {
+          assert.deepEqual(
+            CASH_MAINNET_ADDRESSES.map(address =>
+              SLP.Address.toLegacyAddress(address)
+            ),
+            LEGACY_MAINNET_ADDRESSES
+          )
+        })
+
+        it(`should convert slpAddr to legacyAddr`, async () => {
+          assert.deepEqual(
+            SLP_MAINNET_ADDRESSES.map(address =>
+              SLP.Address.toLegacyAddress(address)
+            ),
+            LEGACY_MAINNET_ADDRESSES
+          )
+        })
+      })
+
+      describe("#toCashAddress", () => {
+        it("should convert mainnet cash address format to itself correctly", () => {
           assert.deepEqual(
             CASH_MAINNET_ADDRESSES.map(address =>
               SLP.Address.toCashAddress(address)
@@ -62,7 +82,27 @@ describe("#Address", () => {
           )
         })
 
-        it("should translate mainnet slp address format to itself correctly", () => {
+        it(`should convert legacyAddr to cashAddr`, async () => {
+          assert.deepEqual(
+            LEGACY_MAINNET_ADDRESSES.map(address =>
+              SLP.Address.toCashAddress(address)
+            ),
+            CASH_MAINNET_ADDRESSES
+          )
+        })
+
+        it(`should convert slpAddr to cashAddr`, async () => {
+          assert.deepEqual(
+            SLP_MAINNET_ADDRESSES.map(address =>
+              SLP.Address.toCashAddress(address)
+            ),
+            CASH_MAINNET_ADDRESSES
+          )
+        })
+      })
+
+      describe("#toSLPAddress", () => {
+        it("should convert mainnet slp address format to itself correctly", () => {
           assert.deepEqual(
             SLP_MAINNET_ADDRESSES.map(address =>
               SLP.Address.toSLPAddress(address)
@@ -70,92 +110,30 @@ describe("#Address", () => {
             SLP_MAINNET_ADDRESSES
           )
         })
-      })
 
-      it(`should convert slpAddr to legacyAddr`, async () => {
-        try {
-          const legacyAddr = await SLP.Address.toLegacyAddress(
-            "simpleledger:qz9tzs6d5097ejpg279rg0rnlhz546q4fsnck9wh5m"
+        it(`should convert legacyAddr to slpAddr`, async () => {
+          assert.deepEqual(
+            LEGACY_MAINNET_ADDRESSES.map(address =>
+              SLP.Address.toSLPAddress(address)
+            ),
+            SLP_MAINNET_ADDRESSES
           )
-          assert.equal(legacyAddr, "1DeLbv5EMzLEFDvQ8wZiKeSuPGGtSSz5HP")
-        } catch (error) {
-          throw error
-        }
-      })
+        })
 
-      it(`should convert cashAddr to legacyAddr`, async () => {
-        try {
-          const legacyAddr = await SLP.Address.toLegacyAddress(
-            "bitcoincash:qz9tzs6d5097ejpg279rg0rnlhz546q4fslra7mh29"
+        it(`should convert cashAddr to slpAddr`, async () => {
+          assert.deepEqual(
+            CASH_MAINNET_ADDRESSES.map(address =>
+              SLP.Address.toSLPAddress(address)
+            ),
+            SLP_MAINNET_ADDRESSES
           )
-          assert.equal(legacyAddr, "1DeLbv5EMzLEFDvQ8wZiKeSuPGGtSSz5HP")
-        } catch (error) {
-          throw error
-        }
-      })
-    })
-    describe("#toSLPAddress", () => {
-      it(`should convert cashAddr to slpAddr`, async () => {
-        try {
-          const slpAddr = await SLP.Address.toSLPAddress(
-            "bitcoincash:qz9tzs6d5097ejpg279rg0rnlhz546q4fslra7mh29"
-          )
-          assert.equal(
-            slpAddr,
-            "simpleledger:qz9tzs6d5097ejpg279rg0rnlhz546q4fsnck9wh5m"
-          )
-        } catch (error) {
-          throw error
-        }
-      })
-
-      it(`should convert legacyAddr to slpAddr`, async () => {
-        try {
-          const slpAddr = await SLP.Address.toSLPAddress(
-            "1DeLbv5EMzLEFDvQ8wZiKeSuPGGtSSz5HP"
-          )
-          assert.equal(
-            slpAddr,
-            "simpleledger:qz9tzs6d5097ejpg279rg0rnlhz546q4fsnck9wh5m"
-          )
-        } catch (error) {
-          throw error
-        }
+        })
       })
     })
 
-    describe("#toCashAddress", () => {
-      it(`should convert slpAddr to cashAddr`, async () => {
-        try {
-          const cashAddr = await SLP.Address.toCashAddress(
-            "simpleledger:qz9tzs6d5097ejpg279rg0rnlhz546q4fsnck9wh5m"
-          )
-          assert.equal(
-            cashAddr,
-            "bitcoincash:qz9tzs6d5097ejpg279rg0rnlhz546q4fslra7mh29"
-          )
-        } catch (error) {
-          throw error
-        }
-      })
-
-      it(`should convert legacyAddr to cashAddr`, async () => {
-        try {
-          const cashAddr = await SLP.Address.toCashAddress(
-            "1DeLbv5EMzLEFDvQ8wZiKeSuPGGtSSz5HP"
-          )
-          assert.equal(
-            cashAddr,
-            "bitcoincash:qz9tzs6d5097ejpg279rg0rnlhz546q4fslra7mh29"
-          )
-        } catch (error) {
-          throw error
-        }
-      })
-    })
     describe("#testnet", () => {
       describe("#toLegacyAddress", () => {
-        it("should translate testnet legacy address format to itself correctly", () => {
+        it("should convert testnet legacy address format to itself correctly", () => {
           assert.deepEqual(
             LEGACY_TESTNET_ADDRESSES.map(address =>
               SLP.Address.toLegacyAddress(address)
@@ -164,7 +142,27 @@ describe("#Address", () => {
           )
         })
 
-        it("should translate testnet cash address format to itself correctly", () => {
+        it(`should convert cashAddr to legacyAddr`, async () => {
+          assert.deepEqual(
+            CASH_TESTNET_ADDRESSES.map(address =>
+              SLP.Address.toLegacyAddress(address)
+            ),
+            LEGACY_TESTNET_ADDRESSES
+          )
+        })
+
+        it(`should convert slpAddr to legacyAddr`, async () => {
+          assert.deepEqual(
+            SLP_TESTNET_ADDRESSES.map(address =>
+              SLP.Address.toLegacyAddress(address)
+            ),
+            LEGACY_TESTNET_ADDRESSES
+          )
+        })
+      })
+
+      describe("#toCashAddress", () => {
+        it("should convert testnet cash address format to itself correctly", () => {
           assert.deepEqual(
             CASH_TESTNET_ADDRESSES.map(address =>
               SLP.Address.toCashAddress(address)
@@ -173,9 +171,47 @@ describe("#Address", () => {
           )
         })
 
-        it("should translate testnet slp address format to itself correctly", () => {
+        it(`should convert legacyAddr to cashAddr`, async () => {
+          assert.deepEqual(
+            LEGACY_TESTNET_ADDRESSES.map(address =>
+              SLP.Address.toCashAddress(address)
+            ),
+            CASH_TESTNET_ADDRESSES
+          )
+        })
+
+        it(`should convert slpAddr to cashAddr`, async () => {
           assert.deepEqual(
             SLP_TESTNET_ADDRESSES.map(address =>
+              SLP.Address.toCashAddress(address)
+            ),
+            CASH_TESTNET_ADDRESSES
+          )
+        })
+      })
+
+      describe("#toSLPAddress", () => {
+        it("should convert testnet slp address format to itself correctly", () => {
+          assert.deepEqual(
+            SLP_TESTNET_ADDRESSES.map(address =>
+              SLP.Address.toSLPAddress(address)
+            ),
+            SLP_TESTNET_ADDRESSES
+          )
+        })
+
+        it(`should convert legacyAddr to slpAddr`, async () => {
+          assert.deepEqual(
+            LEGACY_TESTNET_ADDRESSES.map(address =>
+              SLP.Address.toSLPAddress(address)
+            ),
+            SLP_TESTNET_ADDRESSES
+          )
+        })
+
+        it(`should convert cashAddr to slpAddr`, async () => {
+          assert.deepEqual(
+            CASH_TESTNET_ADDRESSES.map(address =>
               SLP.Address.toSLPAddress(address)
             ),
             SLP_TESTNET_ADDRESSES
