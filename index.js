@@ -15,7 +15,7 @@ const repl = require("repl")
 const SLP = require("./lib/SLP").default
 const clone = require("git-clone")
 
-program.version("0.5.0", "-v, --version")
+program.version("1.0.0", "-v, --version")
 
 program
   .command("new <name>")
@@ -25,7 +25,7 @@ program
   )
   .option(
     "-r, --restURL <restURL>",
-    "The rest URL to use. default: https://trest.bitcoin.com/v1/"
+    "The rest URL to use. default: https://trest.bitcoin.com/v2/"
   )
   .option(
     "-e, --environment <environment>",
@@ -122,7 +122,7 @@ program
     fs.writeFileSync(
       `./${name}/slp.js`,
       `exports.config = {
-  networks: {
+  environments: {
     ${environment}: {
       restURL: "${restURL}"
     }
