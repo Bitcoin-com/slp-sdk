@@ -217,7 +217,7 @@ describe("#Address", () => {
     })
 
     describe("#isMainnetAddress", () => {
-      describe("legacy addr", () => {
+      describe("mainnet legacy addr", () => {
         LEGACY_MAINNET_ADDRESSES.forEach(address => {
           it(`should detect ${address} is a mainnet address`, () => {
             const isMainnetaddr = SLP.Address.isMainnetAddress(address)
@@ -226,7 +226,7 @@ describe("#Address", () => {
         })
       })
 
-      describe("cash addr", () => {
+      describe("mainnet cash addr", () => {
         CASH_MAINNET_ADDRESSES.forEach(address => {
           it(`should detect ${address} is a mainnet address`, () => {
             const isMainnetaddr = SLP.Address.isMainnetAddress(address)
@@ -235,11 +235,38 @@ describe("#Address", () => {
         })
       })
 
-      describe("slp addr", () => {
+      describe("mainnet slp addr", () => {
         SLP_MAINNET_ADDRESSES.forEach(address => {
           it(`should detect ${address} is a mainnet address`, () => {
             const isMainnetaddr = SLP.Address.isMainnetAddress(address)
             assert.equal(isMainnetaddr, true)
+          })
+        })
+      })
+
+      describe("testnet legacy addr", () => {
+        LEGACY_TESTNET_ADDRESSES.forEach(address => {
+          it(`should detect ${address} is not a mainnet address`, () => {
+            const isMainnetaddr = SLP.Address.isMainnetAddress(address)
+            assert.equal(isMainnetaddr, false)
+          })
+        })
+      })
+
+      describe("testnet cash addr", () => {
+        CASH_TESTNET_ADDRESSES.forEach(address => {
+          it(`should detect ${address} is not a mainnet address`, () => {
+            const isMainnetaddr = SLP.Address.isMainnetAddress(address)
+            assert.equal(isMainnetaddr, false)
+          })
+        })
+      })
+
+      describe("testnet slp addr", () => {
+        SLP_TESTNET_ADDRESSES.forEach(address => {
+          it(`should detect ${address} is not a mainnet address`, () => {
+            const isMainnetaddr = SLP.Address.isMainnetAddress(address)
+            assert.equal(isMainnetaddr, false)
           })
         })
       })
@@ -422,7 +449,7 @@ describe("#Address", () => {
     })
 
     describe("#isTestnetAddress", () => {
-      describe("legacy addr", () => {
+      describe("testnet legacy addr", () => {
         LEGACY_TESTNET_ADDRESSES.forEach(address => {
           it(`should detect ${address} is a testnet address`, () => {
             const isTestnetaddr = SLP.Address.isTestnetAddress(address)
@@ -431,7 +458,7 @@ describe("#Address", () => {
         })
       })
 
-      describe("cash addr", () => {
+      describe("testnet cash addr", () => {
         CASH_TESTNET_ADDRESSES.forEach(address => {
           it(`should detect ${address} is a testnet address`, () => {
             const isTestnetaddr = SLP.Address.isTestnetAddress(address)
@@ -440,11 +467,38 @@ describe("#Address", () => {
         })
       })
 
-      describe("slp addr", () => {
+      describe("testnet slp addr", () => {
         SLP_TESTNET_ADDRESSES.forEach(address => {
           it(`should detect ${address} is a testnet address`, () => {
             const isTestnetaddr = SLP.Address.isTestnetAddress(address)
             assert.equal(isTestnetaddr, true)
+          })
+        })
+      })
+
+      describe("mainnet legacy addr", () => {
+        LEGACY_MAINNET_ADDRESSES.forEach(address => {
+          it(`should detect ${address} is not a testnet address`, () => {
+            const isTestnetaddr = SLP.Address.isTestnetAddress(address)
+            assert.equal(isTestnetaddr, false)
+          })
+        })
+      })
+
+      describe("mainnet cash addr", () => {
+        CASH_MAINNET_ADDRESSES.forEach(address => {
+          it(`should detect ${address} is not a testnet address`, () => {
+            const isTestnetaddr = SLP.Address.isTestnetAddress(address)
+            assert.equal(isTestnetaddr, false)
+          })
+        })
+      })
+
+      describe("mainnet slp addr", () => {
+        SLP_MAINNET_ADDRESSES.forEach(address => {
+          it(`should detect ${address} is not a testnet address`, () => {
+            const isTestnetaddr = SLP.Address.isTestnetAddress(address)
+            assert.equal(isTestnetaddr, false)
           })
         })
       })
