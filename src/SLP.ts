@@ -9,7 +9,7 @@ const BigNumber = require("bignumber.js")
 import { IConfig } from "./interfaces/IConfig"
 
 class SLP extends BITBOXSDK {
-  constructor(config: IConfig) {
+  constructor(config: IConfig = {}) {
     super(config)
     let restURL
     if (config && config.restURL && config.restURL !== "")

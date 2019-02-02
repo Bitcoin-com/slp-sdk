@@ -1,6 +1,9 @@
 const BITBOXSDK = require("bitbox-sdk/lib/bitbox-sdk").default
 const BITBOX = new BITBOXSDK()
 const utils = require("slpjs").slpjs.Utils
+const slpjs = require("slpjs").slpjs
+import Address from "./Address"
+let addy = new Address()
 
 import axios from "axios"
 
@@ -56,27 +59,50 @@ class Utils {
   }
 
   async balancesForAddress(address: string): Promise<Object> {
-    try {
-      const response = await axios.get(
-        `${this.restURL}slp/balancesForAddress/${address}`
-      )
-      return response.data
-    } catch (error) {
-      if (error.response && error.response.data) throw error.response.data
-      throw error
+    let network = addy.detectAddressNetwork(address)
+    let tmpBITBOX
+    let path
+    if (network === "mainnet") {
+      tmpBITBOX = new BITBOXSDK({ restURL: "https://rest.bitcoin.com/v2/" })
+      path = "https://validate.simpleledger.info"
+    } else {
+      tmpBITBOX = new BITBOXSDK({ restURL: "https://trest.bitcoin.com/v2/" })
+      path = "https://testnet-validate.simpleledger.info"
     }
+
+    const slpValidator = new slpjs.JsonRpcProxyValidator(tmpBITBOX, path)
+    const bitboxNetwork = new slpjs.BitboxNetwork(tmpBITBOX, slpValidator)
+    let balances = await bitboxNetwork.getAllSlpBalancesAndUtxos(address)
+    return balances
   }
 
-  async balance(address: string, id: string): Promise<Object> {
-    try {
-      const response = await axios.get(
-        `${this.restURL}slp/balance/${address}/${id}`
-      )
-      return response.data
-    } catch (error) {
-      if (error.response && error.response.data) throw error.response.data
-      throw error
+  async balance(address: string, tokenId: string): Promise<Object> {
+    let network = addy.detectAddressNetwork(address)
+    let tmpBITBOX
+    let path
+    if (network === "mainnet") {
+      tmpBITBOX = new BITBOXSDK({ restURL: "https://rest.bitcoin.com/v2/" })
+      path = "https://validate.simpleledger.info"
+    } else {
+      tmpBITBOX = new BITBOXSDK({ restURL: "https://trest.bitcoin.com/v2/" })
+      path = "https://testnet-validate.simpleledger.info"
     }
+
+    const slpValidator = new slpjs.JsonRpcProxyValidator(tmpBITBOX, path)
+    const bitboxNetwork = new slpjs.BitboxNetwork(tmpBITBOX, slpValidator)
+    let balances = await bitboxNetwork.getAllSlpBalancesAndUtxos(address)
+    let keys = Object.keys(balances.slpTokenBalances)
+    let val
+    if (keys) {
+      keys.forEach((key: string) => {
+        if (key === tokenId) {
+          val = balances.slpTokenBalances[tokenId]
+        }
+      })
+    } else {
+      val = "no balance"
+    }
+    return val
   }
 }
 

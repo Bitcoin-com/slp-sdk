@@ -7,24 +7,28 @@ import axios from "axios"
 
 class Address extends BITBOXAddress {
   restURL: string
-  constructor(restURL: string) {
+  constructor(restURL?: string) {
     super(restURL)
     this.restURL = restURL
   }
 
-  toSLPAddress(address: string): string {
+  toSLPAddress(address: string, prefix = true, regtest = false): string {
     try {
       this._ensureValidAddress(address)
-      return utils.toSlpAddress(address)
+      let slpAddress: string = utils.toSlpAddress(address)
+      if (prefix) return slpAddress
+      return slpAddress.split(":")[1]
     } catch (err) {
       return err
     }
   }
 
-  toCashAddress(address: string): string {
+  toCashAddress(address: string, prefix = true, regtest = false): string {
     try {
       this._ensureValidAddress(address)
-      return utils.toCashAddress(address)
+      let cashAddress: string = utils.toCashAddress(address)
+      if (prefix) return cashAddress
+      return cashAddress.split(":")[1]
     } catch (err) {
       return err
     }
