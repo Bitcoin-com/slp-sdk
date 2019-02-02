@@ -41,7 +41,7 @@ program
     let config
     const environment = fetchOption("environment=development", config, options)
     const restURL = fetchOption(
-      "restURL=https://trest.bitcoin.com/v1/",
+      "restURL=https://trest.bitcoin.com/v2/",
       config,
       options
     )
@@ -144,7 +144,7 @@ program
   .command("console")
   .option(
     "-e, --environment <environment>",
-    "environment of running BITBOX instance. Ex: production, staging. (Default: development)"
+    "environment of REST backend. Ex: production, staging. (Default: development)"
   )
   .description("Run a console with Bitcoin Cash RPC commands available")
   .action(options => {
@@ -163,7 +163,7 @@ program
 
     const environment = fetchOption("environment=development", config, options)
 
-    replServer.context.SLP = new SLP(config.networks[environment])
+    replServer.context.SLP = new SLP(config.environments[environment])
   })
 
 function fetchOption(kv, config, options) {
