@@ -6,90 +6,6 @@ const SLP = new slp({
 })
 
 describe("#Utils", () => {
-  describe("#toSLPAddress", () => {
-    it(`should convert cashAddr to slpAddr`, async () => {
-      try {
-        const slpAddr = await SLP.Utils.toSLPAddress(
-          "bitcoincash:qz9tzs6d5097ejpg279rg0rnlhz546q4fslra7mh29"
-        )
-        assert.equal(
-          slpAddr,
-          "simpleledger:qz9tzs6d5097ejpg279rg0rnlhz546q4fsnck9wh5m"
-        )
-      } catch (error) {
-        throw error
-      }
-    })
-
-    it(`should convert legacyAddr to slpAddr`, async () => {
-      try {
-        const slpAddr = await SLP.Utils.toSLPAddress(
-          "1DeLbv5EMzLEFDvQ8wZiKeSuPGGtSSz5HP"
-        )
-        assert.equal(
-          slpAddr,
-          "simpleledger:qz9tzs6d5097ejpg279rg0rnlhz546q4fsnck9wh5m"
-        )
-      } catch (error) {
-        throw error
-      }
-    })
-  })
-
-  describe("#toCashAddress", () => {
-    it(`should convert slpAddr to cashAddr`, async () => {
-      try {
-        const cashAddr = await SLP.Utils.toCashAddress(
-          "simpleledger:qz9tzs6d5097ejpg279rg0rnlhz546q4fsnck9wh5m"
-        )
-        assert.equal(
-          cashAddr,
-          "bitcoincash:qz9tzs6d5097ejpg279rg0rnlhz546q4fslra7mh29"
-        )
-      } catch (error) {
-        throw error
-      }
-    })
-
-    it(`should convert legacyAddr to cashAddr`, async () => {
-      try {
-        const cashAddr = await SLP.Utils.toCashAddress(
-          "1DeLbv5EMzLEFDvQ8wZiKeSuPGGtSSz5HP"
-        )
-        assert.equal(
-          cashAddr,
-          "bitcoincash:qz9tzs6d5097ejpg279rg0rnlhz546q4fslra7mh29"
-        )
-      } catch (error) {
-        throw error
-      }
-    })
-  })
-
-  describe("#toLegacyAddress", () => {
-    it(`should convert slpAddr to legacyAddr`, async () => {
-      try {
-        const legacyAddr = await SLP.Utils.toLegacyAddress(
-          "simpleledger:qz9tzs6d5097ejpg279rg0rnlhz546q4fsnck9wh5m"
-        )
-        assert.equal(legacyAddr, "1DeLbv5EMzLEFDvQ8wZiKeSuPGGtSSz5HP")
-      } catch (error) {
-        throw error
-      }
-    })
-
-    it(`should convert cashAddr to legacyAddr`, async () => {
-      try {
-        const legacyAddr = await SLP.Utils.toLegacyAddress(
-          "bitcoincash:qz9tzs6d5097ejpg279rg0rnlhz546q4fslra7mh29"
-        )
-        assert.equal(legacyAddr, "1DeLbv5EMzLEFDvQ8wZiKeSuPGGtSSz5HP")
-      } catch (error) {
-        throw error
-      }
-    })
-  })
-
   describe("#list", () => {
     it(`should list all SLP tokens`, async () => {
       try {
@@ -125,17 +41,12 @@ describe("#Utils", () => {
   })
 
   describe("#balancesForAddress", () => {
-    it(`should fetch all balances for address: simpleledger:qz9tzs6d5097ejpg279rg0rnlhz546q4fsnck9wh5m`, async () => {
+    it(`should fetch all balances for address: simpleledger:qr5agtachyxvrwxu76vzszan5pnvuzy8duhv4lxrsk`, async () => {
       try {
         const balances = await SLP.Utils.balancesForAddress(
-          "simpleledger:qz9tzs6d5097ejpg279rg0rnlhz546q4fsnck9wh5m"
+          "simpleledger:qr5agtachyxvrwxu76vzszan5pnvuzy8duhv4lxrsk"
         )
-        assert.equal(
-          balances[
-            "1cda254d0a995c713b7955298ed246822bee487458cd9747a91d9e81d9d28125"
-          ],
-          995
-        )
+        assert.equal(balances.satoshis_in_slp_baton, 0)
       } catch (error) {
         throw error
       }
@@ -143,37 +54,14 @@ describe("#Utils", () => {
   })
 
   describe("#balance", () => {
-    it(`should fetch balance of single token for address: simpleledger:qz9tzs6d5097ejpg279rg0rnlhz546q4fsnck9wh5m`, async () => {
+    it(`should fetch balance of single token for address: simpleledger:qr5agtachyxvrwxu76vzszan5pnvuzy8duhv4lxrsk`, async () => {
       try {
         const balance = await SLP.Utils.balance(
-          "simpleledger:qz9tzs6d5097ejpg279rg0rnlhz546q4fsnck9wh5m",
-          "1cda254d0a995c713b7955298ed246822bee487458cd9747a91d9e81d9d28125"
+          "simpleledger:qr5agtachyxvrwxu76vzszan5pnvuzy8duhv4lxrsk",
+          "df808a41672a0a0ae6475b44f272a107bc9961b90f29dc918d71301f24fe92fb"
         )
-        assert.equal(balance.balance, 995)
-      } catch (error) {
-        throw error
-      }
-    })
-  })
-
-  describe("#convert", () => {
-    it(`should convert address`, async () => {
-      try {
-        const conversion = await SLP.Utils.convert(
-          "simpleledger:qz9tzs6d5097ejpg279rg0rnlhz546q4fsnck9wh5m"
-        )
-        assert.equal(
-          conversion.slpAddress,
-          "simpleledger:qz9tzs6d5097ejpg279rg0rnlhz546q4fsnck9wh5m"
-        )
-        assert.equal(
-          conversion.cashAddress,
-          "bitcoincash:qz9tzs6d5097ejpg279rg0rnlhz546q4fslra7mh29"
-        )
-        assert.equal(
-          conversion.legacyAddress,
-          "1DeLbv5EMzLEFDvQ8wZiKeSuPGGtSSz5HP"
-        )
+        console.log("ALALALA", balance)
+        assert.equal(balance.c, 61700000000)
       } catch (error) {
         throw error
       }

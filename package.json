@@ -1,7 +1,7 @@
 {
   "name": "slp-sdk",
-  "version": "0.5.0",
-  "description": "BITBOX lib for SLP",
+  "version": "1.0.0",
+  "description": "SLP SDK powered by BITBOX",
   "main": "index.js",
   "scripts": {
     "build": "node ./node_modules/gulp/bin/gulp.js build && ./node_modules/typescript/bin/tsc",
@@ -9,10 +9,10 @@
     "coverage": "nyc report --reporter=text-lcov | coveralls",
     "coverage:report": "nyc --reporter=html mocha --require babel-core/register --timeout 10000"
   },
-  "author": "Gabriel Cardona @ bitcoin.com. James Cramer @ SLP",
+  "author": "Gabriel Cardona <gabriel@bitcoin.com>. James Cramer @ SLP",
   "license": "MIT",
   "engines": {
-    "node": ">=8.11.0"
+    "node": ">=10.15.1"
   },
   "bin": {
     "slp": "./index.js"
@@ -22,26 +22,23 @@
     "url": "git+https://github.com/Bitcoin-com/slp-sdk.git"
   },
   "dependencies": {
+    "axios": "^0.17.1",
     "babel-register": "^6.26.0",
-    "bigi": "^1.4.2",
     "bignumber.js": "^7.2.1",
-    "bitbox-sdk": "^2.3.0",
-    "buffer": "^5.1.0",
+    "bitbox-sdk": "^3.0.8",
     "chalk": "^2.3.0",
     "clear": "0.1.0",
     "commander": "^2.13.0",
-    "ecurve": "^1.0.6",
     "figlet": "^1.2.1",
     "git-clone": "^0.1.0",
     "mkdirp": "^0.5.1",
     "node-emoji": "^1.8.1",
     "repl.history": "^0.1.4",
-    "slpjs": "^0.2.2",
+    "slpjs": "^0.10.2",
     "touch": "^3.1.0"
   },
   "devDependencies": {
     "@types/node": "^10.11.7",
-    "chai": "^4.1.2",
     "coveralls": "^3.0.2",
     "eslint": "^5.5.0",
     "eslint-config-prettier": "^3.0.1",
@@ -51,10 +48,9 @@
     "eslint-plugin-standard": "^4.0.0",
     "fs-extra": "^7.0.0",
     "gulp": "^3.9.1",
-    "mocha": "^5.2.0",
-    "node-mocks-http": "^1.7.2",
     "nyc": "^13.0.1",
     "prettier": "^1.14.3",
+    "sinon": "^4.5.0",
     "typescript": "^3.1.4"
   }
 }
