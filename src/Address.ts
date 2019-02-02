@@ -74,8 +74,8 @@ class Address extends BITBOXAddress {
   isMainnetAddress(address: string): boolean {
     try {
       this._ensureValidAddress(address)
-      let cashAddr: string = utils.toCashAddress(address)
-      return BITBOX.Address.isMainnetAddress(cashAddr)
+      let cashaddr: string = utils.toCashAddress(address)
+      return BITBOX.Address.isMainnetAddress(cashaddr)
     } catch (err) {
       return err
     }
@@ -119,6 +119,16 @@ class Address extends BITBOXAddress {
       } else {
         return BITBOX.Address.detectAddressFormat(address)
       }
+    } catch (err) {
+      return err
+    }
+  }
+
+  detectAddressNetwork(address: string): string {
+    try {
+      this._ensureValidAddress(address)
+      let cashAddr: string = utils.toCashAddress(address)
+      return BITBOX.Address.detectAddressNetwork(cashAddr)
     } catch (err) {
       return err
     }

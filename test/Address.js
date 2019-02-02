@@ -360,6 +360,29 @@ describe("#Address", () => {
         })
       })
     })
+
+    describe("#detectAddressNetwork", () => {
+      LEGACY_MAINNET_ADDRESSES.forEach(address => {
+        it(`should detect ${address} is a mainnet address`, () => {
+          const isMainnet = SLP.Address.detectAddressNetwork(address)
+          assert.equal(isMainnet, "mainnet")
+        })
+      })
+
+      CASH_MAINNET_ADDRESSES.forEach(address => {
+        it(`should detect ${address} is a mainnet address`, () => {
+          const isMainnet = SLP.Address.detectAddressNetwork(address)
+          assert.equal(isMainnet, "mainnet")
+        })
+      })
+
+      SLP_MAINNET_ADDRESSES.forEach(address => {
+        it(`should detect ${address} is a mainnet address`, () => {
+          const isMainnet = SLP.Address.detectAddressNetwork(address)
+          assert.equal(isMainnet, "mainnet")
+        })
+      })
+    })
   })
 
   describe("#testnet", () => {
@@ -634,6 +657,29 @@ describe("#Address", () => {
         it(`should detect ${address} is an slp address`, () => {
           const isSlpaddr = SLP.Address.detectAddressFormat(address)
           assert.equal(isSlpaddr, "slpaddr")
+        })
+      })
+    })
+
+    describe("#detectAddressNetwork", () => {
+      LEGACY_TESTNET_ADDRESSES.forEach(address => {
+        it(`should detect ${address} is a testnet address`, () => {
+          const isTestnet = SLP.Address.detectAddressNetwork(address)
+          assert.equal(isTestnet, "testnet")
+        })
+      })
+
+      CASH_TESTNET_ADDRESSES.forEach(address => {
+        it(`should detect ${address} is a testnet address`, () => {
+          const isTestnet = SLP.Address.detectAddressNetwork(address)
+          assert.equal(isTestnet, "testnet")
+        })
+      })
+
+      SLP_TESTNET_ADDRESSES.forEach(address => {
+        it(`should detect ${address} is a testnet address`, () => {
+          const isTestnet = SLP.Address.detectAddressNetwork(address)
+          assert.equal(isTestnet, "testnet")
         })
       })
     })
