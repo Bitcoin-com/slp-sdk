@@ -111,6 +111,19 @@ class Address extends BITBOXAddress {
     }
   }
 
+  detectAddressFormat(address: string): string {
+    try {
+      this._ensureValidAddress(address)
+      if (utils.isSlpAddress(address)) {
+        return "slpaddr"
+      } else {
+        return BITBOX.Address.detectAddressFormat(address)
+      }
+    } catch (err) {
+      return err
+    }
+  }
+
   _ensureValidAddress(address: string): any {
     try {
       utils.toCashAddress(address)
