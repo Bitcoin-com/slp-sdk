@@ -40,6 +40,37 @@ class Address extends BITBOXAddress {
     }
   }
 
+  isLegacyAddress(address: string): boolean {
+    try {
+      this._ensureValidAddress(address)
+      return BITBOX.Address.isLegacyAddress(address)
+    } catch (err) {
+      return err
+    }
+  }
+
+  isCashAddress(address: string): boolean {
+    try {
+      this._ensureValidAddress(address)
+      if (utils.isSlpAddress(address)) {
+        return false
+      } else {
+        return BITBOX.Address.isCashAddress(address)
+      }
+    } catch (err) {
+      return err
+    }
+  }
+
+  isSLPAddress(address: string): boolean {
+    try {
+      this._ensureValidAddress(address)
+      return utils.isSlpAddress(address)
+    } catch (err) {
+      return err
+    }
+  }
+
   _ensureValidAddress(address: string): any {
     try {
       utils.toCashAddress(address)

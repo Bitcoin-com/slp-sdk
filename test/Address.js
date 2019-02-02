@@ -129,6 +129,93 @@ describe("#Address", () => {
           )
         })
       })
+
+      describe("#isLegacyAddress", () => {
+        describe("is legacy addr", () => {
+          LEGACY_MAINNET_ADDRESSES.forEach(address => {
+            it(`should detect ${address} is a legacy address`, () => {
+              const isLegacyaddr = SLP.Address.isLegacyAddress(address)
+              assert.equal(isLegacyaddr, true)
+            })
+          })
+        })
+
+        describe("cashaddr is not legacy addr", () => {
+          CASH_MAINNET_ADDRESSES.forEach(address => {
+            it(`should detect ${address} is not a legacy address`, () => {
+              const isLegacyaddr = SLP.Address.isLegacyAddress(address)
+              assert.equal(isLegacyaddr, false)
+            })
+          })
+        })
+
+        describe("slpaddr is not legacy addr", () => {
+          SLP_MAINNET_ADDRESSES.forEach(address => {
+            it(`should detect ${address} is not a legacy address`, () => {
+              const isLegacyaddr = SLP.Address.isLegacyAddress(address)
+              assert.equal(isLegacyaddr, false)
+            })
+          })
+        })
+      })
+
+      describe("#isCashAddress", () => {
+        describe("is cashaddr", () => {
+          CASH_MAINNET_ADDRESSES.forEach(address => {
+            it(`should detect ${address} is a cashaddr address`, () => {
+              const isCashaddr = SLP.Address.isCashAddress(address)
+              assert.equal(isCashaddr, true)
+            })
+          })
+        })
+
+        describe("legacy is not cash addr", () => {
+          LEGACY_MAINNET_ADDRESSES.forEach(address => {
+            it(`should detect ${address} is not a cash address`, () => {
+              const isCashaddr = SLP.Address.isCashAddress(address)
+              assert.equal(isCashaddr, false)
+            })
+          })
+        })
+
+        describe("slpaddr is not cash addr", () => {
+          SLP_MAINNET_ADDRESSES.forEach(address => {
+            it(`should detect ${address} is not a cash address`, () => {
+              const isCashaddr = SLP.Address.isCashAddress(address)
+              assert.equal(isCashaddr, false)
+            })
+          })
+        })
+      })
+
+      describe("#isSLPAddress", () => {
+        describe("is slpaddr", () => {
+          SLP_MAINNET_ADDRESSES.forEach(address => {
+            it(`should detect ${address} is an slp address`, () => {
+              const isSLPaddr = SLP.Address.isSLPAddress(address)
+              assert.equal(isSLPaddr, true)
+            })
+          })
+        })
+
+        describe("legacy is not slp addr", () => {
+          LEGACY_MAINNET_ADDRESSES.forEach(address => {
+            it(`should detect ${address} is not an slp address`, () => {
+              const isSLPaddr = SLP.Address.isSLPAddress(address)
+              assert.equal(isSLPaddr, false)
+            })
+          })
+        })
+
+        describe("cash is not slp addr", () => {
+          CASH_MAINNET_ADDRESSES.forEach(address => {
+            it(`should detect ${address} is not an slp address`, () => {
+              const isSLPaddr = SLP.Address.isSLPAddress(address)
+              assert.equal(isSLPaddr, false)
+            })
+          })
+        })
+      })
     })
 
     describe("#testnet", () => {
@@ -216,6 +303,93 @@ describe("#Address", () => {
             ),
             SLP_TESTNET_ADDRESSES
           )
+        })
+      })
+
+      describe("#isLegacyAddress", () => {
+        describe("is legacy addr", () => {
+          LEGACY_TESTNET_ADDRESSES.forEach(address => {
+            it(`should detect ${address} is a legacy address`, () => {
+              const isLegacyaddr = SLP.Address.isLegacyAddress(address)
+              assert.equal(isLegacyaddr, true)
+            })
+          })
+        })
+
+        describe("cashaddr is not legacy addr", () => {
+          CASH_TESTNET_ADDRESSES.forEach(address => {
+            it(`should detect ${address} is not a legacy address`, () => {
+              const isLegacyaddr = SLP.Address.isLegacyAddress(address)
+              assert.equal(isLegacyaddr, false)
+            })
+          })
+        })
+
+        describe("slpaddr is not legacy addr", () => {
+          SLP_TESTNET_ADDRESSES.forEach(address => {
+            it(`should detect ${address} is not a legacy address`, () => {
+              const isLegacyaddr = SLP.Address.isLegacyAddress(address)
+              assert.equal(isLegacyaddr, false)
+            })
+          })
+        })
+      })
+
+      describe("#isCashAddress", () => {
+        describe("is cashaddr", () => {
+          CASH_TESTNET_ADDRESSES.forEach(address => {
+            it(`should detect ${address} is a cashaddr address`, () => {
+              const isCashaddr = SLP.Address.isCashAddress(address)
+              assert.equal(isCashaddr, true)
+            })
+          })
+        })
+
+        describe("legacy is not cash addr", () => {
+          LEGACY_TESTNET_ADDRESSES.forEach(address => {
+            it(`should detect ${address} is not a cash address`, () => {
+              const isCashaddr = SLP.Address.isCashAddress(address)
+              assert.equal(isCashaddr, false)
+            })
+          })
+        })
+
+        describe("slpaddr is not cash addr", () => {
+          SLP_TESTNET_ADDRESSES.forEach(address => {
+            it(`should detect ${address} is not a cash address`, () => {
+              const isCashaddr = SLP.Address.isCashAddress(address)
+              assert.equal(isCashaddr, false)
+            })
+          })
+        })
+      })
+
+      describe("#isSLPAddress", () => {
+        describe("is slpaddr", () => {
+          SLP_TESTNET_ADDRESSES.forEach(address => {
+            it(`should detect ${address} is an slp address`, () => {
+              const isSLPaddr = SLP.Address.isSLPAddress(address)
+              assert.equal(isSLPaddr, true)
+            })
+          })
+        })
+
+        describe("legacy is not slp addr", () => {
+          LEGACY_TESTNET_ADDRESSES.forEach(address => {
+            it(`should detect ${address} is not an slp address`, () => {
+              const isSLPaddr = SLP.Address.isSLPAddress(address)
+              assert.equal(isSLPaddr, false)
+            })
+          })
+        })
+
+        describe("cash is not slp addr", () => {
+          CASH_TESTNET_ADDRESSES.forEach(address => {
+            it(`should detect ${address} is not an slp address`, () => {
+              const isSLPaddr = SLP.Address.isSLPAddress(address)
+              assert.equal(isSLPaddr, false)
+            })
+          })
         })
       })
     })
