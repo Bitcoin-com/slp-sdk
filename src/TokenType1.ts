@@ -5,6 +5,7 @@ import Address from "./Address"
 let addy = new Address()
 import { ICreateConfig } from "./interfaces/ICreateConfig"
 import { IMintConfig } from "./interfaces/IMintConfig"
+import { ISendConfig } from "./interfaces/ISendConfig"
 
 class TokenType1 {
   async create(createConfig: ICreateConfig) {
@@ -104,6 +105,54 @@ class TokenType1 {
       bchChangeReceiverAddress
     )
     return mintTxid
+  }
+
+  async send(sendConfig: ISendConfig) {
+    let network = addy.detectAddressNetwork(sendConfig.fundingAddress)
+    let tmpBITBOX
+    let path
+    if (network === "mainnet") {
+      tmpBITBOX = new BITBOXSDK({ restURL: "https://rest.bitcoin.com/v2/" })
+      path = "https://validate.simpleledger.info"
+    } else {
+      tmpBITBOX = new BITBOXSDK({ restURL: "https://trest.bitcoin.com/v2/" })
+      path = "https://testnet-validate.simpleledger.info"
+    }
+    const slpValidator = new slpjs.JsonRpcProxyValidator(tmpBITBOX, path)
+    const bitboxNetwork = new slpjs.BitboxNetwork(tmpBITBOX, slpValidator)
+
+    const fundingAddress = sendConfig.fundingAddress
+    const fundingWif = sendConfig.fundingWif
+    const tokenReceiverAddress = sendConfig.tokenReceiverAddress
+    const bchChangeReceiverAddress = sendConfig.bchChangeReceiverAddress
+    let tokenId = sendConfig.tokenId
+    let sendAmount = sendConfig.sendAmount
+
+    const tokenInfo = await bitboxNetwork.getTokenInformation(tokenId)
+    let tokenDecimals = tokenInfo.decimals
+
+    let balances = await bitboxNetwork.getAllSlpBalancesAndUtxos(fundingAddress)
+
+    // 3) Calculate send amount in "Token Satoshis".  In this example we want to just send 1 token unit to someone...
+    sendAmount = new BigNumber(sendAmount).times(10 ** tokenDecimals) // Don't forget to account for token precision
+
+    // 4) Get all of our token's UTXOs
+    let inputUtxos = balances.slpTokenUtxos[tokenId]
+
+    // 5) Simply sweep our BCH utxos to fuel the transaction
+    inputUtxos = inputUtxos.concat(balances.nonSlpUtxos)
+
+    // 6) Set the proper private key for each Utxo
+    inputUtxos.forEach((txo: any) => (txo.wif = fundingWif))
+
+    let sendTxid = await bitboxNetwork.simpleTokenSend(
+      tokenId,
+      sendAmount,
+      inputUtxos,
+      tokenReceiverAddress,
+      bchChangeReceiverAddress
+    )
+    return sendTxid
   }
 
   // lokadIdHex(): string {
