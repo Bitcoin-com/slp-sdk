@@ -10,19 +10,6 @@ class Utils {
     this.restURL = restURL
   }
 
-  toSLPAddress(address: string): string {
-    return utils.toSlpAddress(address)
-  }
-
-  toCashAddress(address: string): string {
-    return utils.toCashAddress(address)
-  }
-
-  toLegacyAddress(address: string): string {
-    const cashAddr = utils.toCashAddress(address)
-    return BITBOX.Address.toLegacyAddress(cashAddr)
-  }
-
   getPushDataOpcode(data: any): any {
     return utils.getPushDataOpcode(data)
   }
@@ -84,18 +71,6 @@ class Utils {
     try {
       const response = await axios.get(
         `${this.restURL}slp/balance/${address}/${id}`
-      )
-      return response.data
-    } catch (error) {
-      if (error.response && error.response.data) throw error.response.data
-      throw error
-    }
-  }
-
-  async convert(address: string): Promise<Object> {
-    try {
-      const response = await axios.get(
-        `${this.restURL}slp/address/convert/${address}`
       )
       return response.data
     } catch (error) {
