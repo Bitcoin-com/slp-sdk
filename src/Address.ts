@@ -91,6 +91,26 @@ class Address extends BITBOXAddress {
     }
   }
 
+  isP2PKHAddress(address: string): boolean {
+    try {
+      this._ensureValidAddress(address)
+      let cashAddr: string = utils.toCashAddress(address)
+      return BITBOX.Address.isP2PKHAddress(cashAddr)
+    } catch (err) {
+      return err
+    }
+  }
+
+  isP2SHAddress(address: string): boolean {
+    try {
+      this._ensureValidAddress(address)
+      let cashAddr: string = utils.toCashAddress(address)
+      return BITBOX.Address.isP2SHAddress(cashAddr)
+    } catch (err) {
+      return err
+    }
+  }
+
   _ensureValidAddress(address: string): any {
     try {
       utils.toCashAddress(address)

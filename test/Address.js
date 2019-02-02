@@ -40,6 +40,30 @@ const SLP_TESTNET_ADDRESSES = flatten([
   fixtures.testnet.slpAddressP2SH
 ])
 
+const MAINNET_P2PKH_ADDRESSES = flatten([
+  fixtures.mainnet.legacyP2PKH,
+  fixtures.mainnet.cashAddressP2PKH,
+  fixtures.mainnet.slpAddressP2PKH
+])
+
+const TESTNET_P2PKH_ADDRESSES = flatten([
+  fixtures.testnet.legacyP2PKH,
+  fixtures.testnet.cashAddressP2PKH,
+  fixtures.testnet.slpAddressP2PKH
+])
+
+const MAINNET_P2SH_ADDRESSES = flatten([
+  fixtures.mainnet.legacyP2SH,
+  fixtures.mainnet.cashAddressP2SH,
+  fixtures.mainnet.slpAddressP2SH
+])
+
+const TESTNET_P2SH_ADDRESSES = flatten([
+  fixtures.testnet.legacyP2SH,
+  fixtures.testnet.cashAddressP2SH,
+  fixtures.testnet.slpAddressP2SH
+])
+
 describe("#Address", () => {
   describe("#mainnet", () => {
     describe("#toLegacyAddress", () => {
@@ -267,6 +291,28 @@ describe("#Address", () => {
           it(`should detect ${address} is not a mainnet address`, () => {
             const isMainnetaddr = SLP.Address.isMainnetAddress(address)
             assert.equal(isMainnetaddr, false)
+          })
+        })
+      })
+    })
+
+    describe("#isP2PKHAddress", () => {
+      describe("mainnet legacy addr", () => {
+        MAINNET_P2PKH_ADDRESSES.forEach(address => {
+          it(`should detect ${address} is a P2PKH address`, () => {
+            const isP2PKHaddr = SLP.Address.isP2PKHAddress(address)
+            assert.equal(isP2PKHaddr, true)
+          })
+        })
+      })
+    })
+
+    describe("#isP2SHAddress", () => {
+      describe("mainnet legacy addr", () => {
+        MAINNET_P2SH_ADDRESSES.forEach(address => {
+          it(`should detect ${address} is a P2SH address`, () => {
+            const isP2SHaddr = SLP.Address.isP2SHAddress(address)
+            assert.equal(isP2SHaddr, true)
           })
         })
       })
@@ -499,6 +545,28 @@ describe("#Address", () => {
           it(`should detect ${address} is not a testnet address`, () => {
             const isTestnetaddr = SLP.Address.isTestnetAddress(address)
             assert.equal(isTestnetaddr, false)
+          })
+        })
+      })
+    })
+
+    describe("#isP2PKHAddress", () => {
+      describe("testnet legacy addr", () => {
+        TESTNET_P2PKH_ADDRESSES.forEach(address => {
+          it(`should detect ${address} is a P2PKH address`, () => {
+            const isP2PKHaddr = SLP.Address.isP2PKHAddress(address)
+            assert.equal(isP2PKHaddr, true)
+          })
+        })
+      })
+    })
+
+    describe("#isP2SHAddress", () => {
+      describe("testnet legacy addr", () => {
+        TESTNET_P2SH_ADDRESSES.forEach(address => {
+          it(`should detect ${address} is a P2SH address`, () => {
+            const isP2SHaddr = SLP.Address.isP2SHAddress(address)
+            assert.equal(isP2SHaddr, true)
           })
         })
       })
