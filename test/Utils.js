@@ -1,9 +1,7 @@
 "use strict"
 const assert = require("assert")
 const slp = require("./../lib/SLP").default
-const SLP = new slp({
-  restURL: "https://rest.bitcoin.com/v1/"
-})
+const SLP = new slp()
 
 describe("#Utils", () => {
   describe("#list", () => {
@@ -60,7 +58,6 @@ describe("#Utils", () => {
           "simpleledger:qr5agtachyxvrwxu76vzszan5pnvuzy8duhv4lxrsk",
           "df808a41672a0a0ae6475b44f272a107bc9961b90f29dc918d71301f24fe92fb"
         )
-        console.log("ALALALA", balance)
         assert.equal(balance.c, 61700000000)
       } catch (error) {
         throw error

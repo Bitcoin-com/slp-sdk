@@ -45,6 +45,7 @@ class Utils {
   }
 
   async list(id: string): Promise<Object | Array<Object>> {
+    console.log("REST", this.restURL)
     let path: string
     if (!id) path = `${this.restURL}slp/list`
     else path = `${this.restURL}slp/list/${id}`
