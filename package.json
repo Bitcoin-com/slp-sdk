@@ -48,6 +48,7 @@
     "eslint-plugin-standard": "^4.0.0",
     "fs-extra": "^7.0.0",
     "gulp": "^3.9.1",
+    "mocha": "^5.2.0",
     "nyc": "^13.0.1",
     "prettier": "^1.14.3",
     "sinon": "^4.5.0",
