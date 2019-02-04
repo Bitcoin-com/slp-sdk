@@ -143,52 +143,92 @@ class Address extends BITBOXAddress {
   }
 
   async details(address: string | Array<string>): Promise<Object> {
+    let tmpBITBOX: any
+    let network: string
+    if (typeof address === "string")
+      network = this.detectAddressNetwork(address)
+    else network = this.detectAddressNetwork(address[0])
+
+    if (network === "mainnet")
+      tmpBITBOX = new BITBOXSDK({ restURL: "https://rest.bitcoin.com/v2/" })
+    else tmpBITBOX = new BITBOXSDK({ restURL: "https://trest.bitcoin.com/v2/" })
+
     try {
       if (typeof address === "string") {
         const cashAddr: string = utils.toCashAddress(address)
-        return BITBOX.Address.details(cashAddr)
+        return tmpBITBOX.Address.details(cashAddr)
       }
       address = address.map((address: string) => utils.toCashAddress(address))
-      return BITBOX.Address.details(address)
+      return tmpBITBOX.Address.details(address)
     } catch (error) {
       throw error
     }
   }
 
   async utxo(address: string | Array<string>): Promise<Object> {
+    let tmpBITBOX: any
+    let network: string
+    if (typeof address === "string")
+      network = this.detectAddressNetwork(address)
+    else network = this.detectAddressNetwork(address[0])
+
+    if (network === "mainnet")
+      tmpBITBOX = new BITBOXSDK({ restURL: "https://rest.bitcoin.com/v2/" })
+    else tmpBITBOX = new BITBOXSDK({ restURL: "https://trest.bitcoin.com/v2/" })
+
     try {
       if (typeof address === "string") {
         const cashAddr: string = utils.toCashAddress(address)
-        return BITBOX.Address.utxo(cashAddr)
+        return tmpBITBOX.Address.utxo(cashAddr)
       }
       address = address.map((address: string) => utils.toCashAddress(address))
-      return BITBOX.Address.utxo(address)
+      return tmpBITBOX.Address.utxo(address)
     } catch (error) {
       throw error
     }
   }
 
   async unconfirmed(address: string | Array<string>): Promise<Object> {
+    let tmpBITBOX: any
+    let network: string
+    if (typeof address === "string")
+      network = this.detectAddressNetwork(address)
+    else network = this.detectAddressNetwork(address[0])
+
+    if (network === "mainnet")
+      tmpBITBOX = new BITBOXSDK({ restURL: "https://rest.bitcoin.com/v2/" })
+    else tmpBITBOX = new BITBOXSDK({ restURL: "https://trest.bitcoin.com/v2/" })
+
     try {
       if (typeof address === "string") {
         const cashAddr: string = utils.toCashAddress(address)
-        return BITBOX.Address.unconfirmed(cashAddr)
+        return tmpBITBOX.Address.unconfirmed(cashAddr)
       }
       address = address.map((address: string) => utils.toCashAddress(address))
-      return BITBOX.Address.unconfirmed(address)
+      return tmpBITBOX.Address.unconfirmed(address)
     } catch (error) {
       throw error
     }
   }
 
   async transactions(address: string | Array<string>): Promise<Object> {
+    let tmpBITBOX: any
+    let network: string
+    if (typeof address === "string")
+      network = this.detectAddressNetwork(address)
+    else network = this.detectAddressNetwork(address[0])
+
+    if (network === "mainnet")
+      tmpBITBOX = new BITBOXSDK({ restURL: "https://rest.bitcoin.com/v2/" })
+    else tmpBITBOX = new BITBOXSDK({ restURL: "https://trest.bitcoin.com/v2/" })
+
     try {
       if (typeof address === "string") {
         const cashAddr: string = utils.toCashAddress(address)
-        return BITBOX.Address.transactions(cashAddr)
+        return tmpBITBOX.Address.transactions(cashAddr)
       }
       address = address.map((address: string) => utils.toCashAddress(address))
-      return BITBOX.Address.transactions(address)
+      return tmpBITBOX.Address.transactions(address)
     } catch (error) {
       throw error
     }
