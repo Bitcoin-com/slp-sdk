@@ -4,5 +4,5 @@ export interface ISendConfig {
   tokenReceiverAddress: string
   bchChangeReceiverAddress: string
   tokenId: string
-  sendAmount: number
+  amount: number
 }

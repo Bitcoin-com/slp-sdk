@@ -4,6 +4,6 @@ export interface IMintConfig {
   tokenReceiverAddress: string
   batonReceiverAddress: string
   bchChangeReceiverAddress: string
-  tokenIdHexToMint: string
+  tokenId: string
   additionalTokenQty: number
 }
