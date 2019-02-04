@@ -1,11 +1,13 @@
+// require deps
 const BITBOXSDK = require("bitbox-sdk/lib/bitbox-sdk").default
 const utils = require("slpjs").slpjs.Utils
 const slpjs = require("slpjs").slpjs
-import Address from "./Address"
 const BigNumber: any = require("bignumber.js")
-let addy = new Address()
-
 import axios from "axios"
+
+// import classes
+import Address from "./Address"
+let addy = new Address()
 
 class Utils {
   restURL: string
@@ -46,18 +48,23 @@ class Utils {
     let balances: any = await bitboxNetwork.getAllSlpBalancesAndUtxos(
       addy.toSLPAddress(address)
     )
-    let tmpBalances: any = {}
-    let keys: Array<string> = Object.keys(balances.slpTokenBalances)
-    if (keys) {
-      keys.forEach(async (key: string) => {
-        let tokenMetadata: any = await bitboxNetwork.getTokenInformation(key)
-        tmpBalances[key] = balances.slpTokenBalances[key]
-          .div(10 ** tokenMetadata.decimals)
-          .toString()
-      })
-    }
 
-    return tmpBalances
+    let keys: Array<string> = Object.keys(balances.slpTokenBalances)
+
+    const axiosPromises = keys.map(async (key: any) => {
+      let tokenMetadata: any = await bitboxNetwork.getTokenInformation(key)
+      return balances.slpTokenBalances[key]
+        .div(10 ** tokenMetadata.decimals)
+        .toString()
+    })
+
+    // Wait for all parallel promises to return.
+    const axiosResult: Array<any> = await axios.all(axiosPromises)
+    let finalResult: any = {}
+    keys.forEach(async (key: string, index: number) => {
+      finalResult[key] = axiosResult[index]
+    })
+    return finalResult
   }
 
   async balance(address: string, tokenId: string): Promise<Object> {
