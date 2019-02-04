@@ -9,6 +9,8 @@ import axios from "axios"
 import Address from "./Address"
 let addy = new Address()
 
+let slpValidator: any
+
 class Utils {
   restURL: string
   constructor(restURL: string) {
@@ -94,7 +96,7 @@ class Utils {
     return val
   }
 
-  async validateTxid(txid: string, network: string): Promise<Object> {
+  async validateTxid(txid: string, network: string, getRawTransactions: any): Promise<Object> {
     let tmpBITBOX: any
 
     if (network === "mainnet") {
@@ -103,10 +105,12 @@ class Utils {
       tmpBITBOX = new BITBOXSDK({ restURL: "https://trest.bitcoin.com/v2/" })
     }
 
-    const slpValidator: any = new slpjs.LocalValidator(
-      tmpBITBOX,
-      tmpBITBOX.RawTransactions.getRawTransaction.bind(this)
-    )
+    if (!slpValidator) {
+      slpValidator = new slpjs.LocalValidator(
+        tmpBITBOX,
+        getRawTransactions ? getRawTransactions : tmpBITBOX.RawTransactions.getRawTransaction.bind(this)
+      )
+    }
 
     let isValid: boolean = await slpValidator.isValidSlpTxid(txid)
     return isValid
