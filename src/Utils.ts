@@ -105,7 +105,7 @@ class Utils {
 
     const slpValidator: any = new slpjs.LocalValidator(
       tmpBITBOX,
-      tmpBITBOX.RawTransactions.getRawTransaction
+      tmpBITBOX.RawTransactions.getRawTransaction.bind(this)
     )
 
     let isValid: boolean = await slpValidator.isValidSlpTxid(txid)
