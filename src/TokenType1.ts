@@ -1,25 +1,32 @@
-const BITBOXSDK = require("bitbox-sdk/lib/bitbox-sdk").default
-const BigNumber = require("bignumber.js")
-const slpjs = require("slpjs").slpjs
+// require deps
+const BITBOXSDK: any = require("bitbox-sdk/lib/bitbox-sdk").default
+const BigNumber: any = require("bignumber.js")
+const slpjs: any = require("slpjs").slpjs
+
+// import interfaces
+import { ICreateConfig } from "./interfaces/SLPInterfaces"
+import { IMintConfig } from "./interfaces/SLPInterfaces"
+import { ISendConfig } from "./interfaces/SLPInterfaces"
+
+// import classes
 import Address from "./Address"
-let addy = new Address()
-import { ICreateConfig } from "./interfaces/ICreateConfig"
-import { IMintConfig } from "./interfaces/IMintConfig"
-import { ISendConfig } from "./interfaces/ISendConfig"
+let addy: any = new Address()
 
 class TokenType1 {
   async create(createConfig: ICreateConfig) {
     let network: string = addy.detectAddressNetwork(createConfig.fundingAddress)
     let tmpBITBOX: any
-    let path: string
+
     if (network === "mainnet") {
       tmpBITBOX = new BITBOXSDK({ restURL: "https://rest.bitcoin.com/v2/" })
-      path = "https://validate.simpleledger.info"
     } else {
       tmpBITBOX = new BITBOXSDK({ restURL: "https://trest.bitcoin.com/v2/" })
-      path = "https://testnet-validate.simpleledger.info"
     }
-    const slpValidator: any = new slpjs.JsonRpcProxyValidator(tmpBITBOX, path)
+
+    const slpValidator: any = new slpjs.LocalValidator(
+      tmpBITBOX,
+      tmpBITBOX.RawTransactions.getRawTransaction
+    )
     const bitboxNetwork: any = new slpjs.BitboxNetwork(tmpBITBOX, slpValidator)
     const fundingAddress: string = addy.toSLPAddress(
       createConfig.fundingAddress
@@ -66,15 +73,17 @@ class TokenType1 {
   async mint(mintConfig: IMintConfig) {
     let network: string = addy.detectAddressNetwork(mintConfig.fundingAddress)
     let tmpBITBOX: any
-    let path: string
+
     if (network === "mainnet") {
       tmpBITBOX = new BITBOXSDK({ restURL: "https://rest.bitcoin.com/v2/" })
-      path = "https://validate.simpleledger.info"
     } else {
       tmpBITBOX = new BITBOXSDK({ restURL: "https://trest.bitcoin.com/v2/" })
-      path = "https://testnet-validate.simpleledger.info"
     }
-    const slpValidator: any = new slpjs.JsonRpcProxyValidator(tmpBITBOX, path)
+
+    const slpValidator: any = new slpjs.LocalValidator(
+      tmpBITBOX,
+      tmpBITBOX.RawTransactions.getRawTransaction
+    )
     const bitboxNetwork: any = new slpjs.BitboxNetwork(tmpBITBOX, slpValidator)
     const fundingAddress: string = addy.toSLPAddress(mintConfig.fundingAddress)
     const fundingWif: string = mintConfig.fundingWif
@@ -124,16 +133,18 @@ class TokenType1 {
 
   async send(sendConfig: ISendConfig) {
     let network = addy.detectAddressNetwork(sendConfig.fundingAddress)
-    let tmpBITBOX
-    let path
+    let tmpBITBOX: any
+
     if (network === "mainnet") {
       tmpBITBOX = new BITBOXSDK({ restURL: "https://rest.bitcoin.com/v2/" })
-      path = "https://validate.simpleledger.info"
     } else {
       tmpBITBOX = new BITBOXSDK({ restURL: "https://trest.bitcoin.com/v2/" })
-      path = "https://testnet-validate.simpleledger.info"
     }
-    const slpValidator = new slpjs.JsonRpcProxyValidator(tmpBITBOX, path)
+
+    const slpValidator = new slpjs.LocalValidator(
+      tmpBITBOX,
+      tmpBITBOX.RawTransactions.getRawTransaction
+    )
     const bitboxNetwork = new slpjs.BitboxNetwork(tmpBITBOX, slpValidator)
 
     const fundingAddress: string = addy.toSLPAddress(sendConfig.fundingAddress)

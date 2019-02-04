@@ -1,17 +1,22 @@
-const BITBOXSDK = require("bitbox-sdk/lib/bitbox-sdk").default
-import Utils from "./Utils"
+// require deps
+const BITBOXSDK: any = require("bitbox-sdk/lib/bitbox-sdk").default
+
+// import interfaces
+import { IConfig } from "./interfaces/SLPInterfaces"
+
+// import classes
 import Address from "./Address"
 import TokenType1 from "./TokenType1"
-let slp = require("slpjs").slp
-let bitboxproxy = require("slpjs").bitbox
-let bitdb = require("slpjs").bitdb
-const BigNumber = require("bignumber.js")
-import { IConfig } from "./interfaces/IConfig"
+import Utils from "./Utils"
 
+// SLP SDK is a superset of BITBOX SDK <3
 class SLP extends BITBOXSDK {
+  Address: any
+  TokenType1: any
+  Utils: any
   constructor(config: IConfig = {}) {
     super(config)
-    let restURL
+    let restURL: string
     if (config && config.restURL && config.restURL !== "")
       restURL = config.restURL
     else restURL = "https://rest.bitcoin.com/v2/"
@@ -19,10 +24,6 @@ class SLP extends BITBOXSDK {
     this.Address = new Address(restURL)
     this.TokenType1 = new TokenType1()
     this.Utils = new Utils(restURL)
-    this.bitbox = bitboxproxy
-    this.slp = slp
-    this.BigNumber = BigNumber
-    this.biddb = bitdb
   }
 }
 

@@ -1,5 +1,4 @@
 const BITBOXSDK = require("bitbox-sdk/lib/bitbox-sdk").default
-const BITBOX = new BITBOXSDK()
 const utils = require("slpjs").slpjs.Utils
 const slpjs = require("slpjs").slpjs
 import Address from "./Address"
@@ -11,37 +10,6 @@ class Utils {
   restURL: string
   constructor(restURL: string) {
     this.restURL = restURL
-  }
-
-  getPushDataOpcode(data: any): any {
-    return utils.getPushDataOpcode(data)
-  }
-
-  int2FixedBuffer(amount: any): any {
-    return utils.int2FixedBuffer(amount)
-  }
-
-  // This is for encoding Script in scriptPubKey OP_RETURN scripts, where BIP62.3 does not apply
-  encodeScript(script: any): any {
-    return utils.gencodeScript(script)
-  }
-
-  txidFromHex(hex: any): any {
-    return utils.txidFromHex(hex)
-  }
-
-  // Method to get Script 32-bit integer (little-endian signed magnitude representation)
-  readScriptInt32(buffer: any): any {
-    return utils.readScriptInt32(buffer)
-  }
-
-  // Method to check whether or not a secret value is valid
-  scriptInt32IsValid(buffer: any): any {
-    return utils.scriptInt32IsValid(buffer)
-  }
-
-  generateRandomScriptInt32(): any {
-    return utils.generateRandomScriptInt32()
   }
 
   async list(id: string): Promise<Object | Array<Object>> {
@@ -59,40 +27,47 @@ class Utils {
   }
 
   async balancesForAddress(address: string): Promise<Object> {
-    let network = addy.detectAddressNetwork(address)
-    let tmpBITBOX
-    let path
+    let network: string = addy.detectAddressNetwork(address)
+    let tmpBITBOX: any
+
     if (network === "mainnet") {
       tmpBITBOX = new BITBOXSDK({ restURL: "https://rest.bitcoin.com/v2/" })
-      path = "https://validate.simpleledger.info"
     } else {
       tmpBITBOX = new BITBOXSDK({ restURL: "https://trest.bitcoin.com/v2/" })
-      path = "https://testnet-validate.simpleledger.info"
     }
 
-    const slpValidator = new slpjs.JsonRpcProxyValidator(tmpBITBOX, path)
-    const bitboxNetwork = new slpjs.BitboxNetwork(tmpBITBOX, slpValidator)
-    let balances = await bitboxNetwork.getAllSlpBalancesAndUtxos(address)
+    const slpValidator: any = new slpjs.LocalValidator(
+      tmpBITBOX,
+      tmpBITBOX.RawTransactions.getRawTransaction
+    )
+
+    const bitboxNetwork: any = new slpjs.BitboxNetwork(tmpBITBOX, slpValidator)
+    let balances: any = await bitboxNetwork.getAllSlpBalancesAndUtxos(
+      addy.toSLPAddress(address)
+    )
     return balances
   }
 
   async balance(address: string, tokenId: string): Promise<Object> {
-    let network = addy.detectAddressNetwork(address)
-    let tmpBITBOX
-    let path
+    let network: string = addy.detectAddressNetwork(address)
+    let tmpBITBOX: any
+
     if (network === "mainnet") {
       tmpBITBOX = new BITBOXSDK({ restURL: "https://rest.bitcoin.com/v2/" })
-      path = "https://validate.simpleledger.info"
     } else {
       tmpBITBOX = new BITBOXSDK({ restURL: "https://trest.bitcoin.com/v2/" })
-      path = "https://testnet-validate.simpleledger.info"
     }
 
-    const slpValidator = new slpjs.JsonRpcProxyValidator(tmpBITBOX, path)
-    const bitboxNetwork = new slpjs.BitboxNetwork(tmpBITBOX, slpValidator)
-    let balances = await bitboxNetwork.getAllSlpBalancesAndUtxos(address)
-    let keys = Object.keys(balances.slpTokenBalances)
-    let val
+    const slpValidator: any = new slpjs.LocalValidator(
+      tmpBITBOX,
+      tmpBITBOX.RawTransactions.getRawTransaction
+    )
+    const bitboxNetwork: any = new slpjs.BitboxNetwork(tmpBITBOX, slpValidator)
+    let balances: any = await bitboxNetwork.getAllSlpBalancesAndUtxos(
+      addy.toSLPAddress(address)
+    )
+    let keys: Array<string> = Object.keys(balances.slpTokenBalances)
+    let val: any
     if (keys) {
       keys.forEach((key: string) => {
         if (key === tokenId) {
@@ -103,6 +78,24 @@ class Utils {
       val = "no balance"
     }
     return val
+  }
+
+  async validate(txid: string, network: string): Promise<Object> {
+    let tmpBITBOX: any
+
+    if (network === "mainnet") {
+      tmpBITBOX = new BITBOXSDK({ restURL: "https://rest.bitcoin.com/v2/" })
+    } else {
+      tmpBITBOX = new BITBOXSDK({ restURL: "https://trest.bitcoin.com/v2/" })
+    }
+
+    const slpValidator: any = new slpjs.LocalValidator(
+      tmpBITBOX,
+      tmpBITBOX.RawTransactions.getRawTransaction
+    )
+
+    let isValid: boolean = await slpValidator.isValidSlpTxid(txid)
+    return isValid
   }
 }
 
