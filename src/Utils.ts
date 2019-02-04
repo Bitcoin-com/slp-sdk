@@ -45,7 +45,15 @@ class Utils {
     let balances: any = await bitboxNetwork.getAllSlpBalancesAndUtxos(
       addy.toSLPAddress(address)
     )
-    return balances
+    let tmpBalances: any = {}
+    let keys: Array<string> = Object.keys(balances.slpTokenBalances)
+    if (keys) {
+      keys.forEach((key: string) => {
+        tmpBalances[key] = balances.slpTokenBalances[key].c[0]
+      })
+    }
+
+    return tmpBalances
   }
 
   async balance(address: string, tokenId: string): Promise<Object> {
@@ -71,7 +79,7 @@ class Utils {
     if (keys) {
       keys.forEach((key: string) => {
         if (key === tokenId) {
-          val = balances.slpTokenBalances[tokenId]
+          val = balances.slpTokenBalances[tokenId].c[0]
         }
       })
     } else {
@@ -80,7 +88,7 @@ class Utils {
     return val
   }
 
-  async validate(txid: string, network: string): Promise<Object> {
+  async validateTxid(txid: string, network: string): Promise<Object> {
     let tmpBITBOX: any
 
     if (network === "mainnet") {
