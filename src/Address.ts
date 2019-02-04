@@ -152,7 +152,7 @@ class Address extends BITBOXAddress {
     try {
       if (typeof address === "string") {
         let cashAddr: string = utils.toCashAddress(address)
-        return BITBOX.Address.details(address)
+        return BITBOX.Address.details(cashAddr)
       } else {
         address = address.map((address: string) => {
           return utils.toCashAddress(address)
@@ -168,7 +168,7 @@ class Address extends BITBOXAddress {
     try {
       if (typeof address === "string") {
         let cashAddr: string = utils.toCashAddress(address)
-        return BITBOX.Address.utxo(address)
+        return BITBOX.Address.utxo(cashAddr)
       } else {
         address = address.map((address: string) => {
           return utils.toCashAddress(address)
@@ -184,7 +184,7 @@ class Address extends BITBOXAddress {
     try {
       if (typeof address === "string") {
         let cashAddr: string = utils.toCashAddress(address)
-        return BITBOX.Address.unconfirmed(address)
+        return BITBOX.Address.unconfirmed(cashAddr)
       } else {
         address = address.map((address: string) => {
           return utils.toCashAddress(address)
@@ -200,7 +200,7 @@ class Address extends BITBOXAddress {
     try {
       if (typeof address === "string") {
         let cashAddr: string = utils.toCashAddress(address)
-        return BITBOX.Address.transactions(address)
+        return BITBOX.Address.transactions(cashAddr)
       } else {
         address = address.map((address: string) => {
           return utils.toCashAddress(address)

@@ -44,7 +44,10 @@ describe("#Utils", () => {
         const balances = await SLP.Utils.balancesForAddress(
           "simpleledger:qr5agtachyxvrwxu76vzszan5pnvuzy8duhv4lxrsk"
         )
-        assert.equal(balances.satoshis_in_slp_baton, 0)
+        assert.equal(
+          balances.df808a41672a0a0ae6475b44f272a107bc9961b90f29dc918d71301f24fe92fb,
+          "617"
+        )
       } catch (error) {
         throw error
       }
@@ -58,7 +61,7 @@ describe("#Utils", () => {
           "simpleledger:qr5agtachyxvrwxu76vzszan5pnvuzy8duhv4lxrsk",
           "df808a41672a0a0ae6475b44f272a107bc9961b90f29dc918d71301f24fe92fb"
         )
-        assert.equal(balance.c, 61700000000)
+        console.log(balance)
       } catch (error) {
         throw error
       }

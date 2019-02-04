@@ -729,28 +729,32 @@ describe("#details", () => {
 
   it("should get details", done => {
     const data = {
-      legacyAddress: "3CnzuFFbtgVyHNiDH8BknGo3PQ3dpdThgJ",
-      cashAddress: "bitcoincash:ppuukp49np467kyzxl0fkla34rmgcddhvc33ce2d6l",
-      balance: 300.0828874,
-      balanceSat: 30008288740,
-      totalReceived: 12945.45174649,
-      totalReceivedSat: 1294545174649,
-      totalSent: 12645.36885909,
-      totalSentSat: 1264536885909,
+      balance: 0.00000546,
+      balanceSat: 546,
+      totalReceived: 0.00426132,
+      totalReceivedSat: 426132,
+      totalSent: 0.00425586,
+      totalSentSat: 425586,
       unconfirmedBalance: 0,
       unconfirmedBalanceSat: 0,
       unconfirmedTxApperances: 0,
-      txApperances: 1042,
+      txApperances: 3,
       transactions: [
-        "b29425a876f62e114508e67e66b5eb1ab0d320d7c9a57fb0ece086a36e2b7309"
-      ]
+        "902fe6ed7a19570c032b3ba4c4d7af92804662b486a15c8ca2d284166c658dd4",
+        "467969e067f5612863d0bf2daaa70dede2c6be03abb6fd401c5ef6e1e1f1f5c5",
+        "c1d9f3490e96a1fe4f77195067f1ab12c787f79b39d107424e0c4c810098e11b"
+      ],
+      legacyAddress: "1NM2ozrXVSnMRm66ua6aGeXgMsU7yqwqLS",
+      cashAddress: "bitcoincash:qr4zg7xth86yzq94gl8jvnf5z4wuupzt3g4hl47n9y",
+      currentPage: 0,
+      pagesTotal: null
     }
 
     const resolved = new Promise(r => r({ data: data }))
     sandbox.stub(axios, "get").returns(resolved)
 
     SLP.Address.details(
-      "simpleledger:qrdka2205f4hyukutc2g0s6lykperc8nsuc8pkcp7h"
+      "simpleledger:qr4zg7xth86yzq94gl8jvnf5z4wuupzt3gev5wtnm6"
     )
       .then(result => {
         assert.deepEqual(data, result)
@@ -765,67 +769,50 @@ describe("#utxo", () => {
   afterEach(() => sandbox.restore())
 
   it("should get utxo", done => {
-    const data = [
-      {
-        legacyAddress: "3CnzuFFbtgVyHNiDH8BknGo3PQ3dpdThgJ",
-        cashAddress: "bitcoincash:ppuukp49np467kyzxl0fkla34rmgcddhvc33ce2d6l",
-        txid:
-          "6f56254424378d6914cebd097579c70664843e5876ca86f0bf412ba7f3928326",
-        vout: 0,
-        scriptPubKey: "a91479cb06a5986baf588237de9b7fb1a8f68c35b76687",
-        amount: 12.5002911,
-        satoshis: 1250029110,
-        height: 528745,
-        confirmations: 17
-      },
-      {
-        legacyAddress: "3CnzuFFbtgVyHNiDH8BknGo3PQ3dpdThgJ",
-        cashAddress: "bitcoincash:ppuukp49np467kyzxl0fkla34rmgcddhvc33ce2d6l",
-        txid:
-          "b29425a876f62e114508e67e66b5eb1ab0d320d7c9a57fb0ece086a36e2b7309",
-        vout: 0,
-        scriptPubKey: "a91479cb06a5986baf588237de9b7fb1a8f68c35b76687",
-        amount: 12.50069247,
-        satoshis: 1250069247,
-        height: 528744,
-        confirmations: 18
-      }
-    ]
+    const data = {
+      utxos: [
+        {
+          txid:
+            "467969e067f5612863d0bf2daaa70dede2c6be03abb6fd401c5ef6e1e1f1f5c5",
+          vout: 1,
+          amount: 0.00000546,
+          satoshis: 546,
+          height: 568215,
+          confirmations: 24
+        }
+      ],
+      legacyAddress: "1NM2ozrXVSnMRm66ua6aGeXgMsU7yqwqLS",
+      cashAddress: "bitcoincash:qr4zg7xth86yzq94gl8jvnf5z4wuupzt3g4hl47n9y",
+      scriptPubKey: "76a914ea2478cbb9f44100b547cf264d34155dce044b8a88ac"
+    }
     const resolved = new Promise(r => r({ data: data }))
     sandbox.stub(axios, "get").returns(resolved)
 
-    SLP.Address.utxo("simpleledger:ppuukp49np467kyzxl0fkla34rmgcddhvca2nzldyp")
+    SLP.Address.utxo("simpleledger:qr4zg7xth86yzq94gl8jvnf5z4wuupzt3gev5wtnm6")
       .then(result => {
         assert.deepEqual(data, result)
       })
       .then(done, done)
   })
 })
+
 describe("#unconfirmed", () => {
   let sandbox
   beforeEach(() => (sandbox = sinon.sandbox.create()))
   afterEach(() => sandbox.restore())
 
   it("should get unconfirmed transactions", done => {
-    const data = [
-      {
-        txid:
-          "e0aadd861a06993e39af932bb0b9ad69e7b37ef5843a13c6724789e1c94f3513",
-        vout: 1,
-        scriptPubKey: "76a914a0f531f4ff810a415580c12e54a7072946bb927e88ac",
-        amount: 0.00008273,
-        satoshis: 8273,
-        confirmations: 0,
-        ts: 1526680569,
-        legacyAddress: "1Fg4r9iDrEkCcDmHTy2T79EusNfhyQpu7W",
-        cashAddress: "bitcoincash:qzs02v05l7qs5s24srqju498qu55dwuj0cx5ehjm2c"
-      }
-    ]
+    const data = {
+      utxos: [],
+      legacyAddress: "1NM2ozrXVSnMRm66ua6aGeXgMsU7yqwqLS",
+      cashAddress: "bitcoincash:qr4zg7xth86yzq94gl8jvnf5z4wuupzt3g4hl47n9y",
+      scriptPubKey: "76a914ea2478cbb9f44100b547cf264d34155dce044b8a88ac"
+    }
     const resolved = new Promise(r => r({ data: data }))
     sandbox.stub(axios, "get").returns(resolved)
 
     SLP.Address.unconfirmed(
-      "simpleledger:qzs02v05l7qs5s24srqju498qu55dwuj0c20jv8m5x"
+      "simpleledger:qr4zg7xth86yzq94gl8jvnf5z4wuupzt3gev5wtnm6"
     )
       .then(result => {
         assert.deepEqual(data, result)
@@ -833,3 +820,14 @@ describe("#unconfirmed", () => {
       .then(done, done)
   })
 })
+
+// (async () => {
+//   try {
+//     const details = await SLP.Address.unconfirmed(
+//       "simpleledger:qr4zg7xth86yzq94gl8jvnf5z4wuupzt3gev5wtnm6"
+//     )
+//     console.log(details)
+//   } catch (error) {
+//     console.error(error)
+//   }
+// })()
