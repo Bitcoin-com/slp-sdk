@@ -3,8 +3,6 @@ const BITBOXSDK = require("bitbox-sdk/lib/bitbox-sdk").default
 const BITBOX = new BITBOXSDK()
 const utils = require("slpjs").slpjs.Utils
 
-import axios from "axios"
-
 class Address extends BITBOXAddress {
   restURL: string
   constructor(restURL?: string) {
@@ -15,7 +13,7 @@ class Address extends BITBOXAddress {
   toSLPAddress(address: string, prefix = true, regtest = false): string {
     try {
       this._ensureValidAddress(address)
-      let slpAddress: string = utils.toSlpAddress(address)
+      const slpAddress: string = utils.toSlpAddress(address)
       if (prefix) return slpAddress
       return slpAddress.split(":")[1]
     } catch (err) {
@@ -26,7 +24,7 @@ class Address extends BITBOXAddress {
   toCashAddress(address: string, prefix = true, regtest = false): string {
     try {
       this._ensureValidAddress(address)
-      let cashAddress: string = utils.toCashAddress(address)
+      const cashAddress: string = utils.toCashAddress(address)
       if (prefix) return cashAddress
       return cashAddress.split(":")[1]
     } catch (err) {
@@ -56,11 +54,9 @@ class Address extends BITBOXAddress {
   isCashAddress(address: string): boolean {
     try {
       this._ensureValidAddress(address)
-      if (utils.isSlpAddress(address)) {
-        return false
-      } else {
-        return BITBOX.Address.isCashAddress(address)
-      }
+      if (utils.isSlpAddress(address)) return false
+
+      return BITBOX.Address.isCashAddress(address)
     } catch (err) {
       return err
     }
@@ -78,7 +74,7 @@ class Address extends BITBOXAddress {
   isMainnetAddress(address: string): boolean {
     try {
       this._ensureValidAddress(address)
-      let cashaddr: string = utils.toCashAddress(address)
+      const cashaddr: string = utils.toCashAddress(address)
       return BITBOX.Address.isMainnetAddress(cashaddr)
     } catch (err) {
       return err
@@ -88,7 +84,7 @@ class Address extends BITBOXAddress {
   isTestnetAddress(address: string): boolean {
     try {
       this._ensureValidAddress(address)
-      let cashAddr: string = utils.toCashAddress(address)
+      const cashAddr: string = utils.toCashAddress(address)
       return BITBOX.Address.isTestnetAddress(cashAddr)
     } catch (err) {
       return err
@@ -98,7 +94,7 @@ class Address extends BITBOXAddress {
   isP2PKHAddress(address: string): boolean {
     try {
       this._ensureValidAddress(address)
-      let cashAddr: string = utils.toCashAddress(address)
+      const cashAddr: string = utils.toCashAddress(address)
       return BITBOX.Address.isP2PKHAddress(cashAddr)
     } catch (err) {
       return err
@@ -108,7 +104,7 @@ class Address extends BITBOXAddress {
   isP2SHAddress(address: string): boolean {
     try {
       this._ensureValidAddress(address)
-      let cashAddr: string = utils.toCashAddress(address)
+      const cashAddr: string = utils.toCashAddress(address)
       return BITBOX.Address.isP2SHAddress(cashAddr)
     } catch (err) {
       return err
@@ -118,11 +114,9 @@ class Address extends BITBOXAddress {
   detectAddressFormat(address: string): string {
     try {
       this._ensureValidAddress(address)
-      if (utils.isSlpAddress(address)) {
-        return "slpaddr"
-      } else {
-        return BITBOX.Address.detectAddressFormat(address)
-      }
+      if (utils.isSlpAddress(address)) return "slpaddr"
+
+      return BITBOX.Address.detectAddressFormat(address)
     } catch (err) {
       return err
     }
@@ -131,7 +125,7 @@ class Address extends BITBOXAddress {
   detectAddressNetwork(address: string): string {
     try {
       this._ensureValidAddress(address)
-      let cashAddr: string = utils.toCashAddress(address)
+      const cashAddr: string = utils.toCashAddress(address)
       return BITBOX.Address.detectAddressNetwork(cashAddr)
     } catch (err) {
       return err
@@ -141,7 +135,7 @@ class Address extends BITBOXAddress {
   detectAddressType(address: string): string {
     try {
       this._ensureValidAddress(address)
-      let cashAddr: string = utils.toCashAddress(address)
+      const cashAddr: string = utils.toCashAddress(address)
       return BITBOX.Address.detectAddressType(cashAddr)
     } catch (err) {
       return err
@@ -151,14 +145,11 @@ class Address extends BITBOXAddress {
   async details(address: string | Array<string>): Promise<Object> {
     try {
       if (typeof address === "string") {
-        let cashAddr: string = utils.toCashAddress(address)
+        const cashAddr: string = utils.toCashAddress(address)
         return BITBOX.Address.details(cashAddr)
-      } else {
-        address = address.map((address: string) => {
-          return utils.toCashAddress(address)
-        })
-        return BITBOX.Address.details(address)
       }
+      address = address.map((address: string) => utils.toCashAddress(address))
+      return BITBOX.Address.details(address)
     } catch (error) {
       throw error
     }
@@ -167,14 +158,11 @@ class Address extends BITBOXAddress {
   async utxo(address: string | Array<string>): Promise<Object> {
     try {
       if (typeof address === "string") {
-        let cashAddr: string = utils.toCashAddress(address)
+        const cashAddr: string = utils.toCashAddress(address)
         return BITBOX.Address.utxo(cashAddr)
-      } else {
-        address = address.map((address: string) => {
-          return utils.toCashAddress(address)
-        })
-        return BITBOX.Address.utxo(address)
       }
+      address = address.map((address: string) => utils.toCashAddress(address))
+      return BITBOX.Address.utxo(address)
     } catch (error) {
       throw error
     }
@@ -183,14 +171,11 @@ class Address extends BITBOXAddress {
   async unconfirmed(address: string | Array<string>): Promise<Object> {
     try {
       if (typeof address === "string") {
-        let cashAddr: string = utils.toCashAddress(address)
+        const cashAddr: string = utils.toCashAddress(address)
         return BITBOX.Address.unconfirmed(cashAddr)
-      } else {
-        address = address.map((address: string) => {
-          return utils.toCashAddress(address)
-        })
-        return BITBOX.Address.unconfirmed(address)
       }
+      address = address.map((address: string) => utils.toCashAddress(address))
+      return BITBOX.Address.unconfirmed(address)
     } catch (error) {
       throw error
     }
@@ -199,14 +184,11 @@ class Address extends BITBOXAddress {
   async transactions(address: string | Array<string>): Promise<Object> {
     try {
       if (typeof address === "string") {
-        let cashAddr: string = utils.toCashAddress(address)
+        const cashAddr: string = utils.toCashAddress(address)
         return BITBOX.Address.transactions(cashAddr)
-      } else {
-        address = address.map((address: string) => {
-          return utils.toCashAddress(address)
-        })
-        return BITBOX.Address.transactions(address)
       }
+      address = address.map((address: string) => utils.toCashAddress(address))
+      return BITBOX.Address.transactions(address)
     } catch (error) {
       throw error
     }

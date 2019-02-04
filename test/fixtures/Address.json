@@ -41,6 +41,9 @@
       "simpleledger:prznrkhnf6zqsap6l664ayzu2xue67ue4gqpvp9j6z",
       "simpleledger:pphmm80pznl6pnkmzakz3ahafydmvhwzcsnzkwe59u",
       "simpleledger:pz6pr25g6mulp0kes9xnmsda0u4rf442as43hgj9lp"
+    ],
+    "slpTxids": [
+      "df808a41672a0a0ae6475b44f272a107bc9961b90f29dc918d71301f24fe92fb"
     ]
   },
   "testnet": {

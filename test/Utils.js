@@ -61,7 +61,21 @@ describe("#Utils", () => {
           "simpleledger:qr5agtachyxvrwxu76vzszan5pnvuzy8duhv4lxrsk",
           "df808a41672a0a0ae6475b44f272a107bc9961b90f29dc918d71301f24fe92fb"
         )
-        console.log(balance)
+        assert.equal(balance, "617")
+      } catch (error) {
+        throw error
+      }
+    })
+  })
+
+  describe("#validateTxid", () => {
+    it(`should validate slp txid`, async () => {
+      try {
+        const isValid = await SLP.Utils.validateTxid(
+          "df808a41672a0a0ae6475b44f272a107bc9961b90f29dc918d71301f24fe92fb",
+          "mainnet"
+        )
+        assert.equal(isValid, true)
       } catch (error) {
         throw error
       }

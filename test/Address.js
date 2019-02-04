@@ -790,7 +790,10 @@ describe("#utxo", () => {
 
     SLP.Address.utxo("simpleledger:qr4zg7xth86yzq94gl8jvnf5z4wuupzt3gev5wtnm6")
       .then(result => {
-        assert.deepEqual(data, result)
+        assert.deepEqual(
+          "467969e067f5612863d0bf2daaa70dede2c6be03abb6fd401c5ef6e1e1f1f5c5",
+          result.utxos[0].txid
+        )
       })
       .then(done, done)
   })
