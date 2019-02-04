@@ -2,6 +2,7 @@ const BITBOXSDK = require("bitbox-sdk/lib/bitbox-sdk").default
 const utils = require("slpjs").slpjs.Utils
 const slpjs = require("slpjs").slpjs
 import Address from "./Address"
+const BigNumber: any = require("bignumber.js")
 let addy = new Address()
 
 import axios from "axios"
@@ -48,8 +49,11 @@ class Utils {
     let tmpBalances: any = {}
     let keys: Array<string> = Object.keys(balances.slpTokenBalances)
     if (keys) {
-      keys.forEach((key: string) => {
-        tmpBalances[key] = balances.slpTokenBalances[key].c[0]
+      keys.forEach(async (key: string) => {
+        let tokenMetadata: any = await bitboxNetwork.getTokenInformation(key)
+        tmpBalances[key] = balances.slpTokenBalances[key]
+          .div(10 ** tokenMetadata.decimals)
+          .toString()
       })
     }
 
@@ -74,17 +78,12 @@ class Utils {
     let balances: any = await bitboxNetwork.getAllSlpBalancesAndUtxos(
       addy.toSLPAddress(address)
     )
-    let keys: Array<string> = Object.keys(balances.slpTokenBalances)
     let val: any
-    if (keys) {
-      keys.forEach((key: string) => {
-        if (key === tokenId) {
-          val = balances.slpTokenBalances[tokenId].c[0]
-        }
-      })
-    } else {
-      val = "no balance"
-    }
+    let tokenMetadata: any = await bitboxNetwork.getTokenInformation(tokenId)
+
+    val = balances.slpTokenBalances[tokenId]
+      .div(10 ** tokenMetadata.decimals)
+      .toString()
     return val
   }
 
