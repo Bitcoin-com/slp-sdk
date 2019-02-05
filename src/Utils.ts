@@ -90,10 +90,13 @@ class Utils {
     let val: any
     let tokenMetadata: any = await bitboxNetwork.getTokenInformation(tokenId)
 
-    val = balances.slpTokenBalances[tokenId]
-      .div(10 ** tokenMetadata.decimals)
-      .toString()
-    return val
+    return {
+      tokenId: tokenId,
+      balance: balances.slpTokenBalances[tokenId]
+        .div(10 ** tokenMetadata.decimals)
+        .toString(),
+      decimalCount: tokenMetadata.decimals
+    }
   }
 
   async validateTxid(

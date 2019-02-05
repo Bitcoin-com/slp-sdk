@@ -64,7 +64,14 @@ describe("#Utils", () => {
           "simpleledger:qr5agtachyxvrwxu76vzszan5pnvuzy8duhv4lxrsk",
           "df808a41672a0a0ae6475b44f272a107bc9961b90f29dc918d71301f24fe92fb"
         )
-        assert.equal(balance, "617")
+
+        const data = {
+          tokenId:
+            "df808a41672a0a0ae6475b44f272a107bc9961b90f29dc918d71301f24fe92fb",
+          balance: "617",
+          decimalCount: 8
+        }
+        assert.deepEqual(balance, data)
       } catch (error) {
         throw error
       }
