@@ -9,7 +9,11 @@
     "coverage": "nyc report --reporter=text-lcov | coveralls",
     "coverage:report": "nyc --reporter=html mocha --require babel-core/register --timeout 10000"
   },
-  "author": "Gabriel Cardona <gabriel@bitcoin.com>. James Cramer @ SLP",
+  "author": "Gabriel Cardona <gabriel@bitcoin.com>",
+  "contributors": [
+    "Chris Troutner <chris.troutner@gmail.com>",
+    "James Cramer @ SLP"
+  ],
   "license": "MIT",
   "engines": {
     "node": ">=10.15.1"
