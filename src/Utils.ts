@@ -9,6 +9,8 @@ import axios from "axios"
 import Address from "./Address"
 let addy = new Address()
 
+let slpValidator: any
+
 class Utils {
   restURL: string
   constructor(restURL: string) {
@@ -53,18 +55,18 @@ class Utils {
 
     const axiosPromises = keys.map(async (key: any) => {
       let tokenMetadata: any = await bitboxNetwork.getTokenInformation(key)
-      return balances.slpTokenBalances[key]
-        .div(10 ** tokenMetadata.decimals)
-        .toString()
+      return {
+        tokenId: key,
+        balance: balances.slpTokenBalances[key]
+          .div(10 ** tokenMetadata.decimals)
+          .toString(),
+        decimalCount: tokenMetadata.decimals
+      }
     })
 
     // Wait for all parallel promises to return.
     const axiosResult: Array<any> = await axios.all(axiosPromises)
-    let finalResult: any = {}
-    keys.forEach(async (key: string, index: number) => {
-      finalResult[key] = axiosResult[index]
-    })
-    return finalResult
+    return axiosResult
   }
 
   async balance(address: string, tokenId: string): Promise<Object> {
@@ -88,13 +90,20 @@ class Utils {
     let val: any
     let tokenMetadata: any = await bitboxNetwork.getTokenInformation(tokenId)
 
-    val = balances.slpTokenBalances[tokenId]
-      .div(10 ** tokenMetadata.decimals)
-      .toString()
-    return val
+    return {
+      tokenId: tokenId,
+      balance: balances.slpTokenBalances[tokenId]
+        .div(10 ** tokenMetadata.decimals)
+        .toString(),
+      decimalCount: tokenMetadata.decimals
+    }
   }
 
-  async validateTxid(txid: string, network: string): Promise<Object> {
+  async validateTxid(
+    txid: string,
+    network: string,
+    getRawTransactions: any = null
+  ): Promise<Object> {
     let tmpBITBOX: any
 
     if (network === "mainnet") {
@@ -105,11 +114,35 @@ class Utils {
 
     const slpValidator: any = new slpjs.LocalValidator(
       tmpBITBOX,
-      tmpBITBOX.RawTransactions.getRawTransaction.bind(this)
+      getRawTransactions
+        ? getRawTransactions
+        : tmpBITBOX.RawTransactions.getRawTransaction.bind(this)
     )
 
     let isValid: boolean = await slpValidator.isValidSlpTxid(txid)
     return isValid
+  }
+
+  createValidator(
+    network: string,
+    getRawTransactions: any = null
+  ): Promise<Object> {
+    let tmpBITBOX: any
+
+    if (network === "mainnet") {
+      tmpBITBOX = new BITBOXSDK({ restURL: "https://rest.bitcoin.com/v2/" })
+    } else {
+      tmpBITBOX = new BITBOXSDK({ restURL: "https://trest.bitcoin.com/v2/" })
+    }
+
+    const slpValidator: any = new slpjs.LocalValidator(
+      tmpBITBOX,
+      getRawTransactions
+        ? getRawTransactions
+        : tmpBITBOX.RawTransactions.getRawTransaction.bind(this)
+    )
+
+    return slpValidator
   }
 }
 
