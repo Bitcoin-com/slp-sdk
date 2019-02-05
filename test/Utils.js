@@ -44,10 +44,13 @@ describe("#Utils", () => {
         const balances = await SLP.Utils.balancesForAddress(
           "simpleledger:qr5agtachyxvrwxu76vzszan5pnvuzy8duhv4lxrsk"
         )
-        assert.equal(
-          balances.df808a41672a0a0ae6475b44f272a107bc9961b90f29dc918d71301f24fe92fb,
-          "617"
-        )
+        const data = {
+          tokenId:
+            "968ff0cc4c93864001e03e9524e351250b94ec56150fa4897f65b0b6477d44d4",
+          balance: "9980",
+          decimalCount: 9
+        }
+        assert.deepEqual(balances[0], data)
       } catch (error) {
         throw error
       }

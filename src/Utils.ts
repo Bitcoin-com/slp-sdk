@@ -55,18 +55,18 @@ class Utils {
 
     const axiosPromises = keys.map(async (key: any) => {
       let tokenMetadata: any = await bitboxNetwork.getTokenInformation(key)
-      return balances.slpTokenBalances[key]
-        .div(10 ** tokenMetadata.decimals)
-        .toString()
+      return {
+        tokenId: key,
+        balance: balances.slpTokenBalances[key]
+          .div(10 ** tokenMetadata.decimals)
+          .toString(),
+        decimalCount: tokenMetadata.decimals
+      }
     })
 
     // Wait for all parallel promises to return.
     const axiosResult: Array<any> = await axios.all(axiosPromises)
-    let finalResult: any = {}
-    keys.forEach(async (key: string, index: number) => {
-      finalResult[key] = axiosResult[index]
-    })
-    return finalResult
+    return axiosResult
   }
 
   async balance(address: string, tokenId: string): Promise<Object> {
@@ -96,7 +96,11 @@ class Utils {
     return val
   }
 
-  async validateTxid(txid: string, network: string, getRawTransactions: any = null): Promise<Object> {
+  async validateTxid(
+    txid: string,
+    network: string,
+    getRawTransactions: any = null
+  ): Promise<Object> {
     let tmpBITBOX: any
 
     if (network === "mainnet") {
@@ -107,14 +111,19 @@ class Utils {
 
     const slpValidator: any = new slpjs.LocalValidator(
       tmpBITBOX,
-      getRawTransactions ? getRawTransactions : tmpBITBOX.RawTransactions.getRawTransaction.bind(this)
+      getRawTransactions
+        ? getRawTransactions
+        : tmpBITBOX.RawTransactions.getRawTransaction.bind(this)
     )
 
     let isValid: boolean = await slpValidator.isValidSlpTxid(txid)
     return isValid
   }
 
-  createValidator(network: string, getRawTransactions: any = null): Promise<Object> {
+  createValidator(
+    network: string,
+    getRawTransactions: any = null
+  ): Promise<Object> {
     let tmpBITBOX: any
 
     if (network === "mainnet") {
@@ -125,7 +134,9 @@ class Utils {
 
     const slpValidator: any = new slpjs.LocalValidator(
       tmpBITBOX,
-      getRawTransactions ? getRawTransactions : tmpBITBOX.RawTransactions.getRawTransaction.bind(this)
+      getRawTransactions
+        ? getRawTransactions
+        : tmpBITBOX.RawTransactions.getRawTransaction.bind(this)
     )
 
     return slpValidator
