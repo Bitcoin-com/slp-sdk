@@ -6,6 +6,8 @@ sudo: required
 services:
   - docker
 script: "npm run test"
+before_install:
+  - npm install -g mkdirp
 after_success:
   - npm run coverage
 notifications:
