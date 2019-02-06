@@ -33,7 +33,7 @@
     "git-clone": "^0.1.0",
     "node-emoji": "^1.8.1",
     "repl.history": "^0.1.4",
-    "slpjs": "0.10.2",
+    "slpjs": "0.10.1",
     "touch": "^3.1.0"
   },
   "devDependencies": {
