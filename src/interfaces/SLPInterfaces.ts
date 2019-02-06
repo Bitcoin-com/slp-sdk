@@ -10,7 +10,7 @@ export interface ICreateConfig {
   bchChangeReceiverAddress: string
   decimals: number
   name: string
-  ticker: string
+  symbol: string
   documentUri: string
   documentHash: any
   initialTokenQty: number
