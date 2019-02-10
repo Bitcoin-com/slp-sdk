@@ -13,7 +13,10 @@ describe("#Utils", () => {
           "timestamp",
           "symbol",
           "name",
-          "document"
+          "documentUri",
+          "documentHash",
+          "decimals",
+          "initialTokenQty"
         ])
       } catch (error) {
         throw error
@@ -30,7 +33,10 @@ describe("#Utils", () => {
           "timestamp",
           "symbol",
           "name",
-          "document"
+          "documentUri",
+          "documentHash",
+          "decimals",
+          "initialTokenQty"
         ])
       } catch (error) {
         throw error
@@ -39,18 +45,18 @@ describe("#Utils", () => {
   })
 
   describe("#balancesForAddress", () => {
-    it(`should fetch all balances for address: simpleledger:qr5agtachyxvrwxu76vzszan5pnvuzy8duhv4lxrsk`, async () => {
+    it(`should fetch all balances for address: simpleledger:qzv3zz2trz0xgp6a96lu4m6vp2nkwag0kvyucjzqt9`, async () => {
       try {
         const balances = await SLP.Utils.balancesForAddress(
-          "simpleledger:qr5agtachyxvrwxu76vzszan5pnvuzy8duhv4lxrsk"
+          "simpleledger:qzv3zz2trz0xgp6a96lu4m6vp2nkwag0kvyucjzqt9"
         )
         const data = {
           tokenId:
-            "968ff0cc4c93864001e03e9524e351250b94ec56150fa4897f65b0b6477d44d4",
-          balance: "8987",
-          decimalCount: 9
+            "df808a41672a0a0ae6475b44f272a107bc9961b90f29dc918d71301f24fe92fb",
+          balance: "1",
+          decimalCount: 8
         }
-        assert.deepEqual(balances[0], data)
+        assert.deepEqual(balances[1], data)
       } catch (error) {
         throw error
       }
@@ -58,17 +64,17 @@ describe("#Utils", () => {
   })
 
   describe("#balance", () => {
-    it(`should fetch balance of single token for address: simpleledger:qr5agtachyxvrwxu76vzszan5pnvuzy8duhv4lxrsk`, async () => {
+    it(`should fetch balance of single token for address: simpleledger:qzv3zz2trz0xgp6a96lu4m6vp2nkwag0kvyucjzqt9`, async () => {
       try {
         const balance = await SLP.Utils.balance(
-          "simpleledger:qr5agtachyxvrwxu76vzszan5pnvuzy8duhv4lxrsk",
+          "simpleledger:qzv3zz2trz0xgp6a96lu4m6vp2nkwag0kvyucjzqt9",
           "df808a41672a0a0ae6475b44f272a107bc9961b90f29dc918d71301f24fe92fb"
         )
 
         const data = {
           tokenId:
             "df808a41672a0a0ae6475b44f272a107bc9961b90f29dc918d71301f24fe92fb",
-          balance: "417",
+          balance: "1",
           decimalCount: 8
         }
         assert.deepEqual(balance, data)

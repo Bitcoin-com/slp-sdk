@@ -1,7 +1,7 @@
 // require deps
 const BITBOXSDK: any = require("bitbox-sdk/lib/bitbox-sdk").default
 const BigNumber: any = require("bignumber.js")
-const slpjs: any = require("slpjs").slpjs
+const slpjs: any = require("slpjs")
 
 // import interfaces
 import { ICreateConfig } from "./interfaces/SLPInterfaces"
