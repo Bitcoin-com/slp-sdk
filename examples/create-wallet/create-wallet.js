@@ -1,6 +1,6 @@
 /*
   Create an HDNode wallet using SLP SDK. The mnemonic from this wallet
-  will be used in future examples.
+  will be used in the other examples.
 */
 "use strict"
 
@@ -49,8 +49,8 @@ for (let i = 0; i < 10; i++) {
 
   if (i === 0) {
     outObj.cashAddress = SLP.HDNode.toCashAddress(childNode)
-    outObj.slpAddress = SLP.Utils.toSLPAddress(outObj.cashAddress)
-    outObj.legacyAddress = SLP.Utils.toLegacyAddress(outObj.cashAddress)
+    outObj.slpAddress = SLP.Address.toSLPAddress(outObj.cashAddress)
+    outObj.legacyAddress = SLP.Address.toLegacyAddress(outObj.cashAddress)
   }
 }
 
