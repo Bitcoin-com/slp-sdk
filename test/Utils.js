@@ -1,5 +1,6 @@
 "use strict"
 const assert = require("assert")
+const assert2 = require("chai").assert
 const slp = require("./../lib/SLP").default
 const SLP = new slp()
 
@@ -50,13 +51,10 @@ describe("#Utils", () => {
         const balances = await SLP.Utils.balancesForAddress(
           "simpleledger:qzv3zz2trz0xgp6a96lu4m6vp2nkwag0kvyucjzqt9"
         )
-        const data = {
-          tokenId:
-            "df808a41672a0a0ae6475b44f272a107bc9961b90f29dc918d71301f24fe92fb",
-          balance: "1",
-          decimalCount: 8
-        }
-        assert.deepEqual(balances[1], data)
+        //console.log(`balances: ${JSON.stringify(balances, null, 2)}`)
+
+        assert2.isArray(balances)
+        assert2.hasAllKeys(balances[0], ["tokenId", "balance", "decimalCount"])
       } catch (error) {
         throw error
       }
