@@ -39,6 +39,7 @@
   },
   "devDependencies": {
     "@types/node": "^10.11.7",
+    "chai": "^4.2.0",
     "coveralls": "^3.0.2",
     "eslint": "^5.5.0",
     "eslint-config-prettier": "^3.0.1",
