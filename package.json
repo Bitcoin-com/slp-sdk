@@ -56,5 +56,13 @@
     "semantic-release": "^15.13.3",
     "sinon": "^4.5.0",
     "typescript": "^3.1.4"
+  },
+  "release": {
+    "publish": [
+      {
+        "path": "@semantic-release/npm",
+        "npmPublish": true
+      }
+    ]
   }
 }
