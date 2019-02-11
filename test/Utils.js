@@ -1,14 +1,7 @@
 "use strict"
 const assert = require("assert")
-const assert2 = require("chai").assert
 const slp = require("./../lib/SLP").default
 const SLP = new slp()
-const nock = require("nock") // HTTP mocking
-
-const mocks = require("./fixtures/mock-utils")
-
-const util = require("util")
-util.inspect.defaultOptions = { depth: 5 }
 
 describe("#Utils", () => {
   describe("#list", () => {
@@ -20,7 +13,10 @@ describe("#Utils", () => {
           "timestamp",
           "symbol",
           "name",
-          "document"
+          "documentUri",
+          "documentHash",
+          "decimals",
+          "initialTokenQty"
         ])
       } catch (error) {
         throw error
@@ -37,7 +33,10 @@ describe("#Utils", () => {
           "timestamp",
           "symbol",
           "name",
-          "document"
+          "documentUri",
+          "documentHash",
+          "decimals",
+          "initialTokenQty"
         ])
       } catch (error) {
         throw error
@@ -46,38 +45,36 @@ describe("#Utils", () => {
   })
 
   describe("#balancesForAddress", () => {
-    /*
-    it(`should fetch all balances for address: simpleledger:qr5agtachyxvrwxu76vzszan5pnvuzy8duhv4lxrsk`, async () => {
+    it(`should fetch all balances for address: simpleledger:qzv3zz2trz0xgp6a96lu4m6vp2nkwag0kvyucjzqt9`, async () => {
       try {
-        // Should I use nock? Or should I use sinon to stub out BITBOX endpoint?
-
         const balances = await SLP.Utils.balancesForAddress(
-          "simpleledger:qr5agtachyxvrwxu76vzszan5pnvuzy8duhv4lxrsk"
+          "simpleledger:qzv3zz2trz0xgp6a96lu4m6vp2nkwag0kvyucjzqt9"
         )
-        console.log(`balances: ${util.inspect(balances)}`)
-
-        assert2.isArray(balances)
-        assert2.hasAllKeys(balances[0], ["tokenId", "balance", "decimalCount"])
+        const data = {
+          tokenId:
+            "df808a41672a0a0ae6475b44f272a107bc9961b90f29dc918d71301f24fe92fb",
+          balance: "1",
+          decimalCount: 8
+        }
+        assert.deepEqual(balances[1], data)
       } catch (error) {
         throw error
       }
     })
-    */
   })
 
   describe("#balance", () => {
-    /*
-    it(`should fetch balance of single token for address: simpleledger:qr5agtachyxvrwxu76vzszan5pnvuzy8duhv4lxrsk`, async () => {
+    it(`should fetch balance of single token for address: simpleledger:qzv3zz2trz0xgp6a96lu4m6vp2nkwag0kvyucjzqt9`, async () => {
       try {
         const balance = await SLP.Utils.balance(
-          "simpleledger:qr5agtachyxvrwxu76vzszan5pnvuzy8duhv4lxrsk",
+          "simpleledger:qzv3zz2trz0xgp6a96lu4m6vp2nkwag0kvyucjzqt9",
           "df808a41672a0a0ae6475b44f272a107bc9961b90f29dc918d71301f24fe92fb"
         )
 
         const data = {
           tokenId:
             "df808a41672a0a0ae6475b44f272a107bc9961b90f29dc918d71301f24fe92fb",
-          balance: "617",
+          balance: "1",
           decimalCount: 8
         }
         assert.deepEqual(balance, data)
@@ -85,7 +82,6 @@ describe("#Utils", () => {
         throw error
       }
     })
-    */
   })
 
   describe("#validateTxid", () => {

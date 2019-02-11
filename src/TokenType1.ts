@@ -1,7 +1,7 @@
 // require deps
 const BITBOXSDK: any = require("bitbox-sdk/lib/bitbox-sdk").default
 const BigNumber: any = require("bignumber.js")
-const slpjs: any = require("slpjs").slpjs
+const slpjs: any = require("slpjs")
 
 // import interfaces
 import { ICreateConfig } from "./interfaces/SLPInterfaces"
@@ -47,7 +47,7 @@ class TokenType1 {
 
     const decimals: number = createConfig.decimals
     const name: string = createConfig.name
-    const ticker: string = createConfig.ticker
+    const symbol: string = createConfig.symbol
     const documentUri: string = createConfig.documentUri
     const documentHash: any = createConfig.documentHash
 
@@ -57,7 +57,7 @@ class TokenType1 {
     balances.nonSlpUtxos.forEach((txo: any) => (txo.wif = fundingWif))
     const genesisTxid = await bitboxNetwork.simpleTokenGenesis(
       name,
-      ticker,
+      symbol,
       initialTokenQty,
       documentUri,
       documentHash,

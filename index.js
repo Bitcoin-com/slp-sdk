@@ -5,7 +5,7 @@ require("babel-register")
 const path = require("path")
 const program = require("commander")
 const chalk = require("chalk")
-// const mkdirp = require("mkdirp")
+const mkdirp = require("mkdirp")
 const figlet = require("figlet")
 const clear = require("clear")
 const fs = require("fs")
@@ -15,7 +15,7 @@ const repl = require("repl")
 const SLP = require("./lib/SLP").default
 const clone = require("git-clone")
 
-program.version("1.1.5", "-v, --version")
+program.version("1.1.7", "-v, --version")
 
 program
   .command("new <name>")
@@ -108,16 +108,16 @@ program
 
     console.log(chalk.green(`Creating ${name}/ directory`))
     console.log(chalk.green(`Creating src/ directory: ./${name}/src`))
-    // mkdirp(`./${name}/src`, err => {})
+    mkdirp(`./${name}/src`, err => {})
 
     console.log(chalk.green(`Creating tests/ directory: ./${name}/tests`))
-    // mkdirp(`./${name}/tests`, err => {})
+    mkdirp(`./${name}/tests`, err => {})
 
     console.log(
       chalk.green(`Creating slp.js configuration file: ./${name}/slp.js`)
     )
 
-    // mkdirp(`./${name}`, err => {})
+    mkdirp(`./${name}`, err => {})
     touch(`./${name}/slp.js`)
     fs.writeFileSync(
       `./${name}/slp.js`,

@@ -1,7 +1,7 @@
 const BITBOXAddress = require("bitbox-sdk/lib/Address").default
 const BITBOXSDK = require("bitbox-sdk/lib/bitbox-sdk").default
 const BITBOX = new BITBOXSDK()
-const utils = require("slpjs").slpjs.Utils
+const utils = require("slpjs").Utils
 
 class Address extends BITBOXAddress {
   restURL: string

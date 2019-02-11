@@ -1,7 +1,7 @@
 // require deps
 const BITBOXSDK = require("bitbox-sdk/lib/bitbox-sdk").default
-const utils = require("slpjs").slpjs.Utils
-const slpjs = require("slpjs").slpjs
+const utils = require("slpjs").Utils
+const slpjs = require("slpjs")
 const BigNumber: any = require("bignumber.js")
 import axios from "axios"
 
