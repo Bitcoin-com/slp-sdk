@@ -12,8 +12,8 @@ const SLPSDK = require("../../lib/SLP").default
 // Instantiate SLP based on the network.
 let SLP
 if (NETWORK === `mainnet`)
-  SLP = new SLPSDK({ restURL: `https://rest.bitcoin.com/v1/` })
-else SLP = new SLPSDK({ restURL: `https://trest.bitcoin.com/v1/` })
+  SLP = new SLPSDK({ restURL: `https://rest.bitcoin.com/v2/` })
+else SLP = new SLPSDK({ restURL: `https://trest.bitcoin.com/v2/` })
 
 // Open the wallet generated with create-wallet.
 let walletInfo
@@ -44,7 +44,7 @@ async function getBalance() {
 
     // get the cash address
     const cashAddress = SLP.HDNode.toCashAddress(change)
-    const slpAddress = SLP.Utils.toSLPAddress(cashAddress)
+    const slpAddress = SLP.Address.toSLPAddress(cashAddress)
 
     // first get BCH balance
     const balance = await SLP.Address.details(cashAddress)

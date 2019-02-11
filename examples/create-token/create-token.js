@@ -1,6 +1,6 @@
 /*
-  Check the BCH and SLP token balance for the wallet created with the
-  create-wallet example app.
+  Create a new SLP token. Requires a wallet created with the create-wallet
+  example. Also requires that wallet to have a small BCH balance.
 */
 "use strict"
 
@@ -9,11 +9,15 @@ const NETWORK = `mainnet`
 
 const SLPSDK = require("../../lib/SLP").default
 
+// Used for debugging and investigating JS objects.
+const util = require("util")
+util.inspect.defaultOptions = { depth: 1 }
+
 // Instantiate SLP based on the network.
 let SLP
 if (NETWORK === `mainnet`)
-  SLP = new SLPSDK({ restURL: `https://rest.bitcoin.com/v1/` })
-else SLP = new SLPSDK({ restURL: `https://trest.bitcoin.com/v1/` })
+  SLP = new SLPSDK({ restURL: `https://rest.bitcoin.com/v2/` })
+else SLP = new SLPSDK({ restURL: `https://trest.bitcoin.com/v2/` })
 
 // Open the wallet generated with create-wallet.
 let walletInfo
@@ -44,7 +48,7 @@ async function createToken() {
 
     // get the cash address
     const cashAddress = SLP.HDNode.toCashAddress(change)
-    const slpAddress = SLP.Utils.toSLPAddress(cashAddress)
+    const slpAddress = SLP.Address.toSLPAddress(cashAddress)
     const u = await SLP.Address.utxo(cashAddress)
     const utxo = u[0]
 
@@ -54,38 +58,29 @@ async function createToken() {
     const batonReceiverAddress = slpAddress // <-- must be simpleledger format
     const bchChangeReceiverAddress = cashAddress // <-- simpleledger or bitcoincash format
 
-    const decimals = 9
-    const initialQty = new SLP.BigNumber(1000).times(10 ** decimals)
+    // Create a config object defining the token to be created.
+    const createConfig = {
+      fundingAddress,
+      fundingWif,
+      tokenReceiverAddress,
+      batonReceiverAddress,
+      bchChangeReceiverAddress,
+      decimals: 8,
+      name: "SLP SDK example using BITBOX",
+      symbol: "SLPSDK",
+      documentUri: "developer.bitcoin.com",
+      documentHash: null,
+      initialTokenQty: 1234
+    }
+    //console.log(`createConfig: ${util.inspect(createConfig)}`)
 
-    const genesisOpReturn = SLP.SlpTokenType1.buildGenesisOpReturn(
-      "TRUST3",
-      "Trustafari",
-      "developer.bitcoin.com",
-      null,
-      decimals,
-      2,
-      initialQty
-    )
+    // Generate, sign, and broadcast a hex-encoded transaction for creating
+    // the new token.
+    const genesisTxId = await SLP.TokenType1.create(createConfig)
 
-    const genesisTxHex = SLP.SlpTokenType1.buildRawGenesisTx({
-      slpGenesisOpReturn: genesisOpReturn,
-      mintReceiverAddress: tokenReceiverAddress,
-      mintReceiverSatoshis: 546,
-      batonReceiverAddress: batonReceiverAddress,
-      batonReceiverSatoshis: 546,
-      bchChangeReceiverAddress: bchChangeReceiverAddress,
-      input_utxos: [
-        {
-          txid: utxo.txid,
-          vout: utxo.vout,
-          satoshis: utxo.satoshis,
-          wif: fundingWif
-        }
-      ]
-    })
-
-    const res = await SLP.RawTransactions.sendRawTransaction(genesisTxHex)
-    console.log(res)
+    console.log(`genesisTxHex: ${util.inspect(genesisTxId)}`)
+    console.log(`View this transaction on the block explorer:`)
+    console.log(`https://explorer.bitcoin.com/bch/tx/${genesisTxId}`)
   } catch (err) {
     console.error(`Error in createToken: `, err)
     console.log(`Error message: ${err.message}`)
