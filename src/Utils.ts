@@ -31,25 +31,30 @@ class Utils {
     }
   }
 
+  // Retrieve token balances for a given address.
   async balancesForAddress(address: string): Promise<Object> {
     let network: string = addy.detectAddressNetwork(address)
     let tmpBITBOX: any
 
+    // Determine network (mainnet or testnet)
     if (network === "mainnet") {
       tmpBITBOX = new BITBOXSDK({ restURL: "https://rest.bitcoin.com/v2/" })
     } else {
       tmpBITBOX = new BITBOXSDK({ restURL: "https://trest.bitcoin.com/v2/" })
     }
 
+    // Instantiate a local SLP TX validator
     const slpValidator: any = new slpjs.LocalValidator(
       tmpBITBOX,
       tmpBITBOX.RawTransactions.getRawTransaction
     )
 
+    //
     const bitboxNetwork: any = new slpjs.BitboxNetwork(tmpBITBOX, slpValidator)
     let balances: any = await bitboxNetwork.getAllSlpBalancesAndUtxos(
       addy.toSLPAddress(address)
     )
+    console.log(`balances: ${JSON.stringify(balances,null,2)}`)
 
     let keys: Array<string> = Object.keys(balances.slpTokenBalances)
 

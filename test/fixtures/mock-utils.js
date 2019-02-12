@@ -85,7 +85,19 @@ const mockBalance = [
   }
 ]
 
+const mockToken = {
+  id: "4276533bb702e7f8c9afd8aa61ebf016e95011dc3d54e55faa847ac1dd461e84",
+  timestamp: "2018-08-25 03:54",
+  symbol: "USDT",
+  name: "US Dollar Tether",
+  documentUri: "",
+  documentHash: "",
+  decimals: 0,
+  initialTokenQty: 10000000000000000
+}
+
 module.exports = {
   mockList,
-  mockBalance
+  mockBalance,
+  mockToken
 }

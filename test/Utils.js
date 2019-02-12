@@ -54,39 +54,51 @@ describe("#Utils", () => {
     })
 
     it(`should list single SLP token by id: 4276533bb702e7f8c9afd8aa61ebf016e95011dc3d54e55faa847ac1dd461e84`, async () => {
-      try {
-        const list = await SLP.Utils.list(
-          "4276533bb702e7f8c9afd8aa61ebf016e95011dc3d54e55faa847ac1dd461e84"
-        )
-        assert.deepEqual(Object.keys(list), [
-          "id",
-          "timestamp",
-          "symbol",
-          "name",
-          "documentUri",
-          "documentHash",
-          "decimals",
-          "initialTokenQty"
-        ])
-      } catch (error) {
-        throw error
+      // Mock the call to rest.bitcoin.com
+      if (process.env.TEST === "unit") {
+        nock(SERVER)
+          .get(uri => uri.includes("/"))
+          .reply(200, mockData.mockToken)
       }
+
+      const tokenId =
+        "4276533bb702e7f8c9afd8aa61ebf016e95011dc3d54e55faa847ac1dd461e84"
+
+      const list = await SLP.Utils.list(tokenId)
+      //console.log(`list: ${JSON.stringify(list, null, 2)}`)
+
+      assert2.hasAllKeys(list, [
+        "id",
+        "timestamp",
+        "symbol",
+        "name",
+        "documentUri",
+        "documentHash",
+        "decimals",
+        "initialTokenQty"
+      ])
+      assert.equal(list.id, tokenId)
     })
   })
 
   describe("#balancesForAddress", () => {
     it(`should fetch all balances for address: simpleledger:qzv3zz2trz0xgp6a96lu4m6vp2nkwag0kvyucjzqt9`, async () => {
-      try {
-        const balances = await SLP.Utils.balancesForAddress(
-          "simpleledger:qzv3zz2trz0xgp6a96lu4m6vp2nkwag0kvyucjzqt9"
-        )
-        //console.log(`balances: ${JSON.stringify(balances, null, 2)}`)
-
-        assert2.isArray(balances)
-        assert2.hasAllKeys(balances[0], ["tokenId", "balance", "decimalCount"])
-      } catch (error) {
-        throw error
+      // Mock the call to rest.bitcoin.com
+      /*
+      if (process.env.TEST === "unit") {
+        nock(SERVER)
+          .post(uri => uri.includes("/"))
+          .reply(200, mockData.mockBalance)
       }
+      */
+
+      const balances = await SLP.Utils.balancesForAddress(
+        "simpleledger:qzv3zz2trz0xgp6a96lu4m6vp2nkwag0kvyucjzqt9"
+      )
+      console.log(`balances: ${JSON.stringify(balances, null, 2)}`)
+
+      assert2.isArray(balances)
+      assert2.hasAllKeys(balances[0], ["tokenId", "balance", "decimalCount"])
     })
   })
 
