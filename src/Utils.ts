@@ -31,6 +31,16 @@ class Utils {
     }
   }
 
+  // Get raw SLP balances and utxos from the REST server.
+  // This function was created to faciliate unit and integration tests.
+  async slpBalancesUtxos(bitboxNetwork: any, addr: any) {
+    let balances: any = await bitboxNetwork.getAllSlpBalancesAndUtxos(
+      addy.toSLPAddress(addr)
+    )
+
+    return balances
+  }
+
   // Retrieve token balances for a given address.
   async balancesForAddress(address: string): Promise<Object> {
     let network: string = addy.detectAddressNetwork(address)
@@ -49,17 +59,45 @@ class Utils {
       tmpBITBOX.RawTransactions.getRawTransaction
     )
 
-    //
+    // Get raw SLP information for this address.
     const bitboxNetwork: any = new slpjs.BitboxNetwork(tmpBITBOX, slpValidator)
-    let balances: any = await bitboxNetwork.getAllSlpBalancesAndUtxos(
-      addy.toSLPAddress(address)
-    )
-    console.log(`balances: ${JSON.stringify(balances,null,2)}`)
+    let balances: any = await this.slpBalancesUtxos(bitboxNetwork, address)
 
     let keys: Array<string> = Object.keys(balances.slpTokenBalances)
-
+    //console.log(`keys: ${JSON.stringify(keys,null,2)}`)
+/*
     const axiosPromises = keys.map(async (key: any) => {
       let tokenMetadata: any = await bitboxNetwork.getTokenInformation(key)
+      console.log(`tokenMetadata: ${JSON.stringify(tokenMetadata,null,2)}`)
+
+      return {
+        tokenId: key,
+        balance: balances.slpTokenBalances[key]
+          .div(10 ** tokenMetadata.decimals)
+          .toString(),
+        decimalCount: tokenMetadata.decimals
+      }
+    })
+
+    // Wait for all parallel promises to return.
+    const axiosResult: Array<any> = await axios.all(axiosPromises)
+    return axiosResult
+*/
+    const tokenMeta = await this.getTokenMetadata(keys, bitboxNetwork, balances)
+    //console.log(`tokenMeta: ${JSON.stringify(tokenMeta,null,2)}`)
+
+    return tokenMeta
+  }
+
+  // Retrieve token metadata from the REST server using an input array of txids
+  // This function was created to faciliate unit and integration tests.
+  async getTokenMetadata(keys: Array<string>, bitboxNetwork: any, balances: any) {
+    const axiosPromises = keys.map(async (key: any) => {
+      let tokenMetadata: any = await bitboxNetwork.getTokenInformation(key)
+      //console.log(`tokenMetadata: ${JSON.stringify(tokenMetadata,null,2)}`)
+
+      console.log(`balances.slpTokenBalances[key]: ${JSON.stringify(balances.slpTokenBalances[key],null,2)}`)
+
       return {
         tokenId: key,
         balance: balances.slpTokenBalances[key]
@@ -74,6 +112,7 @@ class Utils {
     return axiosResult
   }
 
+  // Retrieve a balance for a specific address and token ID
   async balance(address: string, tokenId: string): Promise<Object> {
     let network: string = addy.detectAddressNetwork(address)
     let tmpBITBOX: any

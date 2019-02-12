@@ -4,6 +4,10 @@ const assert2 = require("chai").assert
 const slp = require("./../lib/SLP").default
 const SLP = new slp()
 const nock = require("nock") // http call mocking
+const sinon = require("sinon")
+
+const BITBOXSDK = require("bitbox-sdk/lib/bitbox-sdk").default
+const slpjs = require("slpjs")
 
 // Mock data used for unit tests
 const mockData = require("./fixtures/mock-utils")
@@ -17,15 +21,21 @@ const util = require("util")
 util.inspect.defaultOptions = { depth: 1 }
 
 describe("#Utils", () => {
+  let sandbox
+
   beforeEach(() => {
     // Activate nock if it's inactive.
     if (!nock.isActive()) nock.activate()
+
+    sandbox = sinon.createSandbox()
   })
 
   afterEach(() => {
     // Clean up HTTP mocks.
     nock.cleanAll() // clear interceptor list.
     nock.restore()
+
+    sandbox.restore()
   })
 
   describe("#list", () => {
@@ -78,6 +88,96 @@ describe("#Utils", () => {
         "initialTokenQty"
       ])
       assert.equal(list.id, tokenId)
+    })
+  })
+
+  describe("#slpBalancesUtxos", () => {
+    it(`should fetch raw UTXO balances from server`, async () => {
+      // When run as a unit test, this test case serves to prove that the
+      // SLP.Utils.slpBalancesUtxos() function can be successfully stubbed by
+      // sinon, which is needed for other tests. When run as an integration
+      // test, it confirms that mocked data matches the real data coming from
+      // the REST server.
+
+      // Mock the call to rest.bitcoin.com for unit tests.
+      if (process.env.TEST === "unit") {
+        sandbox
+          .stub(SLP.Utils, "slpBalancesUtxos")
+          .resolves(mockData.mockBalance)
+      }
+
+      // Instantiate BITBOX
+      const tmpBITBOX = new BITBOXSDK({
+        restURL: `${SERVER}/v2/`
+      })
+
+      // Instantiate a local validator
+      const slpValidator = new slpjs.LocalValidator(
+        tmpBITBOX,
+        tmpBITBOX.RawTransactions.getRawTransaction
+      )
+
+      // Instantiate the bitboxNetwork object
+      const bitboxNetwork = new slpjs.BitboxNetwork(tmpBITBOX, slpValidator)
+
+      const addr = "simpleledger:qzv3zz2trz0xgp6a96lu4m6vp2nkwag0kvyucjzqt9"
+      const balances = await SLP.Utils.slpBalancesUtxos(bitboxNetwork, addr)
+      //console.log(`balances: ${JSON.stringify(balances, null, 2)}`)
+
+      assert2.hasAnyKeys(balances, [
+        "satoshis_available_bch",
+        "satoshis_in_slp_baton",
+        "satoshis_in_slp_token",
+        "satoshis_in_invalid_token_dag",
+        "satoshis_in_invalid_baton_dag",
+        "slpTokenBalances",
+        "slpTokenUtxos",
+        "slpBatonUtxos",
+        "nonSlpUtxos",
+        "invalidTokenUtxos",
+        "invalidBatonUtxos"
+      ])
+    })
+  })
+
+  describe("#getTokenMetadata", () => {
+    it(`should fetch token metadata from the REST server`, async () => {
+      // When run as a unit test, this test case serves to prove that the
+      // SLP.Utils.getTokenMetadata() function can be successfully stubbed by
+      // sinon, which is needed for other tests. When run as an integration
+      // test, it confirms that mocked data matches the real data coming from
+      // the REST server.
+
+      // Mock the call to rest.bitcoin.com for unit tests.
+      if (process.env.TEST === "unit") {
+        sandbox
+          .stub(SLP.Utils, "getTokenMetadata")
+          .resolves(mockData.mockTokenMeta)
+      }
+
+      // Instantiate BITBOX
+      const tmpBITBOX = new BITBOXSDK({
+        restURL: `${SERVER}/v2/`
+      })
+
+      // Instantiate a local validator
+      const slpValidator = new slpjs.LocalValidator(
+        tmpBITBOX,
+        tmpBITBOX.RawTransactions.getRawTransaction
+      )
+
+      // Instantiate the bitboxNetwork object
+      const bitboxNetwork = new slpjs.BitboxNetwork(tmpBITBOX, slpValidator)
+
+      const balances = mockData.mockBalance
+      const keys = Object.keys(balances.slpTokenBalances)
+
+      const tokenMeta = await SLP.Utils.getTokenMetadata(
+        keys,
+        bitboxNetwork,
+        balances
+      )
+      console.log(`tokenMeta: ${JSON.stringify(tokenMeta, null, 2)}`)
     })
   })
 
