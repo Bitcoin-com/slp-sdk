@@ -15,7 +15,7 @@ cd slp-sdk
 
 - Install dependencies: `npm install`
 
-- Explore the [example apps](examples)
+- Explore the [example apps](examples/README.md)
 
 ### Handy Links
 
