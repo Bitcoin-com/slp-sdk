@@ -1,10 +1,12 @@
 /*
-  Send tokens of type TOKENID to use with SLPADDR address.
+  Send tokens of type TOKENID to user with SLPADDR address.
 */
 "use strict"
 
+// CUSTOMIZE THESE VALUES FOR YOUR USE
+const TOKENQTY = 987.6
 const TOKENID =
-  "d250f9649646aeaba38e61191f5edcd8dcf2f087a3a71203e1cadf87cc863db4"
+  "a33c198f6261694c314449612e3b79104e006d987913d13af526ef918f16c8e9"
 const SLPADDR = "simpleledger:qz50nvfs07jp9kn2jz0s3ycwtfgz6fa8fghrltrpvr"
 
 // Set NETWORK to either testnet or mainnet
@@ -51,15 +53,11 @@ async function sendToken() {
 
     // get the cash address
     const cashAddress = SLP.HDNode.toCashAddress(change)
-    const slpAddress = SLP.Address.toSLPAddress(cashAddress)
-    const u = await SLP.Address.utxo(cashAddress)
-    const utxo = u[0]
 
-    const fundingAddress = cashAddress // <-- must be bitcoincash format
+    const fundingAddress = cashAddress
     const fundingWif = SLP.HDNode.toWIF(change) // <-- compressed WIF format
-    const tokenReceiverAddress = SLPADDR // <-- must be simpleledger format
-    const batonReceiverAddress = slpAddress // <-- must be simpleledger format
-    const bchChangeReceiverAddress = cashAddress // <-- simpleledger or bitcoincash format
+    const tokenReceiverAddress = SLPADDR
+    const bchChangeReceiverAddress = cashAddress
 
     // Create a config object for minting
     const sendConfig = {
@@ -68,7 +66,7 @@ async function sendToken() {
       tokenReceiverAddress,
       bchChangeReceiverAddress,
       tokenId: TOKENID,
-      amount: 1000000000.0 // One Billion
+      amount: TOKENQTY
     }
 
     //console.log(`createConfig: ${util.inspect(createConfig)}`)

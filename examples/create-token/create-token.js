@@ -52,11 +52,11 @@ async function createToken() {
     const u = await SLP.Address.utxo(cashAddress)
     const utxo = u[0]
 
-    const fundingAddress = cashAddress // <-- must be bitcoincash format
+    const fundingAddress = cashAddress
     const fundingWif = SLP.HDNode.toWIF(change) // <-- compressed WIF format
-    const tokenReceiverAddress = slpAddress // <-- must be simpleledger format
-    const batonReceiverAddress = slpAddress // <-- must be simpleledger format
-    const bchChangeReceiverAddress = cashAddress // <-- simpleledger or bitcoincash format
+    const tokenReceiverAddress = slpAddress
+    const batonReceiverAddress = slpAddress
+    const bchChangeReceiverAddress = cashAddress
 
     // Create a config object defining the token to be created.
     const createConfig = {
@@ -72,13 +72,16 @@ async function createToken() {
       documentHash: null,
       initialTokenQty: 1234
     }
-    //console.log(`createConfig: ${util.inspect(createConfig)}`)
 
     // Generate, sign, and broadcast a hex-encoded transaction for creating
     // the new token.
     const genesisTxId = await SLP.TokenType1.create(createConfig)
 
-    console.log(`genesisTxHex: ${util.inspect(genesisTxId)}`)
+    console.log(`genesisTxID: ${util.inspect(genesisTxId)}`)
+    console.log(
+      `The genesis TxID above is used to uniquely identify your new class of SLP token. Save it and keep it handy.`
+    )
+    console.log(` `)
     console.log(`View this transaction on the block explorer:`)
     console.log(`https://explorer.bitcoin.com/bch/tx/${genesisTxId}`)
   } catch (err) {
