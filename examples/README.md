@@ -23,8 +23,8 @@ controlled by your wallet.
 
 - [send-token](send-token) - Send tokens from your address to another address.
 
-- [lookup-token](lookup-token) Lookup token information based on the token `id`.
+- [lookup-token](lookup-token) - Lookup token information based on the token `id`.
 
-- [list-all-tokens](list-all-tokens) List every token in existence.
+- [list-all-tokens](list-all-tokens) - List every token in existence.
 
 - [conversion](conversion) - Convert between address formats.
