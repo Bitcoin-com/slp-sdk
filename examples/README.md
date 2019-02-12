@@ -16,7 +16,9 @@ You can run each example script by entering its directory and executing `npm sta
 
 ## SLP Token Functions
 
-- [create-token](create-token) - Create a new SLP token class.
+- [create-token](create-token) - Create a new SLP token class. Run the
+[create-wallet](create-wallet) example first, and fund your wallet with a few
+cents of BCH first.
 
 - [mint-token](mint-token) - Mint additional SLP tokens for an existing class
 controlled by your wallet.
