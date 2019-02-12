@@ -1,7 +1,61 @@
 /*
- */
+  Contains mocked data used by unit tests.
+*/
 
 "use strict"
+
+const mockList = [
+  {
+    id: "386e85e556ba273e8e733944fa09184ad473badc47256a90ca967e98c760fd68",
+    timestamp: "2018-10-13 10:33",
+    symbol: "USD",
+    name: "Dollar",
+    documentUri: "15119324642@163.com",
+    documentHash: "",
+    decimals: 5,
+    initialTokenQty: 1000000000
+  },
+  {
+    id: "437ce1491119a1786f8e17a30d550f8a3a7b9eaa4477c21401d036efc34e7032",
+    timestamp: "2018-10-13 08:52",
+    symbol: "CNY",
+    name: "Chinese Yuan",
+    documentUri: "15119324642@163.com",
+    documentHash: "",
+    decimals: 5,
+    initialTokenQty: 1000000000
+  },
+  {
+    id: "03de34ad3dc1875383920592fbca538b51ff4740f283016bf673484c7a7d9c75",
+    timestamp: "2018-10-13 08:52",
+    symbol: "RMB",
+    name: "Renminbi",
+    documentUri: "15119324642@163.com",
+    documentHash: "",
+    decimals: 5,
+    initialTokenQty: 1000000000
+  },
+  {
+    id: "00ecb68463600b091e832eed48a2155cff01a0d0930c45f9194f4f289e1330f3",
+    timestamp: "2018-10-12 13:08",
+    symbol: "ART$",
+    name: "Art Dollar",
+    documentUri: "",
+    documentHash: "",
+    decimals: 0,
+    initialTokenQty: 21000000
+  },
+  {
+    id: "14c6d416ed14ef7fddacc58b05abf60b13d0ebaacee901282d4d2e37fc0dfcb1",
+    timestamp: "2018-10-11 20:54",
+    symbol: "rwc",
+    name: "cashroyale",
+    documentUri: "",
+    documentHash: "",
+    decimals: 0,
+    initialTokenQty: 100000
+  }
+]
 
 const mockBalance = [
   {
@@ -32,5 +86,6 @@ const mockBalance = [
 ]
 
 module.exports = {
+  mockList,
   mockBalance
 }

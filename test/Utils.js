@@ -3,25 +3,54 @@ const assert = require("assert")
 const assert2 = require("chai").assert
 const slp = require("./../lib/SLP").default
 const SLP = new slp()
+const nock = require("nock") // http call mocking
+
+// Mock data used for unit tests
+const mockData = require("./fixtures/mock-utils")
+
+// Default to unit tests unless some other value for TEST is passed.
+if (!process.env.TEST) process.env.TEST = "unit"
+const SERVER = "https://rest.bitcoin.com"
+
+// Used for debugging and iterrogating JS objects.
+const util = require("util")
+util.inspect.defaultOptions = { depth: 1 }
 
 describe("#Utils", () => {
+  beforeEach(() => {
+    // Activate nock if it's inactive.
+    if (!nock.isActive()) nock.activate()
+  })
+
+  afterEach(() => {
+    // Clean up HTTP mocks.
+    nock.cleanAll() // clear interceptor list.
+    nock.restore()
+  })
+
   describe("#list", () => {
     it(`should list all SLP tokens`, async () => {
-      try {
-        const list = await SLP.Utils.list()
-        assert.deepEqual(Object.keys(list[0]), [
-          "id",
-          "timestamp",
-          "symbol",
-          "name",
-          "documentUri",
-          "documentHash",
-          "decimals",
-          "initialTokenQty"
-        ])
-      } catch (error) {
-        throw error
+      // Mock the call to rest.bitcoin.com
+      if (process.env.TEST === "unit") {
+        nock(SERVER)
+          .get(uri => uri.includes("/"))
+          .reply(200, mockData.mockList)
       }
+
+      const list = await SLP.Utils.list()
+      //console.log(`list: ${JSON.stringify(list, null, 2)}`)
+
+      assert2.isArray(list)
+      assert2.hasAllKeys(list[0], [
+        "id",
+        "timestamp",
+        "symbol",
+        "name",
+        "documentUri",
+        "documentHash",
+        "decimals",
+        "initialTokenQty"
+      ])
     })
 
     it(`should list single SLP token by id: 4276533bb702e7f8c9afd8aa61ebf016e95011dc3d54e55faa847ac1dd461e84`, async () => {
