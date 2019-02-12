@@ -27,4 +27,4 @@ controlled by your wallet.
 
 - [list-all-tokens](list-all-tokens) List every token in existence.
 
-- [conversion](conversion) -.Convert between address formats.
+- [conversion](conversion) - Convert between address formats.
