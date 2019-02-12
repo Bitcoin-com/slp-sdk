@@ -16,7 +16,12 @@ You can run each example script by entering its directory and executing `npm sta
 
 ## SLP Token Functions
 
-- [create-token](create-token) - Create an SLP token.
+- [create-token](create-token) - Create a new SLP token class.
+
+- [mint-token](mint-token) - Mint additional SLP tokens for an existing class
+controlled by your wallet.
+
+- [send-token](send-token) - Send tokens from your address to another address.
 
 - [lookup-token](lookup-token) Lookup token information based on the token `id`.
 
