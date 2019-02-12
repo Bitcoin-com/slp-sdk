@@ -24,3 +24,7 @@ cd slp-sdk
 - [SLP specification](https://github.com/simpleledger/slp-specifications/blob/master/slp-token-type-1.md)
 - [SLP website](https://simpleledger.cash/)
 - [SLP specification unit tests](https://github.com/simpleledger/slp-unit-test-data) (Python)
+
+### Token-Aware Wallets
+- [Badger Wallet](https://badger.bitcoin.com/)
+- [Electron Cash SLP](https://github.com/simpleledger/Electron-Cash-SLP)
