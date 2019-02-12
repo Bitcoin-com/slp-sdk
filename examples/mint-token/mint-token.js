@@ -54,11 +54,11 @@ async function mintToken() {
     const u = await SLP.Address.utxo(cashAddress)
     const utxo = u[0]
 
-    const fundingAddress = cashAddress // <-- must be bitcoincash format
+    const fundingAddress = cashAddress
     const fundingWif = SLP.HDNode.toWIF(change) // <-- compressed WIF format
-    const tokenReceiverAddress = slpAddress // <-- must be simpleledger format
-    const batonReceiverAddress = slpAddress // <-- must be simpleledger format
-    const bchChangeReceiverAddress = cashAddress // <-- simpleledger or bitcoincash format
+    const tokenReceiverAddress = slpAddress
+    const batonReceiverAddress = slpAddress
+    const bchChangeReceiverAddress = cashAddress
 
     // Create a config object for minting
     const mintConfig = {
