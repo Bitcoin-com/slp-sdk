@@ -13,3 +13,8 @@ after_success:
 notifications:
   slack:
     secure: kIeXVoUzIvAHY2c9HKnN/FmxdIMC+ka3qkhScTvq1VOsVtVMCjot8gRPwIXmu3oSOzIyZ0qH4XhPDrEEgJ6cLr1v1Ua2jJRorQ8uVqFPjM9YNVZAK+TnaDKuQ0OZtEgsyh+DyCOLu4dgWV6aGGBw9a2K9DqgpB3aFZ3Xy4ayBVlL0k6IueTdDIuIEPzxAreZ+9DT7bMNjTjreWfcDd0U+m1dyk/mQsy7laVFVVCpuXDMoUtu6OrqvoWZ+UBkDmvYNpt+jvwjVWEW+hI01OesqH8B7ME8KQzeO0jI/FulehnbA6ShCWBwbZ/JnSTUI9M4P1yrZjJu+7UE9732rFxdoj5Q43J6DimL7aH1uPemO5nSqEmGABcUA3l5/b2GnyW79ZPOpmep/PrXYcgJ7AuhDxKvxqw+S4OwDvBAirE/zuExLuFY7P3s9TQdxxx765OM4Ck67R9NZFJU2j8bXs+hBTuj+01oj6/aKbwg3DyZsur2HE+zZbkSBSz/cgQ0IrtL1urheWln8xOnjTOr6fjOm7H/dzXrNAFVBimZTLYUznvJo3BMxgyeqy/ji7a6rn6q4r0Ah1zLLnPvX9C7EY0pdAnApdZEkhECfOFIFJoPyxWJDDKY0gYGHTJI7shL+vHq0QJc3FyuhZunQQ6/B9BhvtkQoy20kNc7e3VMgMJQqgQ=
+deploy:
+  provider: script
+  skip_cleanup: true
+  script:
+    - npx semantic-release
