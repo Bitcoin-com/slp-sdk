@@ -200,6 +200,10 @@ describe("#Utils", () => {
         sandbox
           .stub(SLP.Utils, "getTokenMetadata")
           .resolves(mockData.mockTokenMeta)
+
+        sandbox
+          .stub(SLP.Utils, "slpBalancesUtxos")
+          .resolves(mockData.mockBalance)
       }
 
       const balances = await SLP.Utils.balancesForAddress(

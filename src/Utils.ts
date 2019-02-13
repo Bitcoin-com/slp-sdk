@@ -79,6 +79,8 @@ class Utils {
   // Retrieve token metadata from the REST server using an input array of txids
   // This function was created to faciliate unit and integration tests.
   async getTokenMetadata(keys: Array<string>, bitboxNetwork: any, balances: any) {
+    console.log(`executing getTokenMetadata.`)
+    
     const axiosPromises = keys.map(async (key: any) => {
       let tokenMetadata: any = await bitboxNetwork.getTokenInformation(key)
 
