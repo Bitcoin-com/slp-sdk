@@ -240,15 +240,18 @@ describe("#Utils", () => {
 
   describe("#validateTxid", () => {
     it(`should validate slp txid`, async () => {
-      try {
-        const isValid = await SLP.Utils.validateTxid(
-          "df808a41672a0a0ae6475b44f272a107bc9961b90f29dc918d71301f24fe92fb",
-          "mainnet"
-        )
-        assert.equal(isValid, true)
-      } catch (error) {
-        throw error
+      // Mock the call to rest.bitcoin.com
+      if (process.env.TEST === "unit") {
+        nock(SERVER)
+          .post(uri => uri.includes("/"))
+          .reply(200, mockData.mockRawTx)
       }
+
+      const isValid = await SLP.Utils.validateTxid(
+        "df808a41672a0a0ae6475b44f272a107bc9961b90f29dc918d71301f24fe92fb",
+        "mainnet"
+      )
+      assert.equal(isValid, true)
     })
   })
 })

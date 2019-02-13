@@ -2,6 +2,7 @@
 const BITBOXSDK = require("bitbox-sdk/lib/bitbox-sdk").default
 const utils = require("slpjs").Utils
 const slpjs = require("slpjs")
+//const slpjs = require("../../slpjs")
 const BigNumber: any = require("bignumber.js")
 import axios from "axios"
 
@@ -134,7 +135,8 @@ class Utils {
     let tmpBITBOX: any
 
     if (network === "mainnet") {
-      tmpBITBOX = new BITBOXSDK({ restURL: "https://rest.bitcoin.com/v2/" })
+      //tmpBITBOX = new BITBOXSDK({ restURL: "https://rest.bitcoin.com/v2/" })
+      tmpBITBOX = new BITBOXSDK({ restURL: "http://localhost:3000/v2/" })
     } else {
       tmpBITBOX = new BITBOXSDK({ restURL: "https://trest.bitcoin.com/v2/" })
     }
