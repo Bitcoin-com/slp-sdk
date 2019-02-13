@@ -45,6 +45,28 @@ class Utils {
     return balances
   }
 
+  // Retrieve token metadata from the REST server using an input array of txids
+  // This function was created to faciliate unit and integration tests.
+  async getTokenMetadata(keys: Array<string>, bitboxNetwork: any, balances: any) {
+
+    const axiosPromises = keys.map(async (key: any) => {
+      let tokenMetadata: any = await bitboxNetwork.getTokenInformation(key)
+
+      return {
+        tokenId: key,
+        balance: balances.slpTokenBalances[key]
+          .div(10 ** tokenMetadata.decimals)
+          .toString(),
+        decimalCount: tokenMetadata.decimals
+      }
+    })
+
+    // Wait for all parallel promises to return.
+    const axiosResult: Array<any> = await axios.all(axiosPromises)
+
+    return axiosResult
+  }
+
   // Retrieve token balances for a given address.
   async balancesForAddress(address: string): Promise<Object> {
     let network: string = addy.detectAddressNetwork(address)
@@ -76,58 +98,32 @@ class Utils {
     return tokenMeta
   }
 
-  // Retrieve token metadata from the REST server using an input array of txids
-  // This function was created to faciliate unit and integration tests.
-  async getTokenMetadata(keys: Array<string>, bitboxNetwork: any, balances: any) {
-    console.log(`executing getTokenMetadata.`)
-    
-    const axiosPromises = keys.map(async (key: any) => {
-      let tokenMetadata: any = await bitboxNetwork.getTokenInformation(key)
-
-      return {
-        tokenId: key,
-        balance: balances.slpTokenBalances[key]
-          .div(10 ** tokenMetadata.decimals)
-          .toString(),
-        decimalCount: tokenMetadata.decimals
-      }
-    })
-
-    // Wait for all parallel promises to return.
-    const axiosResult: Array<any> = await axios.all(axiosPromises)
-
-    return axiosResult
-  }
-
   // Retrieve a balance for a specific address and token ID
   async balance(address: string, tokenId: string): Promise<Object> {
     let network: string = addy.detectAddressNetwork(address)
     let tmpBITBOX: any
 
+    // Determine network (mainnet or testnet)
     if (network === "mainnet") {
       tmpBITBOX = new BITBOXSDK({ restURL: "https://rest.bitcoin.com/v2/" })
     } else {
       tmpBITBOX = new BITBOXSDK({ restURL: "https://trest.bitcoin.com/v2/" })
     }
 
+    // Instantiate a local SLP TX validator
     const slpValidator: any = new slpjs.LocalValidator(
       tmpBITBOX,
       tmpBITBOX.RawTransactions.getRawTransaction
     )
-    const bitboxNetwork: any = new slpjs.BitboxNetwork(tmpBITBOX, slpValidator)
-    let balances: any = await bitboxNetwork.getAllSlpBalancesAndUtxos(
-      addy.toSLPAddress(address)
-    )
-    let val: any
-    let tokenMetadata: any = await bitboxNetwork.getTokenInformation(tokenId)
 
-    return {
-      tokenId: tokenId,
-      balance: balances.slpTokenBalances[tokenId]
-        .div(10 ** tokenMetadata.decimals)
-        .toString(),
-      decimalCount: tokenMetadata.decimals
-    }
+    // Get raw SLP information for this address.
+    const bitboxNetwork: any = new slpjs.BitboxNetwork(tmpBITBOX, slpValidator)
+    let balances: any = await this.slpBalancesUtxos(bitboxNetwork, address)
+
+    // Get the metadata for this single token.
+    const tokenMeta = await this.getTokenMetadata([tokenId], bitboxNetwork, balances)
+
+    return tokenMeta[0]
   }
 
   async validateTxid(

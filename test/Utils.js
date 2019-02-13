@@ -218,22 +218,23 @@ describe("#Utils", () => {
 
   describe("#balance", () => {
     it(`should fetch balance of single token for address: simpleledger:qzv3zz2trz0xgp6a96lu4m6vp2nkwag0kvyucjzqt9`, async () => {
-      try {
-        const balance = await SLP.Utils.balance(
-          "simpleledger:qzv3zz2trz0xgp6a96lu4m6vp2nkwag0kvyucjzqt9",
-          "df808a41672a0a0ae6475b44f272a107bc9961b90f29dc918d71301f24fe92fb"
-        )
+      // Mock the call to rest.bitcoin.com
+      if (process.env.TEST === "unit") {
+        sandbox
+          .stub(SLP.Utils, "getTokenMetadata")
+          .resolves(mockData.mockTokenMeta)
 
-        const data = {
-          tokenId:
-            "df808a41672a0a0ae6475b44f272a107bc9961b90f29dc918d71301f24fe92fb",
-          balance: "1",
-          decimalCount: 8
-        }
-        assert.deepEqual(balance, data)
-      } catch (error) {
-        throw error
+        sandbox
+          .stub(SLP.Utils, "slpBalancesUtxos")
+          .resolves(mockData.mockBalance)
       }
+
+      const balance = await SLP.Utils.balance(
+        "simpleledger:qzv3zz2trz0xgp6a96lu4m6vp2nkwag0kvyucjzqt9",
+        "df808a41672a0a0ae6475b44f272a107bc9961b90f29dc918d71301f24fe92fb"
+      )
+
+      assert2.hasAllKeys(balance, ["tokenId", "balance", "balance"])
     })
   })
 
