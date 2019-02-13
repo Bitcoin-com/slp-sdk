@@ -5,6 +5,7 @@ const slp = require("./../lib/SLP").default
 const SLP = new slp()
 const nock = require("nock") // http call mocking
 const sinon = require("sinon")
+const BigNumber = require("bignumber.js")
 
 const BITBOXSDK = require("bitbox-sdk/lib/bitbox-sdk").default
 const slpjs = require("slpjs")
@@ -169,33 +170,42 @@ describe("#Utils", () => {
       // Instantiate the bitboxNetwork object
       const bitboxNetwork = new slpjs.BitboxNetwork(tmpBITBOX, slpValidator)
 
+      // Prep data for the test.
       const balances = mockData.mockBalance
       const keys = Object.keys(balances.slpTokenBalances)
+      balances.slpTokenBalances[keys[0]] = new BigNumber(
+        balances.slpTokenBalances[keys[0]]
+      )
+      balances.slpTokenBalances[keys[1]] = new BigNumber(
+        balances.slpTokenBalances[keys[1]]
+      )
 
+      // Call the function under test.
       const tokenMeta = await SLP.Utils.getTokenMetadata(
         keys,
         bitboxNetwork,
         balances
       )
-      console.log(`tokenMeta: ${JSON.stringify(tokenMeta, null, 2)}`)
+      //console.log(`tokenMeta: ${util.inspect(tokenMeta)}`)
+
+      assert2.isArray(tokenMeta)
+      assert2.hasAllKeys(tokenMeta[0], ["tokenId", "balance", "decimalCount"])
     })
   })
 
   describe("#balancesForAddress", () => {
     it(`should fetch all balances for address: simpleledger:qzv3zz2trz0xgp6a96lu4m6vp2nkwag0kvyucjzqt9`, async () => {
       // Mock the call to rest.bitcoin.com
-      /*
       if (process.env.TEST === "unit") {
-        nock(SERVER)
-          .post(uri => uri.includes("/"))
-          .reply(200, mockData.mockBalance)
+        sandbox
+          .stub(SLP.Utils, "getTokenMetadata")
+          .resolves(mockData.mockTokenMeta)
       }
-      */
 
       const balances = await SLP.Utils.balancesForAddress(
         "simpleledger:qzv3zz2trz0xgp6a96lu4m6vp2nkwag0kvyucjzqt9"
       )
-      console.log(`balances: ${JSON.stringify(balances, null, 2)}`)
+      //console.log(`balances: ${JSON.stringify(balances, null, 2)}`)
 
       assert2.isArray(balances)
       assert2.hasAllKeys(balances[0], ["tokenId", "balance", "decimalCount"])

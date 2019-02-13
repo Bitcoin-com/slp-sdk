@@ -5,6 +5,10 @@ const slpjs = require("slpjs")
 const BigNumber: any = require("bignumber.js")
 import axios from "axios"
 
+// Used for debugging and iterrogating JS objects.
+const util = require("util");
+util.inspect.defaultOptions = {depth: 1};
+
 // import classes
 import Address from "./Address"
 let addy = new Address()
@@ -63,28 +67,11 @@ class Utils {
     const bitboxNetwork: any = new slpjs.BitboxNetwork(tmpBITBOX, slpValidator)
     let balances: any = await this.slpBalancesUtxos(bitboxNetwork, address)
 
+    // Get the TXIDs for tokens associated with this address.
     let keys: Array<string> = Object.keys(balances.slpTokenBalances)
-    //console.log(`keys: ${JSON.stringify(keys,null,2)}`)
-/*
-    const axiosPromises = keys.map(async (key: any) => {
-      let tokenMetadata: any = await bitboxNetwork.getTokenInformation(key)
-      console.log(`tokenMetadata: ${JSON.stringify(tokenMetadata,null,2)}`)
 
-      return {
-        tokenId: key,
-        balance: balances.slpTokenBalances[key]
-          .div(10 ** tokenMetadata.decimals)
-          .toString(),
-        decimalCount: tokenMetadata.decimals
-      }
-    })
-
-    // Wait for all parallel promises to return.
-    const axiosResult: Array<any> = await axios.all(axiosPromises)
-    return axiosResult
-*/
+    // Retrieve the token metadata for the TXIDs.
     const tokenMeta = await this.getTokenMetadata(keys, bitboxNetwork, balances)
-    //console.log(`tokenMeta: ${JSON.stringify(tokenMeta,null,2)}`)
 
     return tokenMeta
   }
@@ -94,9 +81,6 @@ class Utils {
   async getTokenMetadata(keys: Array<string>, bitboxNetwork: any, balances: any) {
     const axiosPromises = keys.map(async (key: any) => {
       let tokenMetadata: any = await bitboxNetwork.getTokenInformation(key)
-      //console.log(`tokenMetadata: ${JSON.stringify(tokenMetadata,null,2)}`)
-
-      console.log(`balances.slpTokenBalances[key]: ${JSON.stringify(balances.slpTokenBalances[key],null,2)}`)
 
       return {
         tokenId: key,
@@ -109,6 +93,7 @@ class Utils {
 
     // Wait for all parallel promises to return.
     const axiosResult: Array<any> = await axios.all(axiosPromises)
+
     return axiosResult
   }
 
