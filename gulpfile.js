@@ -1,3 +1,5 @@
+"use strict"
+
 const gulp = require("gulp")
 const fs = require("fs-extra")
 
@@ -9,9 +11,10 @@ const ASSET_FILES = [
   "src/**/*.png"
 ]
 
-gulp.task("build", () => {
+gulp.task("build", done => {
   fs.emptyDirSync("./lib")
   fs.removeSync("./lib")
 
   gulp.src(ASSET_FILES).pipe(gulp.dest("lib"))
+  done()
 })
