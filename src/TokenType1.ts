@@ -23,9 +23,13 @@ class TokenType1 {
       tmpBITBOX = new BITBOXSDK({ restURL: "https://trest.bitcoin.com/v2/" })
     }
 
+    const getRawTransactions = async (txids: any) => {
+      return await tmpBITBOX.RawTransactions.getRawTransaction(txids)
+    }
+
     const slpValidator: any = new slpjs.LocalValidator(
       tmpBITBOX,
-      tmpBITBOX.RawTransactions.getRawTransaction
+      getRawTransactions
     )
     const bitboxNetwork: any = new slpjs.BitboxNetwork(tmpBITBOX, slpValidator)
     const fundingAddress: string = addy.toSLPAddress(
@@ -35,9 +39,19 @@ class TokenType1 {
     const tokenReceiverAddress: string = addy.toSLPAddress(
       createConfig.tokenReceiverAddress
     )
-    const batonReceiverAddress: string = addy.toSLPAddress(
-      createConfig.batonReceiverAddress
-    )
+    let batonReceiverAddress: string
+    if (
+      createConfig.batonReceiverAddress !== undefined &&
+      createConfig.batonReceiverAddress !== "" &&
+      createConfig.batonReceiverAddress !== null
+    ) {
+      batonReceiverAddress = addy.toSLPAddress(
+        createConfig.batonReceiverAddress
+      )
+    } else {
+      batonReceiverAddress = null
+    }
+
     const bchChangeReceiverAddress: string = addy.toSLPAddress(
       createConfig.bchChangeReceiverAddress
     )
@@ -80,9 +94,13 @@ class TokenType1 {
       tmpBITBOX = new BITBOXSDK({ restURL: "https://trest.bitcoin.com/v2/" })
     }
 
+    const getRawTransactions = async (txids: any) => {
+      return await tmpBITBOX.RawTransactions.getRawTransaction(txids)
+    }
+
     const slpValidator: any = new slpjs.LocalValidator(
       tmpBITBOX,
-      tmpBITBOX.RawTransactions.getRawTransaction
+      getRawTransactions
     )
     const bitboxNetwork: any = new slpjs.BitboxNetwork(tmpBITBOX, slpValidator)
     const fundingAddress: string = addy.toSLPAddress(mintConfig.fundingAddress)
@@ -141,9 +159,13 @@ class TokenType1 {
       tmpBITBOX = new BITBOXSDK({ restURL: "https://trest.bitcoin.com/v2/" })
     }
 
-    const slpValidator = new slpjs.LocalValidator(
+    const getRawTransactions = async (txids: any) => {
+      return await tmpBITBOX.RawTransactions.getRawTransaction(txids)
+    }
+
+    const slpValidator: any = new slpjs.LocalValidator(
       tmpBITBOX,
-      tmpBITBOX.RawTransactions.getRawTransaction
+      getRawTransactions
     )
     const bitboxNetwork = new slpjs.BitboxNetwork(tmpBITBOX, slpValidator)
 

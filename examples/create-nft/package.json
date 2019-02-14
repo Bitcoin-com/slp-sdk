@@ -1,11 +1,11 @@
 {
-  "name": "create-token",
+  "name": "create-nft",
   "version": "1.0.0",
-  "description": "Create Token",
-  "main": "create-token.js",
+  "description": "Create Non Fungible Token",
+  "main": "create-nft.js",
   "scripts": {
     "test": "echo no tests yet",
-    "start": "node create-token.js"
+    "start": "node create-nft.js"
   },
   "repository": {
     "type": "git",

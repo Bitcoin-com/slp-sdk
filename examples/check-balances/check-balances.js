@@ -1,5 +1,5 @@
 /*
-  Check the SLP token balance by tokenId for the wallet created with the
+  Check the BCH and SLP token balances for the wallet created with the
   create-wallet example app.
 */
 "use strict"
@@ -12,8 +12,8 @@ const SLPSDK = require("../../lib/SLP").default
 // Instantiate SLP based on the network.
 let SLP
 if (NETWORK === `mainnet`)
-  SLP = new SLPSDK({ restURL: `https://rest.bitcoin.com/v2/` })
-else SLP = new SLPSDK({ restURL: `https://trest.bitcoin.com/v2/` })
+  SLP = new SLPSDK({ restURL: `https://rest.bitcoin.com/v1/` })
+else SLP = new SLPSDK({ restURL: `https://trest.bitcoin.com/v1/` })
 
 // Open the wallet generated with create-wallet.
 let walletInfo
@@ -44,16 +44,18 @@ async function getBalance() {
 
     // get the cash address
     const cashAddress = SLP.HDNode.toCashAddress(change)
-    // convert to slp address
     const slpAddress = SLP.Address.toSLPAddress(cashAddress)
 
-    const tokenId = ""
+    // first get BCH balance
+    const balance = await SLP.Address.details(cashAddress)
 
+    console.log(`BCH Balance information for ${slpAddress}:`)
+    console.log(balance)
     console.log(`SLP Token information:`)
 
     // get token balances
     try {
-      const tokens = await SLP.Utils.balance(slpAddress, tokenId)
+      const tokens = await SLP.Utils.balancesForAddress(slpAddress)
 
       console.log(JSON.stringify(tokens, null, 2))
     } catch (error) {

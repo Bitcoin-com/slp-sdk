@@ -7,8 +7,8 @@ const BigNumber: any = require("bignumber.js")
 import axios from "axios"
 
 // Used for debugging and iterrogating JS objects.
-const util = require("util");
-util.inspect.defaultOptions = {depth: 1};
+const util = require("util")
+util.inspect.defaultOptions = { depth: 1 }
 
 // import classes
 import Address from "./Address"
@@ -48,8 +48,11 @@ class Utils {
 
   // Retrieve token metadata from the REST server using an input array of txids
   // This function was created to faciliate unit and integration tests.
-  async getTokenMetadata(keys: Array<string>, bitboxNetwork: any, balances: any) {
-
+  async getTokenMetadata(
+    keys: Array<string>,
+    bitboxNetwork: any,
+    balances: any
+  ) {
     const axiosPromises = keys.map(async (key: any) => {
       let tokenMetadata: any = await bitboxNetwork.getTokenInformation(key)
 
@@ -80,10 +83,14 @@ class Utils {
       tmpBITBOX = new BITBOXSDK({ restURL: "https://trest.bitcoin.com/v2/" })
     }
 
+    const getRawTransactions = async (txids: any) => {
+      return await tmpBITBOX.RawTransactions.getRawTransaction(txids)
+    }
+
     // Instantiate a local SLP TX validator
     const slpValidator: any = new slpjs.LocalValidator(
       tmpBITBOX,
-      tmpBITBOX.RawTransactions.getRawTransaction
+      getRawTransactions
     )
 
     // Get raw SLP information for this address.
@@ -111,10 +118,14 @@ class Utils {
       tmpBITBOX = new BITBOXSDK({ restURL: "https://trest.bitcoin.com/v2/" })
     }
 
+    const getRawTransactions = async (txids: any) => {
+      return await tmpBITBOX.RawTransactions.getRawTransaction(txids)
+    }
+
     // Instantiate a local SLP TX validator
     const slpValidator: any = new slpjs.LocalValidator(
       tmpBITBOX,
-      tmpBITBOX.RawTransactions.getRawTransaction
+      getRawTransactions
     )
 
     // Get raw SLP information for this address.
@@ -122,7 +133,11 @@ class Utils {
     let balances: any = await this.slpBalancesUtxos(bitboxNetwork, address)
 
     // Get the metadata for this single token.
-    const tokenMeta = await this.getTokenMetadata([tokenId], bitboxNetwork, balances)
+    const tokenMeta = await this.getTokenMetadata(
+      [tokenId],
+      bitboxNetwork,
+      balances
+    )
 
     return tokenMeta[0]
   }

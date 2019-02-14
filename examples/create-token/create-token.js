@@ -5,7 +5,7 @@
 "use strict"
 
 // Set NETWORK to either testnet or mainnet
-const NETWORK = `mainnet`
+const NETWORK = `testnet`
 
 const SLPSDK = require("../../lib/SLP").default
 
@@ -49,8 +49,6 @@ async function createToken() {
     // get the cash address
     const cashAddress = SLP.HDNode.toCashAddress(change)
     const slpAddress = SLP.Address.toSLPAddress(cashAddress)
-    const u = await SLP.Address.utxo(cashAddress)
-    const utxo = u[0]
 
     const fundingAddress = cashAddress
     const fundingWif = SLP.HDNode.toWIF(change) // <-- compressed WIF format
@@ -83,7 +81,9 @@ async function createToken() {
     )
     console.log(` `)
     console.log(`View this transaction on the block explorer:`)
-    console.log(`https://explorer.bitcoin.com/bch/tx/${genesisTxId}`)
+    if (NETWORK === `mainnet`)
+      console.log(`https://explorer.bitcoin.com/bch/tx/${genesisTxId}`)
+    else console.log(`https://explorer.bitcoin.com/tbch/tx/${genesisTxId}`)
   } catch (err) {
     console.error(`Error in createToken: `, err)
     console.log(`Error message: ${err.message}`)

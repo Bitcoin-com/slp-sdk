@@ -1,11 +1,11 @@
 {
-  "name": "create-token",
+  "name": "check-balances",
   "version": "1.0.0",
-  "description": "Create Token",
-  "main": "create-token.js",
+  "description": "Check balances for an address",
+  "main": "check-balances.js",
   "scripts": {
     "test": "echo no tests yet",
-    "start": "node create-token.js"
+    "start": "node check-balances.js"
   },
   "repository": {
     "type": "git",

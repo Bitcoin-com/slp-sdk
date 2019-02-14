@@ -1,12 +1,12 @@
 {
   "name": "slp-sdk",
-  "version": "1.1.7",
+  "version": "1.1.8",
   "description": "SLP SDK powered by BITBOX",
   "main": "index.js",
   "scripts": {
     "build": "node ./node_modules/gulp/bin/gulp.js build && ./node_modules/typescript/bin/tsc",
-    "test": "TEST=unit nyc --reporter=text mocha --require babel-core/register --timeout 10000 test/",
-    "test:integration": "TEST=integration nyc --reporter=text mocha --require babel-core/register --timeout 10000 test/",
+    "test": "TEST=unit nyc --reporter=text mocha --require babel-core/register --timeout 300000 test/",
+    "test:integration": "TEST=integration nyc --reporter=text mocha --require babel-core/register --timeout 300000 test/",
     "coverage": "nyc report --reporter=text-lcov | coveralls",
     "coverage:report": "nyc --reporter=html mocha --require babel-core/register --timeout 10000",
     "semantic-release": "semantic-release"
@@ -40,7 +40,7 @@
     "mkdirp": "^0.5.1",
     "node-emoji": "^1.8.1",
     "repl.history": "^0.1.4",
-    "slpjs": "0.12.2",
+    "slpjs": "0.13.0",
     "touch": "^3.1.0"
   },
   "devDependencies": {
