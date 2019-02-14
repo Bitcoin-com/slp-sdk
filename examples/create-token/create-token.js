@@ -44,7 +44,7 @@ async function createToken() {
     // HDNode of BIP44 account
     const account = SLP.HDNode.derivePath(masterHDNode, "m/44'/145'/0'")
 
-    const change = SLP.HDNode.derivePath(account, "8/0")
+    const change = SLP.HDNode.derivePath(account, "0/0")
 
     // get the cash address
     const cashAddress = SLP.HDNode.toCashAddress(change)
