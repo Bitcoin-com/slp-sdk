@@ -1,8 +1,13 @@
 /*
-  Create a new SLP token. Requires a wallet created with the create-wallet
-  example. Also requires that wallet to have a small BCH balance.
+  Send tokens of type TOKENID to user with SLPADDR address.
 */
 "use strict"
+
+// CUSTOMIZE THESE VALUES FOR YOUR USE
+const TOKENQTY = 987.6
+const TOKENID =
+  "a33c198f6261694c314449612e3b79104e006d987913d13af526ef918f16c8e9"
+const SLPADDR = "simpleledger:qz50nvfs07jp9kn2jz0s3ycwtfgz6fa8fghrltrpvr"
 
 // Set NETWORK to either testnet or mainnet
 const NETWORK = `mainnet`
@@ -30,7 +35,7 @@ try {
   process.exit(0)
 }
 
-async function createToken() {
+async function sendToken() {
   try {
     const mnemonic = walletInfo.mnemonic
 
@@ -48,44 +53,35 @@ async function createToken() {
 
     // get the cash address
     const cashAddress = SLP.HDNode.toCashAddress(change)
-    const slpAddress = SLP.Address.toSLPAddress(cashAddress)
 
     const fundingAddress = cashAddress
     const fundingWif = SLP.HDNode.toWIF(change) // <-- compressed WIF format
-    const tokenReceiverAddress = slpAddress
-    const batonReceiverAddress = slpAddress
+    const tokenReceiverAddress = SLPADDR
     const bchChangeReceiverAddress = cashAddress
 
-    // Create a config object defining the token to be created.
-    const createConfig = {
+    // Create a config object for minting
+    const sendConfig = {
       fundingAddress,
       fundingWif,
       tokenReceiverAddress,
-      batonReceiverAddress,
       bchChangeReceiverAddress,
-      decimals: 8,
-      name: "SLP SDK example using BITBOX",
-      symbol: "SLPSDK",
-      documentUri: "developer.bitcoin.com",
-      documentHash: null,
-      initialTokenQty: 1234
+      tokenId: TOKENID,
+      amount: TOKENQTY
     }
 
-    // Generate, sign, and broadcast a hex-encoded transaction for creating
-    // the new token.
-    const genesisTxId = await SLP.TokenType1.create(createConfig)
+    //console.log(`createConfig: ${util.inspect(createConfig)}`)
 
-    console.log(`genesisTxID: ${util.inspect(genesisTxId)}`)
-    console.log(
-      `The genesis TxID above is used to uniquely identify your new class of SLP token. Save it and keep it handy.`
-    )
-    console.log(` `)
+    // Generate, sign, and broadcast a hex-encoded transaction for sending
+    // the tokens.
+    const sendTxId = await SLP.TokenType1.send(sendConfig)
+
+    console.log(`sendTxId: ${util.inspect(sendTxId)}`)
     console.log(`View this transaction on the block explorer:`)
-    console.log(`https://explorer.bitcoin.com/bch/tx/${genesisTxId}`)
+    console.log(`https://explorer.bitcoin.com/bch/tx/${sendTxId}`)
   } catch (err) {
-    console.error(`Error in createToken: `, err)
+    console.error(`Error in sendToken: `, err)
     console.log(`Error message: ${err.message}`)
     throw err
   }
 }
-createToken()
+sendToken()
