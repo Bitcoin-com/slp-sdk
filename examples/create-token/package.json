@@ -1,7 +1,7 @@
 {
   "name": "create-token",
   "version": "1.0.0",
-  "description": "Check balance for an address",
+  "description": "Create Token",
   "main": "create-token.js",
   "scripts": {
     "test": "echo no tests yet",

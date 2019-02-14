@@ -1,10 +1,11 @@
 /*
-  Create a Token
+  Check the BCH and SLP token balances for the wallet created with the
+  create-wallet example app.
 */
 "use strict"
 
 // Set NETWORK to either testnet or mainnet
-const NETWORK = `mainnet`
+const NETWORK = `testnet`
 
 const SLPSDK = require("../../lib/SLP").default
 
@@ -25,7 +26,7 @@ try {
   process.exit(0)
 }
 
-async function createToken() {
+async function getBalance() {
   try {
     const mnemonic = walletInfo.mnemonic
 
@@ -43,35 +44,27 @@ async function createToken() {
 
     // get the cash address
     const cashAddress = SLP.HDNode.toCashAddress(change)
+    const slpAddress = SLP.Address.toSLPAddress(cashAddress)
 
-    const fundingAddress = cashAddress
-    const fundingWif = SLP.HDNode.toWIF(change)
-    const tokenReceiverAddress = fundingAddress
-    const batonReceiverAddress = fundingAddress
-    const bchChangeReceiverAddress = fundingAddress
+    // first get BCH balance
+    const balance = await SLP.Address.details(cashAddress)
 
-    const decimals = 9
-    const initialQty = 1000
+    console.log(`BCH Balance information for ${slpAddress}:`)
+    console.log(balance)
+    console.log(`SLP Token information:`)
 
-    const token = await SLP.TokenType1.create({
-      fundingAddress: fundingAddress,
-      fundingWif: fundingWif,
-      tokenReceiverAddress: tokenReceiverAddress,
-      batonReceiverAddress: batonReceiverAddress,
-      bchChangeReceiverAddress: bchChangeReceiverAddress,
-      decimals: decimals,
-      name: "My amazing token",
-      symbol: "MAT",
-      documentUri: "documentUri",
-      documentHash:
-        "1010101010101010101010101010101010101010101010101010101010101010",
-      initialTokenQty: initialQty
-    })
-    console.log(token)
+    // get token balances
+    try {
+      const tokens = await SLP.Utils.balancesForAddress(slpAddress)
+
+      console.log(JSON.stringify(tokens, null, 2))
+    } catch (error) {
+      if (error.message === "Address not found") console.log(`No tokens found.`)
+    }
   } catch (err) {
-    console.error(`Error in createToken: `, err)
+    console.error(`Error in getBalance: `, err)
     console.log(`Error message: ${err.message}`)
     throw err
   }
 }
-createToken()
+getBalance()

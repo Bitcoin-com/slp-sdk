@@ -52,9 +52,9 @@ describe("#Utils", () => {
         )
         const data = {
           tokenId:
-            "df808a41672a0a0ae6475b44f272a107bc9961b90f29dc918d71301f24fe92fb",
+            "a436c8e1b6bee3d701c6044d190f76f774be83c36de8d34a988af4489e86dd37",
           balance: "1",
-          decimalCount: 8
+          decimalCount: 7
         }
         assert.deepEqual(balances[1], data)
       } catch (error) {
@@ -68,14 +68,14 @@ describe("#Utils", () => {
       try {
         const balance = await SLP.Utils.balance(
           "simpleledger:qzv3zz2trz0xgp6a96lu4m6vp2nkwag0kvyucjzqt9",
-          "df808a41672a0a0ae6475b44f272a107bc9961b90f29dc918d71301f24fe92fb"
+          "a436c8e1b6bee3d701c6044d190f76f774be83c36de8d34a988af4489e86dd37"
         )
 
         const data = {
           tokenId:
-            "df808a41672a0a0ae6475b44f272a107bc9961b90f29dc918d71301f24fe92fb",
+            "a436c8e1b6bee3d701c6044d190f76f774be83c36de8d34a988af4489e86dd37",
           balance: "1",
-          decimalCount: 8
+          decimalCount: 7
         }
         assert.deepEqual(balance, data)
       } catch (error) {

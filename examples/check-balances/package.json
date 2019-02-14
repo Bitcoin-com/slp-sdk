@@ -1,11 +1,11 @@
 {
-  "name": "check-balance",
+  "name": "check-balances",
   "version": "1.0.0",
-  "description": "Check balance for an address",
+  "description": "Check balances for an address",
   "main": "check-balances.js",
   "scripts": {
     "test": "echo no tests yet",
-    "start": "node check-balance.js"
+    "start": "node check-balances.js"
   },
   "repository": {
     "type": "git",

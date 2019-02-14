@@ -43,8 +43,8 @@ async function conversion() {
 
     // get the cash address
     const cashAddress = SLP.HDNode.toCashAddress(change)
-    const slpAddress = SLP.Utils.toSLPAddress(cashAddress)
-    const legacyAddress = SLP.Utils.toLegacyAddress(cashAddress)
+    const slpAddress = SLP.Address.toSLPAddress(cashAddress)
+    const legacyAddress = SLP.Address.toLegacyAddress(cashAddress)
 
     console.log(`SLP Address: ${slpAddress}:`)
     console.log(`Cash Address: ${cashAddress}:`)

@@ -1,11 +1,11 @@
 /*
-  Check the BCH and SLP token balance for the wallet created with the
+  Check the SLP token balance by tokenId for the wallet created with the
   create-wallet example app.
 */
 "use strict"
 
 // Set NETWORK to either testnet or mainnet
-const NETWORK = `mainnet`
+const NETWORK = `testnet`
 
 const SLPSDK = require("../../lib/SLP").default
 
@@ -44,18 +44,16 @@ async function getBalance() {
 
     // get the cash address
     const cashAddress = SLP.HDNode.toCashAddress(change)
-    const slpAddress = SLP.Utils.toSLPAddress(cashAddress)
+    // convert to slp address
+    const slpAddress = SLP.Address.toSLPAddress(cashAddress)
 
-    // first get BCH balance
-    const balance = await SLP.Address.details(cashAddress)
+    const tokenId = ""
 
-    console.log(`BCH Balance information for ${slpAddress}:`)
-    console.log(balance)
     console.log(`SLP Token information:`)
 
     // get token balances
     try {
-      const tokens = await SLP.Utils.balancesForAddress(slpAddress)
+      const tokens = await SLP.Utils.balance(slpAddress, tokenId)
 
       console.log(JSON.stringify(tokens, null, 2))
     } catch (error) {

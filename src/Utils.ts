@@ -41,9 +41,13 @@ class Utils {
       tmpBITBOX = new BITBOXSDK({ restURL: "https://trest.bitcoin.com/v2/" })
     }
 
+    const getRawTransactions = async (txids: any) => {
+      return await tmpBITBOX.RawTransactions.getRawTransaction(txids)
+    }
+
     const slpValidator: any = new slpjs.LocalValidator(
       tmpBITBOX,
-      tmpBITBOX.RawTransactions.getRawTransaction
+      getRawTransactions
     )
 
     const bitboxNetwork: any = new slpjs.BitboxNetwork(tmpBITBOX, slpValidator)
@@ -79,23 +83,43 @@ class Utils {
       tmpBITBOX = new BITBOXSDK({ restURL: "https://trest.bitcoin.com/v2/" })
     }
 
+    const getRawTransactions = async (txids: any) => {
+      return await tmpBITBOX.RawTransactions.getRawTransaction(txids)
+    }
+
     const slpValidator: any = new slpjs.LocalValidator(
       tmpBITBOX,
-      tmpBITBOX.RawTransactions.getRawTransaction
+      getRawTransactions
     )
     const bitboxNetwork: any = new slpjs.BitboxNetwork(tmpBITBOX, slpValidator)
     let balances: any = await bitboxNetwork.getAllSlpBalancesAndUtxos(
       addy.toSLPAddress(address)
     )
-    let val: any
-    let tokenMetadata: any = await bitboxNetwork.getTokenInformation(tokenId)
+    let formattedTokens: any[] = []
+    if (balances.slpTokenBalances) {
+      let keys = Object.keys(balances.slpTokenBalances)
+      const axiosPromises = keys.map(async (key: any) => {
+        let tokenMetadata: any = await bitboxNetwork.getTokenInformation(key)
+        return {
+          tokenId: key,
+          balance: balances.slpTokenBalances[key]
+            .div(10 ** tokenMetadata.decimals)
+            .toString(),
+          decimalCount: tokenMetadata.decimals
+        }
+      })
 
-    return {
-      tokenId: tokenId,
-      balance: balances.slpTokenBalances[tokenId]
-        .div(10 ** tokenMetadata.decimals)
-        .toString(),
-      decimalCount: tokenMetadata.decimals
+      // Wait for all parallel promises to return.
+      let val: any = "No balance for this address and tokenId"
+      const axiosResult: Array<any> = await axios.all(axiosPromises)
+      axiosResult.forEach((result: any) => {
+        if (result.tokenId === tokenId) {
+          val = result
+        }
+      })
+      return val
+    } else {
+      return "No balance for this address and tokenId"
     }
   }
 

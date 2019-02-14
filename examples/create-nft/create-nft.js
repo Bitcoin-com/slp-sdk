@@ -1,10 +1,10 @@
 /*
-  Create a Token
+  Create a Non Fungible Token.
 */
 "use strict"
 
 // Set NETWORK to either testnet or mainnet
-const NETWORK = `mainnet`
+const NETWORK = `testnet`
 
 const SLPSDK = require("../../lib/SLP").default
 
@@ -25,7 +25,7 @@ try {
   process.exit(0)
 }
 
-async function createToken() {
+async function createNFT() {
   try {
     const mnemonic = walletInfo.mnemonic
 
@@ -39,7 +39,7 @@ async function createToken() {
     // HDNode of BIP44 account
     const account = SLP.HDNode.derivePath(masterHDNode, "m/44'/145'/0'")
 
-    const change = SLP.HDNode.derivePath(account, "0/0")
+    const change = SLP.HDNode.derivePath(account, "8/0")
 
     // get the cash address
     const cashAddress = SLP.HDNode.toCashAddress(change)
@@ -50,14 +50,14 @@ async function createToken() {
     const batonReceiverAddress = fundingAddress
     const bchChangeReceiverAddress = fundingAddress
 
-    const decimals = 9
-    const initialQty = 1000
+    const decimals = 0
+    const initialQty = 1
 
     const token = await SLP.TokenType1.create({
       fundingAddress: fundingAddress,
       fundingWif: fundingWif,
       tokenReceiverAddress: tokenReceiverAddress,
-      batonReceiverAddress: batonReceiverAddress,
+      batonReceiverAddress: null,
       bchChangeReceiverAddress: bchChangeReceiverAddress,
       decimals: decimals,
       name: "My amazing token",
@@ -69,9 +69,9 @@ async function createToken() {
     })
     console.log(token)
   } catch (err) {
-    console.error(`Error in createToken: `, err)
+    console.error(`Error in createNFT: `, err)
     console.log(`Error message: ${err.message}`)
     throw err
   }
 }
-createToken()
+createNFT()

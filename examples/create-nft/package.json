@@ -1,11 +1,11 @@
 {
-  "name": "check-balance",
+  "name": "create-nft",
   "version": "1.0.0",
-  "description": "Check balance for an address",
-  "main": "check-balances.js",
+  "description": "Create Non Fungible Token",
+  "main": "create-nft.js",
   "scripts": {
     "test": "echo no tests yet",
-    "start": "node check-balance.js"
+    "start": "node create-nft.js"
   },
   "repository": {
     "type": "git",
