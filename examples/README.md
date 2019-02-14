@@ -22,7 +22,7 @@ You can run each example script by entering its directory and executing `npm sta
   [create-wallet](create-wallet) example first, and fund your wallet with a few
   cents of BCH first.
 
-- [create-npf](create-nft) - Create a new SLP non-fungible token. Run the
+- [create-npt](create-nft) - Create a new SLP non-fungible token. Run the
   [create-wallet](create-wallet) example first, and fund your wallet with a few
   cents of BCH first.
 
