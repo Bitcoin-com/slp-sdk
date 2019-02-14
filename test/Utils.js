@@ -112,10 +112,13 @@ describe("#Utils", () => {
         restURL: `${SERVER}/v2/`
       })
 
+      const getRawTransactions = async txids =>
+        await tmpBITBOX.RawTransactions.getRawTransaction(txids)
+
       // Instantiate a local validator
       const slpValidator = new slpjs.LocalValidator(
         tmpBITBOX,
-        tmpBITBOX.RawTransactions.getRawTransaction
+        getRawTransactions
       )
 
       // Instantiate the bitboxNetwork object
