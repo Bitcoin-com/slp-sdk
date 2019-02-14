@@ -159,9 +159,13 @@ class TokenType1 {
       tmpBITBOX = new BITBOXSDK({ restURL: "https://trest.bitcoin.com/v2/" })
     }
 
-    const slpValidator = new slpjs.LocalValidator(
+    const getRawTransactions = async (txids: any) => {
+      return await tmpBITBOX.RawTransactions.getRawTransaction(txids)
+    }
+
+    const slpValidator: any = new slpjs.LocalValidator(
       tmpBITBOX,
-      tmpBITBOX.RawTransactions.getRawTransaction
+      getRawTransactions
     )
     const bitboxNetwork = new slpjs.BitboxNetwork(tmpBITBOX, slpValidator)
 

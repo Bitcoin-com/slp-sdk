@@ -4,10 +4,10 @@
 "use strict"
 
 const TOKENID =
-  "d250f9649646aeaba38e61191f5edcd8dcf2f087a3a71203e1cadf87cc863db4"
+  "15f007bdcd8d01ee81adb6390e5023039cb5675cc2144dd358f2fdb2d427ab18"
 
 // Set NETWORK to either testnet or mainnet
-const NETWORK = `mainnet`
+const NETWORK = `testnet`
 
 const SLPSDK = require("../../lib/SLP").default
 
@@ -51,8 +51,6 @@ async function mintToken() {
     // get the cash address
     const cashAddress = SLP.HDNode.toCashAddress(change)
     const slpAddress = SLP.Address.toSLPAddress(cashAddress)
-    const u = await SLP.Address.utxo(cashAddress)
-    const utxo = u[0]
 
     const fundingAddress = cashAddress
     const fundingWif = SLP.HDNode.toWIF(change) // <-- compressed WIF format
@@ -79,7 +77,9 @@ async function mintToken() {
 
     console.log(`mintTxId: ${util.inspect(mintTxId)}`)
     console.log(`View this transaction on the block explorer:`)
-    console.log(`https://explorer.bitcoin.com/bch/tx/${mintTxId}`)
+    if (NETWORK === `mainnet`)
+      console.log(`https://explorer.bitcoin.com/bch/tx/${genesisTxId}`)
+    else console.log(`https://explorer.bitcoin.com/tbch/tx/${genesisTxId}`)
   } catch (err) {
     console.error(`Error in mintToken: `, err)
     console.log(`Error message: ${err.message}`)

@@ -39,7 +39,7 @@ async function createNFT() {
     // HDNode of BIP44 account
     const account = SLP.HDNode.derivePath(masterHDNode, "m/44'/145'/0'")
 
-    const change = SLP.HDNode.derivePath(account, "8/0")
+    const change = SLP.HDNode.derivePath(account, "0/0")
 
     // get the cash address
     const cashAddress = SLP.HDNode.toCashAddress(change)
@@ -47,27 +47,34 @@ async function createNFT() {
     const fundingAddress = cashAddress
     const fundingWif = SLP.HDNode.toWIF(change)
     const tokenReceiverAddress = fundingAddress
-    const batonReceiverAddress = fundingAddress
     const bchChangeReceiverAddress = fundingAddress
 
     const decimals = 0
     const initialQty = 1
 
-    const token = await SLP.TokenType1.create({
+    const genesisTxId = await SLP.TokenType1.create({
       fundingAddress: fundingAddress,
       fundingWif: fundingWif,
       tokenReceiverAddress: tokenReceiverAddress,
       batonReceiverAddress: null,
       bchChangeReceiverAddress: bchChangeReceiverAddress,
       decimals: decimals,
-      name: "My amazing token",
-      symbol: "MAT",
+      name: "Non Fungible Token",
+      symbol: "NFT",
       documentUri: "documentUri",
       documentHash:
         "1010101010101010101010101010101010101010101010101010101010101010",
       initialTokenQty: initialQty
     })
-    console.log(token)
+    console.log(`genesisTxID: ${util.inspect(genesisTxId)}`)
+    console.log(
+      `The genesis TxID above is used to uniquely identify your new class of SLP token. Save it and keep it handy.`
+    )
+    console.log(` `)
+    console.log(`View this transaction on the block explorer:`)
+    if (NETWORK === `mainnet`)
+      console.log(`https://explorer.bitcoin.com/bch/tx/${genesisTxId}`)
+    else console.log(`https://explorer.bitcoin.com/tbch/tx/${genesisTxId}`)
   } catch (err) {
     console.error(`Error in createNFT: `, err)
     console.log(`Error message: ${err.message}`)
