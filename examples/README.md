@@ -31,6 +31,8 @@ You can run each example script by entering its directory and executing `npm sta
 
 - [send-token](send-token) - Send tokens from your address to another address.
 
+- [burn-all](burn-all) - Burn all tokens for an address by tokenId.
+
 - [lookup-token](lookup-token) - Lookup token information based on the token `id`.
 
 - [list-all-tokens](list-all-tokens) - List every token in existence.
