@@ -4,24 +4,25 @@ const BigNumber: any = require("bignumber.js")
 const slpjs: any = require("slpjs")
 
 // import interfaces
-import { ICreateConfig } from "./interfaces/SLPInterfaces"
-import { IMintConfig } from "./interfaces/SLPInterfaces"
-import { ISendConfig } from "./interfaces/SLPInterfaces"
+import {
+  ICreateConfig,
+  IMintConfig,
+  ISendConfig,
+  IBurnAllConfig
+} from "./interfaces/SLPInterfaces"
 
 // import classes
 import Address from "./Address"
 let addy: any = new Address()
 
 class TokenType1 {
-  async create(createConfig: ICreateConfig) {
-    let network: string = addy.detectAddressNetwork(createConfig.fundingAddress)
-    let tmpBITBOX: any
+  restURL: string
+  constructor(restURL?: string) {
+    this.restURL = restURL
+  }
 
-    if (network === "mainnet") {
-      tmpBITBOX = new BITBOXSDK({ restURL: "https://rest.bitcoin.com/v2/" })
-    } else {
-      tmpBITBOX = new BITBOXSDK({ restURL: "https://trest.bitcoin.com/v2/" })
-    }
+  async create(createConfig: ICreateConfig) {
+    let tmpBITBOX: any = this.returnBITBOXInstance(createConfig.fundingAddress)
 
     const getRawTransactions = async (txids: any) => {
       return await tmpBITBOX.RawTransactions.getRawTransaction(txids)
@@ -85,14 +86,7 @@ class TokenType1 {
   }
 
   async mint(mintConfig: IMintConfig) {
-    let network: string = addy.detectAddressNetwork(mintConfig.fundingAddress)
-    let tmpBITBOX: any
-
-    if (network === "mainnet") {
-      tmpBITBOX = new BITBOXSDK({ restURL: "https://rest.bitcoin.com/v2/" })
-    } else {
-      tmpBITBOX = new BITBOXSDK({ restURL: "https://trest.bitcoin.com/v2/" })
-    }
+    let tmpBITBOX: any = this.returnBITBOXInstance(mintConfig.fundingAddress)
 
     const getRawTransactions = async (txids: any) => {
       return await tmpBITBOX.RawTransactions.getRawTransaction(txids)
@@ -150,14 +144,7 @@ class TokenType1 {
   }
 
   async send(sendConfig: ISendConfig) {
-    let network = addy.detectAddressNetwork(sendConfig.fundingAddress)
-    let tmpBITBOX: any
-
-    if (network === "mainnet") {
-      tmpBITBOX = new BITBOXSDK({ restURL: "https://rest.bitcoin.com/v2/" })
-    } else {
-      tmpBITBOX = new BITBOXSDK({ restURL: "https://trest.bitcoin.com/v2/" })
-    }
+    let tmpBITBOX: any = this.returnBITBOXInstance(sendConfig.fundingAddress)
 
     const getRawTransactions = async (txids: any) => {
       return await tmpBITBOX.RawTransactions.getRawTransaction(txids)
@@ -207,6 +194,102 @@ class TokenType1 {
       bchChangeReceiverAddress
     )
     return sendTxid[0]
+  }
+
+  async burnAll(burnAllConfig: IBurnAllConfig) {
+    try {
+      let tmpBITBOX: any = this.returnBITBOXInstance(
+        burnAllConfig.fundingAddress
+      )
+
+      const getRawTransactions = async (txids: any) => {
+        return await tmpBITBOX.RawTransactions.getRawTransaction(txids)
+      }
+
+      const slpValidator: any = new slpjs.LocalValidator(
+        tmpBITBOX,
+        getRawTransactions
+      )
+      const bitboxNetwork = new slpjs.BitboxNetwork(tmpBITBOX, slpValidator)
+      const tokenInfo = await bitboxNetwork.getTokenInformation(
+        burnAllConfig.tokenId
+      )
+      let tokenDecimals = tokenInfo.decimals
+
+      let balances = await bitboxNetwork.getAllSlpBalancesAndUtxos(
+        burnAllConfig.fundingAddress
+      )
+      let inputUtxos = balances.slpTokenUtxos[burnAllConfig.tokenId]
+      inputUtxos = inputUtxos.concat(balances.nonSlpUtxos)
+
+      inputUtxos.forEach((txo: any) => (txo.wif = burnAllConfig.fundingWif))
+      let network: string = this.returnNetwork(burnAllConfig.fundingAddress)
+      let transactionBuilder: any
+      if (network === "mainnet") {
+        transactionBuilder = new tmpBITBOX.TransactionBuilder("mainnet")
+      } else {
+        transactionBuilder = new tmpBITBOX.TransactionBuilder("testnet")
+      }
+
+      let originalAmount: number = 0
+      inputUtxos.forEach((utxo: any) => {
+        // index of vout
+        let vout: string = utxo.vout
+
+        // txid of vout
+        let txid: string = utxo.txid
+
+        // add input with txid and index of vout
+        transactionBuilder.addInput(txid, vout)
+
+        originalAmount += utxo.satoshis
+      })
+
+      let byteCount = tmpBITBOX.BitcoinCash.getByteCount(
+        { P2PKH: inputUtxos.length },
+        { P2PKH: 1 }
+      )
+      let sendAmount = originalAmount - byteCount
+
+      transactionBuilder.addOutput(burnAllConfig.fundingAddress, sendAmount)
+
+      let keyPair = tmpBITBOX.ECPair.fromWIF(burnAllConfig.fundingWif)
+
+      let redeemScript: void
+      inputUtxos.forEach((utxo: any, index: number) => {
+        transactionBuilder.sign(
+          index,
+          keyPair,
+          redeemScript,
+          transactionBuilder.hashTypes.SIGHASH_ALL,
+          utxo.satoshis
+        )
+      })
+
+      let tx = transactionBuilder.build()
+      let hex = tx.toHex()
+      let txid = await tmpBITBOX.RawTransactions.sendRawTransaction(hex)
+      return txid[0]
+    } catch (error) {
+      return error
+    }
+  }
+
+  returnNetwork(address: string): string {
+    return addy.detectAddressNetwork(address)
+  }
+
+  returnBITBOXInstance(address: string): any {
+    let network: string = this.returnNetwork(address)
+    let tmpBITBOX: any
+
+    if (network === "mainnet") {
+      tmpBITBOX = new BITBOXSDK({ restURL: "https://rest.bitcoin.com/v2/" })
+    } else {
+      tmpBITBOX = new BITBOXSDK({ restURL: "https://trest.bitcoin.com/v2/" })
+    }
+
+    return tmpBITBOX
   }
 }
 

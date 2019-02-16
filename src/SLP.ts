@@ -22,7 +22,7 @@ class SLP extends BITBOXSDK {
     else restURL = "https://rest.bitcoin.com/v2/"
 
     this.Address = new Address(restURL)
-    this.TokenType1 = new TokenType1()
+    this.TokenType1 = new TokenType1(restURL)
     this.Utils = new Utils(restURL)
   }
 }
