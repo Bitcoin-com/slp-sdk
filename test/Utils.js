@@ -92,127 +92,19 @@ describe("#Utils", () => {
     })
   })
 
-  describe("#slpBalancesUtxos", () => {
-    it(`should fetch raw UTXO balances from server`, async () => {
-      // When run as a unit test, this test case serves to prove that the
-      // SLP.Utils.slpBalancesUtxos() function can be successfully stubbed by
-      // sinon, which is needed for other tests. When run as an integration
-      // test, it confirms that mocked data matches the real data coming from
-      // the REST server.
-
-      // Mock the call to rest.bitcoin.com for unit tests.
-      if (process.env.TEST === "unit") {
-        sandbox
-          .stub(SLP.Utils, "slpBalancesUtxos")
-          .resolves(mockData.mockBalance)
-      }
-
-      // Instantiate BITBOX
-      const tmpBITBOX = new BITBOXSDK({
-        restURL: `${SERVER}/v2/`
-      })
-
-      const getRawTransactions = async txids =>
-        await tmpBITBOX.RawTransactions.getRawTransaction(txids)
-
-      // Instantiate a local validator
-      const slpValidator = new slpjs.LocalValidator(
-        tmpBITBOX,
-        getRawTransactions
-      )
-
-      // Instantiate the bitboxNetwork object
-      const bitboxNetwork = new slpjs.BitboxNetwork(tmpBITBOX, slpValidator)
-
-      const addr = "simpleledger:qzv3zz2trz0xgp6a96lu4m6vp2nkwag0kvyucjzqt9"
-      const balances = await SLP.Utils.slpBalancesUtxos(bitboxNetwork, addr)
-      //console.log(`balances: ${JSON.stringify(balances, null, 2)}`)
-
-      assert2.hasAnyKeys(balances, [
-        "satoshis_available_bch",
-        "satoshis_in_slp_baton",
-        "satoshis_in_slp_token",
-        "satoshis_in_invalid_token_dag",
-        "satoshis_in_invalid_baton_dag",
-        "slpTokenBalances",
-        "slpTokenUtxos",
-        "slpBatonUtxos",
-        "nonSlpUtxos",
-        "invalidTokenUtxos",
-        "invalidBatonUtxos"
-      ])
-    })
-  })
-
-  describe("#getTokenMetadata", () => {
-    it(`should fetch token metadata from the REST server`, async () => {
-      // When run as a unit test, this test case serves to prove that the
-      // SLP.Utils.getTokenMetadata() function can be successfully stubbed by
-      // sinon, which is needed for other tests. When run as an integration
-      // test, it confirms that mocked data matches the real data coming from
-      // the REST server.
-
-      // Mock the call to rest.bitcoin.com for unit tests.
-      if (process.env.TEST === "unit") {
-        sandbox
-          .stub(SLP.Utils, "getTokenMetadata")
-          .resolves(mockData.mockTokenMeta)
-      }
-
-      // Instantiate BITBOX
-      const tmpBITBOX = new BITBOXSDK({
-        restURL: `${SERVER}/v2/`
-      })
-
-      // Instantiate a local validator
-      const slpValidator = new slpjs.LocalValidator(
-        tmpBITBOX,
-        tmpBITBOX.RawTransactions.getRawTransaction
-      )
-
-      // Instantiate the bitboxNetwork object
-      const bitboxNetwork = new slpjs.BitboxNetwork(tmpBITBOX, slpValidator)
-
-      // Prep data for the test.
-      const balances = mockData.mockBalance
-      const keys = Object.keys(balances.slpTokenBalances)
-      balances.slpTokenBalances[keys[0]] = new BigNumber(
-        balances.slpTokenBalances[keys[0]]
-      )
-      balances.slpTokenBalances[keys[1]] = new BigNumber(
-        balances.slpTokenBalances[keys[1]]
-      )
-
-      // Call the function under test.
-      const tokenMeta = await SLP.Utils.getTokenMetadata(
-        keys,
-        bitboxNetwork,
-        balances
-      )
-      //console.log(`tokenMeta: ${util.inspect(tokenMeta)}`)
-
-      assert2.isArray(tokenMeta)
-      assert2.hasAllKeys(tokenMeta[0], ["tokenId", "balance", "decimalCount"])
-    })
-  })
-
   describe("#balancesForAddress", () => {
     it(`should fetch all balances for address: simpleledger:qzv3zz2trz0xgp6a96lu4m6vp2nkwag0kvyucjzqt9`, async () => {
       // Mock the call to rest.bitcoin.com
       if (process.env.TEST === "unit") {
         sandbox
-          .stub(SLP.Utils, "getTokenMetadata")
-          .resolves(mockData.mockTokenMeta)
-
-        sandbox
-          .stub(SLP.Utils, "slpBalancesUtxos")
-          .resolves(mockData.mockBalance)
+          .stub(SLP.Utils, "balancesForAddress")
+          .resolves(mockData.balancesForAddress)
       }
 
       const balances = await SLP.Utils.balancesForAddress(
         "simpleledger:qzv3zz2trz0xgp6a96lu4m6vp2nkwag0kvyucjzqt9"
       )
-      //console.log(`balances: ${JSON.stringify(balances, null, 2)}`)
+      // console.log(`balances: ${JSON.stringify(balances, null, 2)}`)
 
       assert2.isArray(balances)
       assert2.hasAllKeys(balances[0], ["tokenId", "balance", "decimalCount"])
@@ -224,12 +116,8 @@ describe("#Utils", () => {
       // Mock the call to rest.bitcoin.com
       if (process.env.TEST === "unit") {
         sandbox
-          .stub(SLP.Utils, "getTokenMetadata")
-          .resolves(mockData.mockTokenMeta)
-
-        sandbox
-          .stub(SLP.Utils, "slpBalancesUtxos")
-          .resolves(mockData.mockBalance)
+          .stub(SLP.Utils, "balancesForAddress")
+          .resolves(mockData.balancesForAddress)
       }
 
       const balance = await SLP.Utils.balance(

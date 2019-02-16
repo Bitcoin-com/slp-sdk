@@ -1,3 +1,4 @@
+// require deps
 const BITBOXAddress = require("bitbox-sdk/lib/Address").default
 const BITBOXSDK = require("bitbox-sdk/lib/bitbox-sdk").default
 const BITBOX = new BITBOXSDK()
