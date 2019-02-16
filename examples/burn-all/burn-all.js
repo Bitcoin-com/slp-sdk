@@ -67,18 +67,3 @@ async function burnAll() {
   }
 }
 burnAll()
-// ;(async () => {
-//   try {
-//     const iBurnAllConfig = {
-//       fundingAddress: "bchtest:qqjfqa7qsmydeuctqvddppjnkr53vchseuv49mhsxa",
-//       fundingWif: "cNbbGFfSG8xvrH4HXJLcoENEmtkDAvPoC21qVhjntUc18XBzhGGe",
-//       tokenId:
-//         "2bc28ff247b210212e712988c5abac6d5bcc9294d75694140201904a4eb45080",
-//       amount: 10
-//     }
-//     const burnAll = await SLP.TokenType1.burnAll(iBurnAllConfig)
-//     console.log(burnAll)
-//   } catch (error) {
-//     console.error(error)
-//   }
-// })()
