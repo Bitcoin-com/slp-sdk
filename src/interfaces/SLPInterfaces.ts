@@ -39,5 +39,5 @@ export interface IBurnAllConfig {
   fundingAddress: string
   fundingWif: string
   tokenId: string
-  amount: number
+  bchChangeReceiverAddress: string
 }

@@ -251,7 +251,10 @@ class TokenType1 {
       )
       let sendAmount = originalAmount - byteCount
 
-      transactionBuilder.addOutput(burnAllConfig.fundingAddress, sendAmount)
+      transactionBuilder.addOutput(
+        addy.toCashAddress(burnAllConfig.bchChangeReceiverAddress),
+        sendAmount
+      )
 
       let keyPair = tmpBITBOX.ECPair.fromWIF(burnAllConfig.fundingWif)
 
