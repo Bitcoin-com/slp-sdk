@@ -59,7 +59,7 @@ class Utils {
     }
   }
 
-  async validateTxid(txid: string): Promise<Object> {
+  async validateTxid(txid: string | string[]): Promise<Object> {
     let path: string = `${this.restURL}slp/validateTxid`
 
     let txids: string[]
