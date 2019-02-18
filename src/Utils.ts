@@ -59,51 +59,25 @@ class Utils {
     }
   }
 
-  async validateTxid(
-    txid: string,
-    network: string,
-    getRawTransactions: any = null
-  ): Promise<Object> {
-    let tmpBITBOX: any
+  async validateTxid(txid: string | string[]): Promise<Object> {
+    let path: string = `${this.restURL}slp/validateTxid`
 
-    if (network === "mainnet") {
-      //tmpBITBOX = new BITBOXSDK({ restURL: "https://rest.bitcoin.com/v2/" })
-      tmpBITBOX = new BITBOXSDK({ restURL: "http://localhost:3000/v2/" })
+    let txids: string[]
+    if (typeof txid === "string") {
+      txids = [txid]
     } else {
-      tmpBITBOX = new BITBOXSDK({ restURL: "https://trest.bitcoin.com/v2/" })
+      txids = txid
     }
 
-    const slpValidator: any = new slpjs.LocalValidator(
-      tmpBITBOX,
-      getRawTransactions
-        ? getRawTransactions
-        : tmpBITBOX.RawTransactions.getRawTransaction.bind(this)
-    )
-
-    let isValid: boolean = await slpValidator.isValidSlpTxid(txid)
-    return isValid
-  }
-
-  createValidator(
-    network: string,
-    getRawTransactions: any = null
-  ): Promise<Object> {
-    let tmpBITBOX: any
-
-    if (network === "mainnet") {
-      tmpBITBOX = new BITBOXSDK({ restURL: "https://rest.bitcoin.com/v2/" })
-    } else {
-      tmpBITBOX = new BITBOXSDK({ restURL: "https://trest.bitcoin.com/v2/" })
+    try {
+      const response = await axios.post(path, {
+        txids: txids
+      })
+      return response.data
+    } catch (error) {
+      if (error.response && error.response.data) throw error.response.data
+      throw error
     }
-
-    const slpValidator: any = new slpjs.LocalValidator(
-      tmpBITBOX,
-      getRawTransactions
-        ? getRawTransactions
-        : tmpBITBOX.RawTransactions.getRawTransaction.bind(this)
-    )
-
-    return slpValidator
   }
 }
 

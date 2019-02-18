@@ -135,14 +135,19 @@ describe("#Utils", () => {
       if (process.env.TEST === "unit") {
         nock(SERVER)
           .post(uri => uri.includes("/"))
-          .reply(200, mockData.mockRawTx)
+          .reply(200, mockData.mockIsValidTxid)
       }
 
       const isValid = await SLP.Utils.validateTxid(
-        "df808a41672a0a0ae6475b44f272a107bc9961b90f29dc918d71301f24fe92fb",
-        "mainnet"
+        "df808a41672a0a0ae6475b44f272a107bc9961b90f29dc918d71301f24fe92fb"
       )
-      assert.equal(isValid, true)
+      assert.deepEqual(isValid, [
+        {
+          txid:
+            "df808a41672a0a0ae6475b44f272a107bc9961b90f29dc918d71301f24fe92fb",
+          valid: true
+        }
+      ])
     })
   })
 })
