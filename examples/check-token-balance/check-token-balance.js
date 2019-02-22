@@ -8,7 +8,8 @@
 const NETWORK = `mainnet`
 
 // Set the TOKEN ID you are interested in
-const TOKEN_ID = ""
+const TOKEN_ID =
+  "df808a41672a0a0ae6475b44f272a107bc9961b90f29dc918d71301f24fe92fb"
 
 const SLPSDK = require("../../lib/SLP").default
 
@@ -35,6 +36,7 @@ async function getBalance() {
 
     // root seed buffer
     const rootSeed = SLP.Mnemonic.toSeed(mnemonic)
+
     // master HDNode
     let masterHDNode
     if (NETWORK === `mainnet`) masterHDNode = SLP.HDNode.fromSeed(rootSeed)
@@ -47,6 +49,7 @@ async function getBalance() {
 
     // get the cash address
     const cashAddress = SLP.HDNode.toCashAddress(change)
+
     // convert to slp address
     const slpAddress = SLP.Address.toSLPAddress(cashAddress)
 
