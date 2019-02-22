@@ -4,13 +4,12 @@
 "use strict"
 
 // CUSTOMIZE THESE VALUES FOR YOUR USE
-const TOKENQTY = 987.6
-const TOKENID =
-  "15f007bdcd8d01ee81adb6390e5023039cb5675cc2144dd358f2fdb2d427ab18"
-const SLPADDR = "bchtest:qqqzatu6w03dwf2zp638z453mxnjs7lh3uft2709h9"
+const TOKENQTY = 1
+const TOKENID = ""
+const SLPADDR = ""
 
 // Set NETWORK to either testnet or mainnet
-const NETWORK = `testnet`
+const NETWORK = `mainnet`
 
 const SLPSDK = require("../../lib/SLP").default
 
@@ -59,6 +58,14 @@ async function sendToken() {
     const tokenReceiverAddress = SLPADDR
     const bchChangeReceiverAddress = cashAddress
 
+    // Exit if user did not update the TOKENID.
+    if (!TOKENID || TOKENID === "") {
+      console.log(
+        `TOKENID value is empty. Update the code with the TOKENID of your token.`
+      )
+      return
+    }
+
     // Create a config object for minting
     const sendConfig = {
       fundingAddress,
@@ -76,7 +83,8 @@ async function sendToken() {
     const sendTxId = await SLP.TokenType1.send(sendConfig)
 
     console.log(`sendTxId: ${util.inspect(sendTxId)}`)
-    console.log(`View this transaction on the block explorer:`)
+
+    console.log(`\nView this transaction on the block explorer:`)
     if (NETWORK === `mainnet`)
       console.log(`https://explorer.bitcoin.com/bch/tx/${sendTxId}`)
     else console.log(`https://explorer.bitcoin.com/tbch/tx/${sendTxId}`)
