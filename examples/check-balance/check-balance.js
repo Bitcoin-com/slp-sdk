@@ -5,7 +5,10 @@
 "use strict"
 
 // Set NETWORK to either testnet or mainnet
-const NETWORK = `testnet`
+const NETWORK = `mainnet`
+
+// Set the TOKEN ID you are interested in
+const TOKEN_ID = ""
 
 const SLPSDK = require("../../lib/SLP").default
 
@@ -47,13 +50,11 @@ async function getBalance() {
     // convert to slp address
     const slpAddress = SLP.Address.toSLPAddress(cashAddress)
 
-    const tokenId = ""
-
     console.log(`SLP Token information:`)
 
     // get token balances
     try {
-      const tokens = await SLP.Utils.balance(slpAddress, tokenId)
+      const tokens = await SLP.Utils.balance(slpAddress, TOKEN_ID)
 
       console.log(JSON.stringify(tokens, null, 2))
     } catch (error) {
