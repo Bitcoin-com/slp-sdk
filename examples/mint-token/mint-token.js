@@ -3,11 +3,12 @@
 */
 "use strict"
 
-const TOKENID =
-  "15f007bdcd8d01ee81adb6390e5023039cb5675cc2144dd358f2fdb2d427ab18"
+// EDIT THESE VALUES FOR YOUR USE.
+const TOKENID = ""
+const TOKENQTY = 100
 
 // Set NETWORK to either testnet or mainnet
-const NETWORK = `testnet`
+const NETWORK = `mainnet`
 
 const SLPSDK = require("../../lib/SLP").default
 
@@ -58,6 +59,14 @@ async function mintToken() {
     const batonReceiverAddress = slpAddress
     const bchChangeReceiverAddress = cashAddress
 
+    // Exit if user did not update the TOKENID.
+    if (!TOKENID || TOKENID === "") {
+      console.log(
+        `TOKENID value is empty. Update the code with the TOKENID of your token.`
+      )
+      return
+    }
+
     // Create a config object for minting
     const mintConfig = {
       fundingAddress,
@@ -66,20 +75,19 @@ async function mintToken() {
       batonReceiverAddress,
       bchChangeReceiverAddress,
       tokenId: TOKENID,
-      additionalTokenQty: 1000000000 // One Billion
+      additionalTokenQty: TOKENQTY
     }
-
-    //console.log(`createConfig: ${util.inspect(createConfig)}`)
 
     // Generate, sign, and broadcast a hex-encoded transaction for creating
     // the new token.
     const mintTxId = await SLP.TokenType1.mint(mintConfig)
 
     console.log(`mintTxId: ${util.inspect(mintTxId)}`)
-    console.log(`View this transaction on the block explorer:`)
+
+    console.log(`\nView this transaction on the block explorer:`)
     if (NETWORK === `mainnet`)
-      console.log(`https://explorer.bitcoin.com/bch/tx/${genesisTxId}`)
-    else console.log(`https://explorer.bitcoin.com/tbch/tx/${genesisTxId}`)
+      console.log(`https://explorer.bitcoin.com/bch/tx/${mintTxId}`)
+    else console.log(`https://explorer.bitcoin.com/tbch/tx/${mintTxId}`)
   } catch (err) {
     console.error(`Error in mintToken: `, err)
     console.log(`Error message: ${err.message}`)

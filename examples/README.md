@@ -24,9 +24,10 @@ BCH wallet for a single tokenId
   [create-wallet](create-wallet) example first, and fund your wallet with a few
   cents of BCH first.
 
-- [create-nft](create-nft) - Create a new SLP non-fungible token. Run the
-  [create-wallet](create-wallet) example first, and fund your wallet with a few
-  cents of BCH first.
+- [create-nft](create-nft) - Create a new SLP
+[non-fungible token](https://coincentral.com/nfts-non-fungible-tokens/). Run the
+[create-wallet](create-wallet) example first, and fund your wallet with a few
+cents of BCH first.
 
 - [mint-token](mint-token) - Mint additional SLP tokens for an existing class
   controlled by your wallet.
