@@ -6,6 +6,9 @@
 // Set NETWORK to either testnet or mainnet
 const NETWORK = `testnet`
 
+// Set the token ID you want to burn.
+const TOKEN_ID = ""
+
 const SLPSDK = require("../../lib/SLP").default
 
 // Instantiate SLP based on the network.
@@ -44,14 +47,12 @@ async function burnAll() {
     // get the cash address
     const cashAddress = SLP.HDNode.toCashAddress(change)
 
-    const tokenId = ""
-
     // get token balances
     try {
       const iBurnAllConfig = {
         fundingAddress: cashAddress,
         fundingWif: SLP.HDNode.toWIF(change),
-        tokenId: tokenId,
+        tokenId: TOKEN_ID,
         bchChangeReceiverAddress: cashAddress
       }
       const burnAll = await SLP.TokenType1.burnAll(iBurnAllConfig)
