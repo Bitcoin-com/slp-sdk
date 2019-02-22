@@ -5,9 +5,11 @@
 [SLP SDK](https://developer.bitcoin.com/slp) is powered by [BITBOX](https://developer.bitcoin.com/bitbox).
 
 ## Installation and Usage
+
 - Ensure you have node.js v10 or higher installed.
 
 - Clone this repository
+
 ```bash
 git clone https://github.com/Bitcoin-com/slp-sdk
 cd slp-sdk
@@ -26,5 +28,6 @@ cd slp-sdk
 - [SLP specification unit tests](https://github.com/simpleledger/slp-unit-test-data) (Python)
 
 ### Token-Aware Wallets
+
 - [Badger Wallet](https://badger.bitcoin.com/)
 - [Electron Cash SLP](https://github.com/simpleledger/Electron-Cash-SLP)

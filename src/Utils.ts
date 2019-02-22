@@ -19,13 +19,29 @@ class Utils {
     this.restURL = restURL
   }
 
-  async list(id: string): Promise<Object | Array<Object>> {
+  async list(id?: string | string[]): Promise<Object | Array<Object>> {
     let path: string
-    if (!id) path = `${this.restURL}slp/list`
-    else path = `${this.restURL}slp/list/${id}`
+    let method: string
+    if (!id) {
+      method = "get"
+      path = `${this.restURL}slp/list`
+    } else if (typeof id === "string") {
+      method = "get"
+      path = `${this.restURL}slp/list/${id}`
+    } else if (typeof id === "object") {
+      method = "post"
+      path = `${this.restURL}slp/list`
+    }
 
     try {
-      const response = await axios.get(path)
+      let response: any
+      if (method === "get") {
+        response = await axios.get(path)
+      } else {
+        response = await axios.post(path, {
+          tokenIds: id
+        })
+      }
       return response.data
     } catch (error) {
       if (error.response && error.response.data) throw error.response.data
