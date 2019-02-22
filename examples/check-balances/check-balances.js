@@ -5,15 +5,15 @@
 "use strict"
 
 // Set NETWORK to either testnet or mainnet
-const NETWORK = `testnet`
+const NETWORK = `mainnet`
 
 const SLPSDK = require("../../lib/SLP").default
 
 // Instantiate SLP based on the network.
 let SLP
 if (NETWORK === `mainnet`)
-  SLP = new SLPSDK({ restURL: `https://rest.bitcoin.com/v1/` })
-else SLP = new SLPSDK({ restURL: `https://trest.bitcoin.com/v1/` })
+  SLP = new SLPSDK({ restURL: `https://rest.bitcoin.com/v2/` })
+else SLP = new SLPSDK({ restURL: `https://trest.bitcoin.com/v2/` })
 
 // Open the wallet generated with create-wallet.
 let walletInfo
@@ -60,6 +60,7 @@ async function getBalance() {
       console.log(JSON.stringify(tokens, null, 2))
     } catch (error) {
       if (error.message === "Address not found") console.log(`No tokens found.`)
+      else console.log(`Error: `, error)
     }
   } catch (err) {
     console.error(`Error in getBalance: `, err)

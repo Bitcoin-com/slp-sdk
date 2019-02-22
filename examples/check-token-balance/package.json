@@ -1,11 +1,11 @@
 {
-  "name": "check-balance",
+  "name": "check-token-balance",
   "version": "1.0.0",
-  "description": "Check balance for an address",
-  "main": "check-balance.js",
+  "description": "Check balance for an address and single token ID",
+  "main": "check-token-balance.js",
   "scripts": {
     "test": "echo no tests yet",
-    "start": "node check-balance.js"
+    "start": "node check-token-balance.js"
   },
   "repository": {
     "type": "git",
