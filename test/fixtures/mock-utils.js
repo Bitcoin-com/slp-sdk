@@ -68,6 +68,29 @@ const mockToken = {
   initialTokenQty: 10000000000000000
 }
 
+const mockTokens = [
+  {
+    id: "4276533bb702e7f8c9afd8aa61ebf016e95011dc3d54e55faa847ac1dd461e84",
+    timestamp: "2018-08-25 03:54",
+    symbol: "USDT",
+    name: "US Dollar Tether",
+    documentUri: "",
+    documentHash: "",
+    decimals: 0,
+    initialTokenQty: 10000000000000000
+  },
+  {
+    id: "b3f4f132dc3b9c8c96316346993a8d54d729715147b7b11aa6c8cd909e955313",
+    timestamp: "2019-01-30 21:56",
+    symbol: "SLPJS",
+    name: "Awesome SLPJS README Token",
+    documentUri: "info@simpleledger.io",
+    documentHash: "",
+    decimals: 2,
+    initialTokenQty: 1000000
+  }
+]
+
 const balancesForAddress = [
   {
     tokenId: "df808a41672a0a0ae6475b44f272a107bc9961b90f29dc918d71301f24fe92fb",
@@ -95,6 +118,7 @@ const mockIsValidTxid = [
 module.exports = {
   mockList,
   mockToken,
+  mockTokens,
   balancesForAddress,
   mockRawTx,
   mockIsValidTxid

@@ -90,6 +90,35 @@ describe("#Utils", () => {
       ])
       assert.equal(list.id, tokenId)
     })
+
+    it(`should list multople SLP tokens by array of ids`, async () => {
+      // Mock the call to rest.bitcoin.com
+      if (process.env.TEST === "unit") {
+        nock(SERVER)
+          .post(uri => uri.includes("/"))
+          .reply(200, mockData.mockTokens)
+      }
+
+      const tokenIds = [
+        "4276533bb702e7f8c9afd8aa61ebf016e95011dc3d54e55faa847ac1dd461e84",
+        "b3f4f132dc3b9c8c96316346993a8d54d729715147b7b11aa6c8cd909e955313"
+      ]
+
+      const list = await SLP.Utils.list(tokenIds)
+      // console.log(`list: ${JSON.stringify(list, null, 2)}`)
+
+      assert2.hasAllKeys(list[0], [
+        "id",
+        "timestamp",
+        "symbol",
+        "name",
+        "documentUri",
+        "documentHash",
+        "decimals",
+        "initialTokenQty"
+      ])
+      assert.equal(list[0].id, tokenIds[0])
+    })
   })
 
   describe("#balancesForAddress", () => {
