@@ -83,7 +83,7 @@ class TokenType1 {
       bchChangeReceiverAddress,
       balances.nonSlpUtxos
     )
-    return genesisTxid[0]
+    return genesisTxid
   }
 
   async mint(mintConfig: IMintConfig) {
@@ -141,7 +141,7 @@ class TokenType1 {
       batonReceiverAddress,
       bchChangeReceiverAddress
     )
-    return mintTxid[0]
+    return mintTxid
   }
 
   async send(sendConfig: ISendConfig) {
@@ -194,7 +194,7 @@ class TokenType1 {
       tokenReceiverAddress,
       bchChangeReceiverAddress
     )
-    return sendTxid[0]
+    return sendTxid
   }
 
   async burnAll(burnAllConfig: IBurnAllConfig) {
@@ -273,7 +273,7 @@ class TokenType1 {
       let tx = transactionBuilder.build()
       let hex = tx.toHex()
       let txid = await tmpBITBOX.RawTransactions.sendRawTransaction(hex)
-      return txid[0]
+      return txid
     } catch (error) {
       return error
     }
@@ -317,7 +317,7 @@ class TokenType1 {
         inputUtxos,
         bchChangeReceiverAddress
       )
-      return burnTxid[0]
+      return burnTxid
     } catch (error) {
       return error
     }
