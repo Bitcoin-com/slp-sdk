@@ -1,6 +1,6 @@
 // require deps
 const BITBOXAddress = require("bitbox-sdk/lib/Address").default
-const BITBOXSDK = require("bitbox-sdk/lib/bitbox-sdk").default
+const BITBOXSDK = require("bitbox-sdk")
 const BITBOX = new BITBOXSDK()
 const utils = require("slpjs").Utils
 

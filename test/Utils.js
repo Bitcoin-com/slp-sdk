@@ -1,13 +1,13 @@
 "use strict"
 const assert = require("assert")
 const assert2 = require("chai").assert
-const slp = require("./../lib/SLP").default
+const slp = require("./../lib/SLP")
 const SLP = new slp()
 const nock = require("nock") // http call mocking
 const sinon = require("sinon")
 const BigNumber = require("bignumber.js")
 
-const BITBOXSDK = require("bitbox-sdk/lib/bitbox-sdk").default
+const BITBOXSDK = require("bitbox-sdk")
 const slpjs = require("slpjs")
 
 // Mock data used for unit tests

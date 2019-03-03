@@ -1,5 +1,5 @@
 // require deps
-const BITBOXSDK: any = require("bitbox-sdk/lib/bitbox-sdk").default
+const BITBOXSDK: any = require("bitbox-sdk")
 
 // import interfaces
 import { IConfig } from "./interfaces/SLPInterfaces"
@@ -27,4 +27,4 @@ class SLP extends BITBOXSDK {
   }
 }
 
-export default SLP
+export = SLP
