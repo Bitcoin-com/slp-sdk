@@ -1,6 +1,6 @@
 "use strict"
 const assert = require("assert")
-const slp = require("./../lib/SLP").default
+const slp = require("./../lib/SLP")
 const SLP = new slp({
   restURL: "https://rest.bitcoin.com/v2/"
 })

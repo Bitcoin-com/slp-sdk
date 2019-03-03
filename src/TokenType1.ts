@@ -1,5 +1,5 @@
 // require deps
-const BITBOXSDK: any = require("bitbox-sdk/lib/bitbox-sdk").default
+const BITBOXSDK: any = require("bitbox-sdk")
 const BigNumber: any = require("bignumber.js")
 const slpjs: any = require("slpjs")
 
