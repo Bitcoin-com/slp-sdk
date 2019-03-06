@@ -1,6 +1,4 @@
 #!/usr/bin/env node
-"use strict"
-
 require("babel-register")
 const path = require("path")
 const program = require("commander")
@@ -15,7 +13,7 @@ const repl = require("repl")
 const SLP = require("./lib/SLP")
 const clone = require("git-clone")
 
-program.version("3.0.2", "-v, --version")
+program.version("3.0.3", "-v, --version")
 
 program
   .command("new <name>")
