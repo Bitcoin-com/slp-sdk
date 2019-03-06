@@ -12,10 +12,10 @@ const fs = require("fs")
 const touch = require("touch")
 const emoji = require("node-emoji")
 const repl = require("repl")
-const SLP = require("./lib/SLP").default
+const SLP = require("./lib/SLP")
 const clone = require("git-clone")
 
-program.version("3.0.1", "-v, --version")
+program.version("3.0.2", "-v, --version")
 
 program
   .command("new <name>")
