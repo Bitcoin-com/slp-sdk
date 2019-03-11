@@ -1,19 +1,17 @@
 /*
-  Get the token information based on the primaryid value assigned to it.
+  Get the token information based on all SLP tokens in existence.
 */
-
-"use strict"
 
 // Set NETWORK to either testnet or mainnet
 const NETWORK = `mainnet`
 
-const SLPSDK = require("../../lib/SLP").default
+const SLPSDK = require("../../lib/SLP")
 
 // Instantiate SLP based on the network.
 let SLP
 if (NETWORK === `mainnet`)
-  SLP = new SLPSDK({ restURL: `https://rest.bitcoin.com/v1/` })
-else SLP = new SLPSDK({ restURL: `https://trest.bitcoin.com/v1/` })
+  SLP = new SLPSDK({ restURL: `https://rest.bitcoin.com/v2/` })
+else SLP = new SLPSDK({ restURL: `https://trest.bitcoin.com/v2/` })
 
 async function listAllTokens() {
   try {
