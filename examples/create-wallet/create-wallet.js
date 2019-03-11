@@ -2,12 +2,11 @@
   Create an HDNode wallet using SLP SDK. The mnemonic from this wallet
   will be used in the other examples.
 */
-"use strict"
 
 // Set NETWORK to either testnet or mainnet
 const NETWORK = `mainnet`
 
-const SLPSDK = require("../../lib/SLP").default
+const SLPSDK = require("../../lib/SLP")
 
 // Instantiate SLP based on the network.
 let SLP
@@ -21,12 +20,12 @@ const lang = "english"
 let outStr = ""
 const outObj = {}
 
-// create 256 bit BIP39 mnemonic
-const mnemonic = SLP.Mnemonic.generate(256, SLP.Mnemonic.wordLists()[lang])
+// create 128 bit BIP39 mnemonic
+const mnemonic = SLP.Mnemonic.generate(128, SLP.Mnemonic.wordLists()[lang])
 console.log("BIP44 $BCH Wallet")
 outStr += "BIP44 $BCH Wallet\n"
-console.log(`256 bit ${lang} BIP39 Mnemonic: `, mnemonic)
-outStr += `\n256 bit ${lang} BIP32 Mnemonic:\n${mnemonic}\n\n`
+console.log(`128 bit ${lang} BIP39 Mnemonic: `, mnemonic)
+outStr += `\n128 bit ${lang} BIP32 Mnemonic:\n${mnemonic}\n\n`
 outObj.mnemonic = mnemonic
 
 // root seed buffer
