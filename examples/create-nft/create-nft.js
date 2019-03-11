@@ -1,18 +1,17 @@
 /*
   Create a Non Fungible Token.
 */
-"use strict"
 
 // Set NETWORK to either testnet or mainnet
-const NETWORK = `testnet`
+const NETWORK = `mainnet`
 
-const SLPSDK = require("../../lib/SLP").default
+const SLPSDK = require("../../lib/SLP")
 
 // Instantiate SLP based on the network.
 let SLP
 if (NETWORK === `mainnet`)
-  SLP = new SLPSDK({ restURL: `https://rest.bitcoin.com/v1/` })
-else SLP = new SLPSDK({ restURL: `https://trest.bitcoin.com/v1/` })
+  SLP = new SLPSDK({ restURL: `https://rest.bitcoin.com/v2/` })
+else SLP = new SLPSDK({ restURL: `https://trest.bitcoin.com/v2/` })
 
 // Open the wallet generated with create-wallet.
 let walletInfo
@@ -66,7 +65,7 @@ async function createNFT() {
         "1010101010101010101010101010101010101010101010101010101010101010",
       initialTokenQty: initialQty
     })
-    console.log(`genesisTxID: ${util.inspect(genesisTxId)}`)
+    console.log(`genesisTxID: ${genesisTxId}`)
     console.log(
       `The genesis TxID above is used to uniquely identify your new class of SLP token. Save it and keep it handy.`
     )

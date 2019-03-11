@@ -2,8 +2,6 @@
   Get the token information based on the id.
 */
 
-"use strict"
-
 // EDIT THIS WITH THE TOKEN ID YOU WANT TO LOOK UP
 const TOKENID =
   "259908ae44f46ef585edef4bcc1e50dc06e4c391ac4be929fae27235b8158cf1"
@@ -11,7 +9,7 @@ const TOKENID =
 // Set NETWORK to either testnet or mainnet
 const NETWORK = `mainnet`
 
-const SLPSDK = require("../../lib/SLP").default
+const SLPSDK = require("../../lib/SLP")
 
 // Instantiate SLP based on the network.
 let SLP
