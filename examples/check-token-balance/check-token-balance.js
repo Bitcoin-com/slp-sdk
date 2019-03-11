@@ -2,16 +2,15 @@
   Check the SLP token balance by tokenId for the wallet created with the
   create-wallet example app.
 */
-"use strict"
 
 // Set NETWORK to either testnet or mainnet
 const NETWORK = `mainnet`
 
 // Set the TOKEN ID you are interested in
 const TOKEN_ID =
-  "df808a41672a0a0ae6475b44f272a107bc9961b90f29dc918d71301f24fe92fb"
+  "b71dfb1adcd015dfa62c3ff58496b3c153498d1f3ed2b91b2d139f11a85cec39"
 
-const SLPSDK = require("../../lib/SLP").default
+const SLPSDK = require("../../lib/SLP")
 
 // Instantiate SLP based on the network.
 let SLP
