@@ -2,12 +2,11 @@
   Create a new SLP token. Requires a wallet created with the create-wallet
   example. Also requires that wallet to have a small BCH balance.
 */
-"use strict"
 
 // Set NETWORK to either testnet or mainnet
 const NETWORK = `mainnet`
 
-const SLPSDK = require("../../lib/SLP").default
+const SLPSDK = require("../../lib/SLP")
 
 // Used for debugging and investigating JS objects.
 const util = require("util")

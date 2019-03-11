@@ -1,7 +1,6 @@
 /*
   Send tokens of type TOKENID to user with SLPADDR address.
 */
-"use strict"
 
 // CUSTOMIZE THESE VALUES FOR YOUR USE
 const TOKENQTY = 1
@@ -11,7 +10,7 @@ const SLPADDR = ""
 // Set NETWORK to either testnet or mainnet
 const NETWORK = `mainnet`
 
-const SLPSDK = require("../../lib/SLP").default
+const SLPSDK = require("../../lib/SLP")
 
 // Used for debugging and investigating JS objects.
 const util = require("util")
