@@ -2,12 +2,12 @@
   Check the BCH and SLP token balances for the wallet created with the
   create-wallet example app.
 */
-"use strict"
 
 // Set NETWORK to either testnet or mainnet
 const NETWORK = `mainnet`
 
-const SLPSDK = require("../../lib/SLP").default
+//const SLPSDK = require("../../lib/SLP").default
+const SLPSDK = require("../../lib/SLP")
 
 // Instantiate SLP based on the network.
 let SLP

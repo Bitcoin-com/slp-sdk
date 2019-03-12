@@ -1,15 +1,14 @@
 /*
   Burn all tokens for an address by tokenId
 */
-"use strict"
 
 // Set NETWORK to either testnet or mainnet
-const NETWORK = `testnet`
+const NETWORK = `mainnet`
 
 // Set the token ID you want to burn.
 const TOKEN_ID = ""
 
-const SLPSDK = require("../../lib/SLP").default
+const SLPSDK = require("../../lib/SLP")
 
 // Instantiate SLP based on the network.
 let SLP
