@@ -9,7 +9,7 @@ util.inspect.defaultOptions = { depth: 1 }
 
 // import classes
 import Address from "./Address"
-let addy = new Address()
+const addy = new Address()
 
 let slpValidator: any
 
@@ -51,7 +51,20 @@ class Utils {
 
   // Retrieve token balances for a given address.
   async balancesForAddress(address: string): Promise<Object> {
-    let path: string = `${this.restURL}slp/balancesForAddress/${address}`
+    const path: string = `${this.restURL}slp/balancesForAddress/${address}`
+
+    try {
+      const response = await axios.get(path)
+      return response.data
+    } catch (error) {
+      if (error.response && error.response.data) throw error.response.data
+      throw error
+    }
+  }
+
+  // Retrieve token balances for a given tokenId.
+  async balancesForToken(tokenId: string): Promise<Object> {
+    const path: string = `${this.restURL}slp/balancesForToken/${tokenId}`
 
     try {
       const response = await axios.get(path)
@@ -64,7 +77,7 @@ class Utils {
 
   // Retrieve a balance for a specific address and token ID
   async balance(address: string, tokenId: string): Promise<Object> {
-    let path: string = `${this.restURL}slp/balance/${address}/${tokenId}`
+    const path: string = `${this.restURL}slp/balance/${address}/${tokenId}`
 
     try {
       const response = await axios.get(path)
@@ -76,19 +89,41 @@ class Utils {
   }
 
   async validateTxid(txid: string | string[]): Promise<Object> {
-    let path: string = `${this.restURL}slp/validateTxid`
+    const path: string = `${this.restURL}slp/validateTxid`
 
     let txids: string[]
-    if (typeof txid === "string") {
-      txids = [txid]
-    } else {
-      txids = txid
-    }
+    if (typeof txid === "string") txids = [txid]
+    else txids = txid
 
     try {
       const response = await axios.post(path, {
         txids: txids
       })
+      return response.data
+    } catch (error) {
+      if (error.response && error.response.data) throw error.response.data
+      throw error
+    }
+  }
+
+  async tokenStats(tokenId: string): Promise<Object> {
+    const path: string = `${this.restURL}slp/tokenStats/${tokenId}`
+
+    try {
+      const response = await axios.get(path)
+      return response.data
+    } catch (error) {
+      if (error.response && error.response.data) throw error.response.data
+      throw error
+    }
+  }
+
+  // Retrieve token transactions for a given tokenId and address.
+  async transactions(tokenId: string, address: string): Promise<Object> {
+    const path: string = `${this.restURL}slp/transactions/${tokenId}/${address}`
+
+    try {
+      const response = await axios.get(path)
       return response.data
     } catch (error) {
       if (error.response && error.response.data) throw error.response.data

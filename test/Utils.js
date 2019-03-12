@@ -1,14 +1,9 @@
-"use strict"
 const assert = require("assert")
 const assert2 = require("chai").assert
 const slp = require("./../lib/SLP")
 const SLP = new slp()
 const nock = require("nock") // http call mocking
 const sinon = require("sinon")
-const BigNumber = require("bignumber.js")
-
-const BITBOXSDK = require("bitbox-sdk")
-const slpjs = require("slpjs")
 
 // Mock data used for unit tests
 const mockData = require("./fixtures/mock-utils")
@@ -177,6 +172,68 @@ describe("#Utils", () => {
           valid: true
         }
       ])
+    })
+  })
+
+  describe("#balancesForToken", () => {
+    it(`should retrieve token balances for a given tokenId`, async () => {
+      // Mock the call to rest.bitcoin.com
+      if (process.env.TEST === "unit") {
+        nock(SERVER)
+          .get(uri => uri.includes("/"))
+          .reply(200, mockData.mockBalancesForToken)
+      }
+
+      const balances = await SLP.Utils.balancesForToken(
+        "df808a41672a0a0ae6475b44f272a107bc9961b90f29dc918d71301f24fe92fb"
+      )
+      assert2.hasAnyKeys(balances[0], ["tokenBalance", "slpAddress"])
+    })
+  })
+
+  describe("#tokenStats", () => {
+    it(`should retrieve stats for a given tokenId`, async () => {
+      // Mock the call to rest.bitcoin.com
+      if (process.env.TEST === "unit") {
+        nock(SERVER)
+          .get(uri => uri.includes("/"))
+          .reply(200, mockData.mockTokenStats)
+      }
+
+      const tokenStats = await SLP.Utils.tokenStats(
+        "df808a41672a0a0ae6475b44f272a107bc9961b90f29dc918d71301f24fe92fb"
+      )
+      assert2.hasAnyKeys(tokenStats, [
+        "circulatingSupply",
+        "decimals",
+        "documentUri",
+        "name",
+        "satoshisLockedUp",
+        "symbol",
+        "tokenId",
+        "totalBurned",
+        "totalMinted",
+        "txnsSinceGenesis",
+        "validAddresses",
+        "validUtxos"
+      ])
+    })
+  })
+
+  describe("#transactions", () => {
+    it(`should retrieve transactions for a given tokenId and address`, async () => {
+      // Mock the call to rest.bitcoin.com
+      if (process.env.TEST === "unit") {
+        nock(SERVER)
+          .get(uri => uri.includes("/"))
+          .reply(200, mockData.mockTransactions)
+      }
+
+      const transactions = await SLP.Utils.transactions(
+        "495322b37d6b2eae81f045eda612b95870a0c2b6069c58f70cf8ef4e6a9fd43a",
+        "qrhvcy5xlegs858fjqf8ssl6a4f7wpstaqlsy4gusz"
+      )
+      assert2.hasAnyKeys(transactions[0], ["txid", "tokenDetails"])
     })
   })
 })
