@@ -1,6 +1,6 @@
 {
   "name": "slp-sdk",
-  "version": "3.2.0",
+  "version": "3.2.1",
   "description": "SLP SDK powered by BITBOX",
   "main": "lib/SLP",
   "scripts": {
@@ -40,7 +40,7 @@
     "mkdirp": "^0.5.1",
     "node-emoji": "^1.8.1",
     "repl.history": "^0.1.4",
-    "slpjs": "0.15.3",
+    "slpjs": "0.15.5",
     "touch": "^3.1.0"
   },
   "devDependencies": {
