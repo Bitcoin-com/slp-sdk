@@ -149,7 +149,7 @@ describe("#Utils", () => {
         "df808a41672a0a0ae6475b44f272a107bc9961b90f29dc918d71301f24fe92fb"
       )
 
-      assert2.hasAllKeys(balance, ["tokenId", "balance", "balance"])
+      assert2.hasAllKeys(balance, ["tokenId", "balance"])
     })
   })
 
