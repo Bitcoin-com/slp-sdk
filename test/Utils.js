@@ -48,14 +48,25 @@ describe("#Utils", () => {
 
       assert2.isArray(list)
       assert2.hasAllKeys(list[0], [
-        "id",
-        "timestamp",
-        "symbol",
-        "name",
-        "documentUri",
-        "documentHash",
+        "blockCreated",
+        "blockLastActiveMint",
+        "blockLastActiveSend",
+        "circulatingSupply",
+        "containsBaton",
         "decimals",
-        "initialTokenQty"
+        "documentHash",
+        "documentUri",
+        "id",
+        "initialTokenQty",
+        "mintingBatonStatus",
+        "name",
+        "symbol",
+        "timestamp",
+        "totalBurned",
+        "totalMinted",
+        "txnsSinceGenesis",
+        "validAddresses",
+        "versionType"
       ])
     })
 
@@ -74,14 +85,25 @@ describe("#Utils", () => {
       //console.log(`list: ${JSON.stringify(list, null, 2)}`)
 
       assert2.hasAllKeys(list, [
-        "id",
-        "timestamp",
-        "symbol",
-        "name",
-        "documentUri",
-        "documentHash",
+        "blockCreated",
+        "blockLastActiveMint",
+        "blockLastActiveSend",
+        "circulatingSupply",
+        "containsBaton",
         "decimals",
-        "initialTokenQty"
+        "documentHash",
+        "documentUri",
+        "id",
+        "initialTokenQty",
+        "mintingBatonStatus",
+        "name",
+        "symbol",
+        "timestamp",
+        "totalBurned",
+        "totalMinted",
+        "txnsSinceGenesis",
+        "validAddresses",
+        "versionType"
       ])
       assert.equal(list.id, tokenId)
     })
@@ -103,14 +125,25 @@ describe("#Utils", () => {
       // console.log(`list: ${JSON.stringify(list, null, 2)}`)
 
       assert2.hasAllKeys(list[0], [
-        "id",
-        "timestamp",
-        "symbol",
-        "name",
-        "documentUri",
-        "documentHash",
+        "blockCreated",
+        "blockLastActiveMint",
+        "blockLastActiveSend",
+        "circulatingSupply",
+        "containsBaton",
         "decimals",
-        "initialTokenQty"
+        "documentHash",
+        "documentUri",
+        "id",
+        "initialTokenQty",
+        "mintingBatonStatus",
+        "name",
+        "symbol",
+        "timestamp",
+        "totalBurned",
+        "totalMinted",
+        "txnsSinceGenesis",
+        "validAddresses",
+        "versionType"
       ])
       assert.equal(list[0].id, tokenIds[0])
     })
@@ -131,7 +164,12 @@ describe("#Utils", () => {
       // console.log(`balances: ${JSON.stringify(balances, null, 2)}`)
 
       assert2.isArray(balances)
-      assert2.hasAllKeys(balances[0], ["tokenId", "balance", "decimalCount"])
+      assert2.hasAllKeys(balances[0], [
+        "tokenId",
+        "balance",
+        "decimalCount",
+        "slpAddress"
+      ])
     })
   })
 

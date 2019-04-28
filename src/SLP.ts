@@ -6,12 +6,14 @@ import { IConfig } from "./interfaces/SLPInterfaces"
 
 // import classes
 import Address from "./Address"
+import HDNode from "./HDNode"
 import TokenType1 from "./TokenType1"
 import Utils from "./Utils"
 
 // SLP SDK is a superset of BITBOX SDK <3
 class SLP extends BITBOXSDK {
   Address: any
+  HDNode: any
   TokenType1: any
   Utils: any
   constructor(config: IConfig = {}) {
@@ -22,6 +24,7 @@ class SLP extends BITBOXSDK {
     else restURL = "https://rest.bitcoin.com/v2/"
 
     this.Address = new Address(restURL)
+    this.HDNode = new HDNode(restURL)
     this.TokenType1 = new TokenType1(restURL)
     this.Utils = new Utils(restURL)
   }
