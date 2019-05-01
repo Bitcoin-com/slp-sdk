@@ -31,3 +31,5 @@ cd slp-sdk
 
 - [Badger Wallet](https://badger.bitcoin.com/)
 - [Electron Cash SLP](https://github.com/simpleledger/Electron-Cash-SLP)
+
+deploy
