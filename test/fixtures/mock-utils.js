@@ -4,88 +4,113 @@
 
 const mockList = [
   {
-    id: "386e85e556ba273e8e733944fa09184ad473badc47256a90ca967e98c760fd68",
-    timestamp: "2018-10-13 10:33",
-    symbol: "USD",
-    name: "Dollar",
-    documentUri: "15119324642@163.com",
-    documentHash: "",
-    decimals: 5,
-    initialTokenQty: 1000000000
-  },
-  {
-    id: "437ce1491119a1786f8e17a30d550f8a3a7b9eaa4477c21401d036efc34e7032",
-    timestamp: "2018-10-13 08:52",
-    symbol: "CNY",
-    name: "Chinese Yuan",
-    documentUri: "15119324642@163.com",
-    documentHash: "",
-    decimals: 5,
-    initialTokenQty: 1000000000
-  },
-  {
-    id: "03de34ad3dc1875383920592fbca538b51ff4740f283016bf673484c7a7d9c75",
-    timestamp: "2018-10-13 08:52",
-    symbol: "RMB",
-    name: "Renminbi",
-    documentUri: "15119324642@163.com",
-    documentHash: "",
-    decimals: 5,
-    initialTokenQty: 1000000000
-  },
-  {
-    id: "00ecb68463600b091e832eed48a2155cff01a0d0930c45f9194f4f289e1330f3",
-    timestamp: "2018-10-12 13:08",
-    symbol: "ART$",
-    name: "Art Dollar",
-    documentUri: "",
-    documentHash: "",
     decimals: 0,
-    initialTokenQty: 21000000
+    timestamp: "2019-04-29 08:59",
+    versionType: 1,
+    documentUri: "",
+    symbol: "WMW",
+    name: "WheresMyWallet",
+    containsBaton: false,
+    id: "8fc284dcbc922f7bb7e2a443dc3af792f52923bba403fcf67ca028c88e89da0e",
+    documentHash: null,
+    initialTokenQty: 1000,
+    blockCreated: 580336,
+    blockLastActiveSend: 580336,
+    blockLastActiveMint: null,
+    txnsSinceGenesis: 1,
+    validAddresses: 1,
+    totalMinted: 1000,
+    totalBurned: 0,
+    circulatingSupply: 1000,
+    mintingBatonStatus: "NEVER_CREATED"
   },
   {
-    id: "14c6d416ed14ef7fddacc58b05abf60b13d0ebaacee901282d4d2e37fc0dfcb1",
-    timestamp: "2018-10-11 20:54",
-    symbol: "rwc",
-    name: "cashroyale",
-    documentUri: "",
-    documentHash: "",
     decimals: 0,
-    initialTokenQty: 100000
+    timestamp: "2019-04-29 08:59",
+    versionType: 1,
+    documentUri: "",
+    symbol: "WMW",
+    name: "Where'sMyWallet",
+    containsBaton: false,
+    id: "471d1f33e8a69cf59ce174ce43174feeecdf1f475ccc4cc3705600a5d6d2cd06",
+    documentHash: null,
+    initialTokenQty: 1000,
+    blockCreated: 580336,
+    blockLastActiveSend: 580351,
+    blockLastActiveMint: null,
+    txnsSinceGenesis: 2,
+    validAddresses: 2,
+    totalMinted: 1000,
+    totalBurned: 0,
+    circulatingSupply: 1000,
+    mintingBatonStatus: "NEVER_CREATED"
   }
 ]
 
 const mockToken = {
-  id: "4276533bb702e7f8c9afd8aa61ebf016e95011dc3d54e55faa847ac1dd461e84",
-  timestamp: "2018-08-25 03:54",
+  decimals: 0,
+  timestamp: "2018-08-25 01:54",
+  versionType: 1,
+  documentUri: "",
   symbol: "USDT",
   name: "US Dollar Tether",
-  documentUri: "",
-  documentHash: "",
-  decimals: 0,
-  initialTokenQty: 10000000000000000
+  containsBaton: false,
+  id: "4276533bb702e7f8c9afd8aa61ebf016e95011dc3d54e55faa847ac1dd461e84",
+  documentHash: null,
+  initialTokenQty: 10000000000000000,
+  blockCreated: 544903,
+  blockLastActiveSend: 544905,
+  blockLastActiveMint: null,
+  txnsSinceGenesis: 3,
+  validAddresses: 0,
+  totalMinted: 10000000000000000,
+  totalBurned: 10000000000000000,
+  circulatingSupply: 0,
+  mintingBatonStatus: "NEVER_CREATED"
 }
 
 const mockTokens = [
   {
-    id: "4276533bb702e7f8c9afd8aa61ebf016e95011dc3d54e55faa847ac1dd461e84",
-    timestamp: "2018-08-25 03:54",
+    decimals: 0,
+    timestamp: "2018-08-25 01:54",
+    versionType: 1,
+    documentUri: "",
     symbol: "USDT",
     name: "US Dollar Tether",
-    documentUri: "",
-    documentHash: "",
-    decimals: 0,
-    initialTokenQty: 10000000000000000
+    containsBaton: false,
+    id: "4276533bb702e7f8c9afd8aa61ebf016e95011dc3d54e55faa847ac1dd461e84",
+    documentHash: null,
+    initialTokenQty: 10000000000000000,
+    blockCreated: 544903,
+    blockLastActiveSend: 544905,
+    blockLastActiveMint: null,
+    txnsSinceGenesis: 3,
+    validAddresses: 0,
+    totalMinted: 10000000000000000,
+    totalBurned: 10000000000000000,
+    circulatingSupply: 0,
+    mintingBatonStatus: "NEVER_CREATED"
   },
   {
-    id: "b3f4f132dc3b9c8c96316346993a8d54d729715147b7b11aa6c8cd909e955313",
-    timestamp: "2019-01-30 21:56",
-    symbol: "SLPJS",
-    name: "Awesome SLPJS README Token",
-    documentUri: "info@simpleledger.io",
-    documentHash: "",
-    decimals: 2,
-    initialTokenQty: 1000000
+    decimals: 0,
+    timestamp: "2019-04-29 08:59",
+    versionType: 1,
+    documentUri: "",
+    symbol: "WMW",
+    name: "Where'sMyWallet",
+    containsBaton: false,
+    id: "471d1f33e8a69cf59ce174ce43174feeecdf1f475ccc4cc3705600a5d6d2cd06",
+    documentHash: null,
+    initialTokenQty: 1000,
+    blockCreated: 580336,
+    blockLastActiveSend: 580351,
+    blockLastActiveMint: null,
+    txnsSinceGenesis: 2,
+    validAddresses: 2,
+    totalMinted: 1000,
+    totalBurned: 0,
+    circulatingSupply: 1000,
+    mintingBatonStatus: "NEVER_CREATED"
   }
 ]
 
@@ -93,6 +118,7 @@ const balancesForAddress = [
   {
     tokenId: "df808a41672a0a0ae6475b44f272a107bc9961b90f29dc918d71301f24fe92fb",
     balance: "1",
+    slpAddress: "simpleledger:qzv3zz2trz0xgp6a96lu4m6vp2nkwag0kvyucjzqt9",
     decimalCount: 8
   },
   {
