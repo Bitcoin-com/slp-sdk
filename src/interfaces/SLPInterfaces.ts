@@ -35,13 +35,6 @@ export interface ISendConfig {
   amount: number
 }
 
-export interface IBurnAllConfig {
-  fundingAddress: string
-  fundingWif: string
-  tokenId: string
-  bchChangeReceiverAddress: string
-}
-
 export interface IBurnConfig {
   fundingAddress: string
   fundingWif: string
