@@ -29,10 +29,10 @@ export interface IMintConfig {
 export interface ISendConfig {
   fundingAddress: string
   fundingWif: string
-  tokenReceiverAddress: string
+  tokenReceiverAddress: string | string[]
   bchChangeReceiverAddress: string
   tokenId: string
-  amount: number
+  amount: number | number[]
 }
 
 export interface IBurnConfig {

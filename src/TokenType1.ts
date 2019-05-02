@@ -191,14 +191,14 @@ class TokenType1 {
         sendConfig.fundingAddress
       )
       const fundingWif: string = sendConfig.fundingWif
-      const tokenReceiverAddress: string = addy.toSLPAddress(
+      const tokenReceiverAddress: string | string[] =
         sendConfig.tokenReceiverAddress
-      )
+
       const bchChangeReceiverAddress: string = addy.toSLPAddress(
         sendConfig.bchChangeReceiverAddress
       )
       const tokenId: string = sendConfig.tokenId
-      let amount: number = sendConfig.amount
+      let amount: any = sendConfig.amount
 
       const tokenInfo: any = await bitboxNetwork.getTokenInformation(tokenId)
       const tokenDecimals: number = tokenInfo.decimals
@@ -208,7 +208,13 @@ class TokenType1 {
       )
 
       // 3) Calculate send amount in "Token Satoshis".  In this example we want to just send 1 token unit to someone...
-      amount = new BigNumber(amount).times(10 ** tokenDecimals) // Don't forget to account for token precision
+      if (!Array.isArray(amount)) {
+        amount = new BigNumber(amount).times(10 ** tokenDecimals) // Don't forget to account for token precision
+      } else {
+        amount.forEach((amt: number, index: number) => {
+          amount[index] = new BigNumber(amt).times(10 ** tokenDecimals) // Don't forget to account for token precision
+        })
+      }
 
       // 4) Get all of our token's UTXOs
       let inputUtxos = balances.slpTokenUtxos[tokenId]
@@ -218,6 +224,8 @@ class TokenType1 {
 
       // 6) Set the proper private key for each Utxo
       inputUtxos.forEach((txo: any) => (txo.wif = fundingWif))
+      console.log("AMOUNT", amount.length)
+      console.log("tokenReceiverAddress", tokenReceiverAddress.length)
 
       const sendTxid = await bitboxNetwork.simpleTokenSend(
         tokenId,
@@ -304,11 +312,23 @@ class TokenType1 {
       throw Error("Funding Address must be simpleledger format")
 
     // validate tokenReceiverAddress format
+    // single tokenReceiverAddress
     if (
       config.tokenReceiverAddress &&
       !addy.isSLPAddress(config.tokenReceiverAddress)
     )
       throw Error("Token Receiver Address must be simpleledger format")
+
+    // bulk tokenReceiverAddress
+    if (
+      config.tokenReceiverAddress &&
+      Array.isArray(config.tokenReceiverAddress)
+    ) {
+      config.tokenReceiverAddress.forEach((address: string) => {
+        if (!addy.isSLPAddress(address))
+          throw Error("Token Receiver Address must be simpleledger format")
+      })
+    }
 
     // validate bchChangeReceiverAddress format
     if (
