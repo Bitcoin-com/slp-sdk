@@ -98,60 +98,76 @@ class TokenType1 {
   }
 
   async mint(mintConfig: IMintConfig) {
-    const tmpBITBOX: any = this.returnBITBOXInstance(mintConfig.fundingAddress)
+    try {
+      // validate address formats
+      this.validateAddressFormat(mintConfig)
 
-    const getRawTransactions = async (txids: any) =>
-      await tmpBITBOX.RawTransactions.getRawTransaction(txids)
+      const tmpBITBOX: any = this.returnBITBOXInstance(
+        mintConfig.fundingAddress
+      )
 
-    const slpValidator: any = new slpjs.LocalValidator(
-      tmpBITBOX,
-      getRawTransactions
-    )
-    const bitboxNetwork: any = new slpjs.BitboxNetwork(tmpBITBOX, slpValidator)
-    const fundingAddress: string = addy.toSLPAddress(mintConfig.fundingAddress)
-    const fundingWif: string = mintConfig.fundingWif
-    const tokenReceiverAddress: string = addy.toSLPAddress(
-      mintConfig.tokenReceiverAddress
-    )
-    const batonReceiverAddress: string = addy.toSLPAddress(
-      mintConfig.batonReceiverAddress
-    )
-    const bchChangeReceiverAddress: string = addy.toSLPAddress(
-      mintConfig.bchChangeReceiverAddress
-    )
-    const tokenId: string = mintConfig.tokenId
-    const additionalTokenQty: number = mintConfig.additionalTokenQty
-    const balances: any = await bitboxNetwork.getAllSlpBalancesAndUtxos(
-      fundingAddress
-    )
-    if (!balances.slpBatonUtxos[tokenId])
-      throw Error("You don't have the minting baton for this token")
+      const getRawTransactions = async (txids: any) =>
+        await tmpBITBOX.RawTransactions.getRawTransaction(txids)
 
-    const tokenInfo: any = await bitboxNetwork.getTokenInformation(tokenId)
-    const tokenDecimals: number = tokenInfo.decimals
+      const slpValidator: any = new slpjs.LocalValidator(
+        tmpBITBOX,
+        getRawTransactions
+      )
+      const bitboxNetwork: any = new slpjs.BitboxNetwork(
+        tmpBITBOX,
+        slpValidator
+      )
+      const fundingAddress: string = addy.toSLPAddress(
+        mintConfig.fundingAddress
+      )
+      const fundingWif: string = mintConfig.fundingWif
+      const tokenReceiverAddress: string = addy.toSLPAddress(
+        mintConfig.tokenReceiverAddress
+      )
+      const batonReceiverAddress: string = addy.toSLPAddress(
+        mintConfig.batonReceiverAddress
+      )
+      const bchChangeReceiverAddress: string = addy.toSLPAddress(
+        mintConfig.bchChangeReceiverAddress
+      )
+      const tokenId: string = mintConfig.tokenId
+      const additionalTokenQty: number = mintConfig.additionalTokenQty
+      const balances: any = await bitboxNetwork.getAllSlpBalancesAndUtxos(
+        fundingAddress
+      )
+      if (!balances.slpBatonUtxos[tokenId])
+        throw Error("You don't have the minting baton for this token")
 
-    // 3) Multiply the specified token quantity by 10^(token decimal precision)
-    const mintQty = new BigNumber(additionalTokenQty).times(10 ** tokenDecimals)
+      const tokenInfo: any = await bitboxNetwork.getTokenInformation(tokenId)
+      const tokenDecimals: number = tokenInfo.decimals
 
-    // 4) Filter the list to choose ONLY the baton of interest
-    // NOTE: (spending other batons for other tokens will result in losing ability to mint those tokens)
-    let inputUtxos = balances.slpBatonUtxos[tokenId]
+      // 3) Multiply the specified token quantity by 10^(token decimal precision)
+      const mintQty = new BigNumber(additionalTokenQty).times(
+        10 ** tokenDecimals
+      )
 
-    // 5) Simply sweep our BCH (non-SLP) utxos to fuel the transaction
-    inputUtxos = inputUtxos.concat(balances.nonSlpUtxos)
+      // 4) Filter the list to choose ONLY the baton of interest
+      // NOTE: (spending other batons for other tokens will result in losing ability to mint those tokens)
+      let inputUtxos = balances.slpBatonUtxos[tokenId]
 
-    // 6) Set the proper private key for each Utxo
-    inputUtxos.forEach((txo: any) => (txo.wif = fundingWif))
+      // 5) Simply sweep our BCH (non-SLP) utxos to fuel the transaction
+      inputUtxos = inputUtxos.concat(balances.nonSlpUtxos)
 
-    const mintTxid = await bitboxNetwork.simpleTokenMint(
-      tokenId,
-      mintQty,
-      inputUtxos,
-      tokenReceiverAddress,
-      batonReceiverAddress,
-      bchChangeReceiverAddress
-    )
-    return mintTxid
+      // 6) Set the proper private key for each Utxo
+      inputUtxos.forEach((txo: any) => (txo.wif = fundingWif))
+
+      const mintTxid = await bitboxNetwork.simpleTokenMint(
+        tokenId,
+        mintQty,
+        inputUtxos,
+        tokenReceiverAddress,
+        batonReceiverAddress,
+        bchChangeReceiverAddress
+      )
+      return mintTxid
+    } catch (error) {
+      return error
+    }
   }
 
   async send(sendConfig: ISendConfig) {
