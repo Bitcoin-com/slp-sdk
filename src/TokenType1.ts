@@ -171,55 +171,66 @@ class TokenType1 {
   }
 
   async send(sendConfig: ISendConfig) {
-    const tmpBITBOX: any = this.returnBITBOXInstance(sendConfig.fundingAddress)
+    try {
+      // validate address formats
+      this.validateAddressFormat(sendConfig)
 
-    const getRawTransactions = async (txids: any) =>
-      await tmpBITBOX.RawTransactions.getRawTransaction(txids)
+      const tmpBITBOX: any = this.returnBITBOXInstance(
+        sendConfig.fundingAddress
+      )
 
-    const slpValidator: any = new slpjs.LocalValidator(
-      tmpBITBOX,
-      getRawTransactions
-    )
-    const bitboxNetwork = new slpjs.BitboxNetwork(tmpBITBOX, slpValidator)
+      const getRawTransactions = async (txids: any) =>
+        await tmpBITBOX.RawTransactions.getRawTransaction(txids)
 
-    const fundingAddress: string = addy.toSLPAddress(sendConfig.fundingAddress)
-    const fundingWif: string = sendConfig.fundingWif
-    const tokenReceiverAddress: string = addy.toSLPAddress(
-      sendConfig.tokenReceiverAddress
-    )
-    const bchChangeReceiverAddress: string = addy.toSLPAddress(
-      sendConfig.bchChangeReceiverAddress
-    )
-    const tokenId: string = sendConfig.tokenId
-    let amount: number = sendConfig.amount
+      const slpValidator: any = new slpjs.LocalValidator(
+        tmpBITBOX,
+        getRawTransactions
+      )
+      const bitboxNetwork = new slpjs.BitboxNetwork(tmpBITBOX, slpValidator)
 
-    const tokenInfo: any = await bitboxNetwork.getTokenInformation(tokenId)
-    const tokenDecimals: number = tokenInfo.decimals
+      const fundingAddress: string = addy.toSLPAddress(
+        sendConfig.fundingAddress
+      )
+      const fundingWif: string = sendConfig.fundingWif
+      const tokenReceiverAddress: string = addy.toSLPAddress(
+        sendConfig.tokenReceiverAddress
+      )
+      const bchChangeReceiverAddress: string = addy.toSLPAddress(
+        sendConfig.bchChangeReceiverAddress
+      )
+      const tokenId: string = sendConfig.tokenId
+      let amount: number = sendConfig.amount
 
-    const balances: any = await bitboxNetwork.getAllSlpBalancesAndUtxos(
-      fundingAddress
-    )
+      const tokenInfo: any = await bitboxNetwork.getTokenInformation(tokenId)
+      const tokenDecimals: number = tokenInfo.decimals
 
-    // 3) Calculate send amount in "Token Satoshis".  In this example we want to just send 1 token unit to someone...
-    amount = new BigNumber(amount).times(10 ** tokenDecimals) // Don't forget to account for token precision
+      const balances: any = await bitboxNetwork.getAllSlpBalancesAndUtxos(
+        fundingAddress
+      )
 
-    // 4) Get all of our token's UTXOs
-    let inputUtxos = balances.slpTokenUtxos[tokenId]
+      // 3) Calculate send amount in "Token Satoshis".  In this example we want to just send 1 token unit to someone...
+      amount = new BigNumber(amount).times(10 ** tokenDecimals) // Don't forget to account for token precision
 
-    // 5) Simply sweep our BCH utxos to fuel the transaction
-    inputUtxos = inputUtxos.concat(balances.nonSlpUtxos)
+      // 4) Get all of our token's UTXOs
+      let inputUtxos = balances.slpTokenUtxos[tokenId]
 
-    // 6) Set the proper private key for each Utxo
-    inputUtxos.forEach((txo: any) => (txo.wif = fundingWif))
+      // 5) Simply sweep our BCH utxos to fuel the transaction
+      inputUtxos = inputUtxos.concat(balances.nonSlpUtxos)
 
-    const sendTxid = await bitboxNetwork.simpleTokenSend(
-      tokenId,
-      amount,
-      inputUtxos,
-      tokenReceiverAddress,
-      bchChangeReceiverAddress
-    )
-    return sendTxid
+      // 6) Set the proper private key for each Utxo
+      inputUtxos.forEach((txo: any) => (txo.wif = fundingWif))
+
+      const sendTxid = await bitboxNetwork.simpleTokenSend(
+        tokenId,
+        amount,
+        inputUtxos,
+        tokenReceiverAddress,
+        bchChangeReceiverAddress
+      )
+      return sendTxid
+    } catch (error) {
+      return error
+    }
   }
 
   async burnAll(burnAllConfig: IBurnAllConfig) {
