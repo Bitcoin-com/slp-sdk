@@ -8,7 +8,6 @@ import {
   ICreateConfig,
   IMintConfig,
   ISendConfig,
-  IBurnAllConfig,
   IBurnConfig
 } from "./interfaces/SLPInterfaces"
 
@@ -276,85 +275,6 @@ class TokenType1 {
         bchChangeReceiverAddress
       )
       return burnTxid
-    } catch (error) {
-      return error
-    }
-  }
-
-  async burnAll(burnAllConfig: IBurnAllConfig) {
-    try {
-      const tmpBITBOX: any = this.returnBITBOXInstance(
-        burnAllConfig.fundingAddress
-      )
-
-      const getRawTransactions = async (txids: any) =>
-        await tmpBITBOX.RawTransactions.getRawTransaction(txids)
-
-      const slpValidator: any = new slpjs.LocalValidator(
-        tmpBITBOX,
-        getRawTransactions
-      )
-      const bitboxNetwork = new slpjs.BitboxNetwork(tmpBITBOX, slpValidator)
-      const tokenInfo = await bitboxNetwork.getTokenInformation(
-        burnAllConfig.tokenId
-      )
-      const tokenDecimals = tokenInfo.decimals
-
-      const balances = await bitboxNetwork.getAllSlpBalancesAndUtxos(
-        burnAllConfig.fundingAddress
-      )
-      let inputUtxos = balances.slpTokenUtxos[burnAllConfig.tokenId]
-      inputUtxos = inputUtxos.concat(balances.nonSlpUtxos)
-
-      inputUtxos.forEach((txo: any) => (txo.wif = burnAllConfig.fundingWif))
-      const network: string = this.returnNetwork(burnAllConfig.fundingAddress)
-      let transactionBuilder: any
-      if (network === "mainnet")
-        transactionBuilder = new tmpBITBOX.TransactionBuilder("mainnet")
-      else transactionBuilder = new tmpBITBOX.TransactionBuilder("testnet")
-
-      let originalAmount: number = 0
-      inputUtxos.forEach((utxo: any) => {
-        // index of vout
-        const vout: string = utxo.vout
-
-        // txid of vout
-        const txid: string = utxo.txid
-
-        // add input with txid and index of vout
-        transactionBuilder.addInput(txid, vout)
-
-        originalAmount += utxo.satoshis
-      })
-
-      const byteCount = tmpBITBOX.BitcoinCash.getByteCount(
-        { P2PKH: inputUtxos.length },
-        { P2PKH: 1 }
-      )
-      const sendAmount = originalAmount - byteCount
-
-      transactionBuilder.addOutput(
-        addy.toCashAddress(burnAllConfig.bchChangeReceiverAddress),
-        sendAmount
-      )
-
-      const keyPair = tmpBITBOX.ECPair.fromWIF(burnAllConfig.fundingWif)
-
-      let redeemScript: void
-      inputUtxos.forEach((utxo: any, index: number) => {
-        transactionBuilder.sign(
-          index,
-          keyPair,
-          redeemScript,
-          transactionBuilder.hashTypes.SIGHASH_ALL,
-          utxo.satoshis
-        )
-      })
-
-      const tx = transactionBuilder.build()
-      const hex = tx.toHex()
-      const txid = await tmpBITBOX.RawTransactions.sendRawTransaction(hex)
-      return txid
     } catch (error) {
       return error
     }
