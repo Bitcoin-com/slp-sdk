@@ -233,6 +233,54 @@ class TokenType1 {
     }
   }
 
+  async burn(burnConfig: IBurnConfig) {
+    try {
+      // validate address formats
+      this.validateAddressFormat(burnConfig)
+
+      const tmpBITBOX: any = this.returnBITBOXInstance(
+        burnConfig.fundingAddress
+      )
+
+      const getRawTransactions = async (txids: any) =>
+        await tmpBITBOX.RawTransactions.getRawTransaction(txids)
+
+      const slpValidator: any = new slpjs.LocalValidator(
+        tmpBITBOX,
+        getRawTransactions
+      )
+      const bitboxNetwork = new slpjs.BitboxNetwork(tmpBITBOX, slpValidator)
+      const fundingAddress: string = addy.toSLPAddress(
+        burnConfig.fundingAddress
+      )
+      const bchChangeReceiverAddress: string = addy.toSLPAddress(
+        burnConfig.bchChangeReceiverAddress
+      )
+      const tokenInfo = await bitboxNetwork.getTokenInformation(
+        burnConfig.tokenId
+      )
+      const tokenDecimals = tokenInfo.decimals
+      const balances = await bitboxNetwork.getAllSlpBalancesAndUtxos(
+        fundingAddress
+      )
+      const amount = new BigNumber(burnConfig.amount).times(10 ** tokenDecimals)
+      let inputUtxos = balances.slpTokenUtxos[burnConfig.tokenId]
+
+      inputUtxos = inputUtxos.concat(balances.nonSlpUtxos)
+
+      inputUtxos.forEach((txo: any) => (txo.wif = burnConfig.fundingWif))
+      const burnTxid = await bitboxNetwork.simpleTokenBurn(
+        burnConfig.tokenId,
+        amount,
+        inputUtxos,
+        bchChangeReceiverAddress
+      )
+      return burnTxid
+    } catch (error) {
+      return error
+    }
+  }
+
   async burnAll(burnAllConfig: IBurnAllConfig) {
     try {
       const tmpBITBOX: any = this.returnBITBOXInstance(
@@ -307,51 +355,6 @@ class TokenType1 {
       const hex = tx.toHex()
       const txid = await tmpBITBOX.RawTransactions.sendRawTransaction(hex)
       return txid
-    } catch (error) {
-      return error
-    }
-  }
-
-  async burn(burnConfig: IBurnConfig) {
-    try {
-      const tmpBITBOX: any = this.returnBITBOXInstance(
-        burnConfig.fundingAddress
-      )
-
-      const getRawTransactions = async (txids: any) =>
-        await tmpBITBOX.RawTransactions.getRawTransaction(txids)
-
-      const slpValidator: any = new slpjs.LocalValidator(
-        tmpBITBOX,
-        getRawTransactions
-      )
-      const bitboxNetwork = new slpjs.BitboxNetwork(tmpBITBOX, slpValidator)
-      const fundingAddress: string = addy.toSLPAddress(
-        burnConfig.fundingAddress
-      )
-      const bchChangeReceiverAddress: string = addy.toSLPAddress(
-        burnConfig.bchChangeReceiverAddress
-      )
-      const tokenInfo = await bitboxNetwork.getTokenInformation(
-        burnConfig.tokenId
-      )
-      const tokenDecimals = tokenInfo.decimals
-      const balances = await bitboxNetwork.getAllSlpBalancesAndUtxos(
-        fundingAddress
-      )
-      const amount = new BigNumber(burnConfig.amount).times(10 ** tokenDecimals)
-      let inputUtxos = balances.slpTokenUtxos[burnConfig.tokenId]
-
-      inputUtxos = inputUtxos.concat(balances.nonSlpUtxos)
-
-      inputUtxos.forEach((txo: any) => (txo.wif = burnConfig.fundingWif))
-      const burnTxid = await bitboxNetwork.simpleTokenBurn(
-        burnConfig.tokenId,
-        amount,
-        inputUtxos,
-        bchChangeReceiverAddress
-      )
-      return burnTxid
     } catch (error) {
       return error
     }
