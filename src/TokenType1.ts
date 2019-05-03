@@ -29,18 +29,7 @@ class TokenType1 {
       const tmpBITBOX: any = this.returnBITBOXInstance(
         createConfig.fundingAddress
       )
-
-      const getRawTransactions = async (txids: any) =>
-        await tmpBITBOX.RawTransactions.getRawTransaction(txids)
-
-      const slpValidator: any = new slpjs.LocalValidator(
-        tmpBITBOX,
-        getRawTransactions
-      )
-      const bitboxNetwork: any = new slpjs.BitboxNetwork(
-        tmpBITBOX,
-        slpValidator
-      )
+      const bitboxNetwork: any = new slpjs.BitboxNetwork(tmpBITBOX)
       const fundingAddress: string = addy.toSLPAddress(
         createConfig.fundingAddress
       )
@@ -104,18 +93,7 @@ class TokenType1 {
       const tmpBITBOX: any = this.returnBITBOXInstance(
         mintConfig.fundingAddress
       )
-
-      const getRawTransactions = async (txids: any) =>
-        await tmpBITBOX.RawTransactions.getRawTransaction(txids)
-
-      const slpValidator: any = new slpjs.LocalValidator(
-        tmpBITBOX,
-        getRawTransactions
-      )
-      const bitboxNetwork: any = new slpjs.BitboxNetwork(
-        tmpBITBOX,
-        slpValidator
-      )
+      const bitboxNetwork: any = new slpjs.BitboxNetwork(tmpBITBOX)
       const fundingAddress: string = addy.toSLPAddress(
         mintConfig.fundingAddress
       )
@@ -178,14 +156,7 @@ class TokenType1 {
         sendConfig.fundingAddress
       )
 
-      const getRawTransactions = async (txids: any) =>
-        await tmpBITBOX.RawTransactions.getRawTransaction(txids)
-
-      const slpValidator: any = new slpjs.LocalValidator(
-        tmpBITBOX,
-        getRawTransactions
-      )
-      const bitboxNetwork = new slpjs.BitboxNetwork(tmpBITBOX, slpValidator)
+      const bitboxNetwork = new slpjs.BitboxNetwork(tmpBITBOX)
 
       const fundingAddress: string = addy.toSLPAddress(
         sendConfig.fundingAddress
@@ -224,8 +195,6 @@ class TokenType1 {
 
       // 6) Set the proper private key for each Utxo
       inputUtxos.forEach((txo: any) => (txo.wif = fundingWif))
-      console.log("AMOUNT", amount.length)
-      console.log("tokenReceiverAddress", tokenReceiverAddress.length)
 
       const sendTxid = await bitboxNetwork.simpleTokenSend(
         tokenId,
@@ -248,15 +217,7 @@ class TokenType1 {
       const tmpBITBOX: any = this.returnBITBOXInstance(
         burnConfig.fundingAddress
       )
-
-      const getRawTransactions = async (txids: any) =>
-        await tmpBITBOX.RawTransactions.getRawTransaction(txids)
-
-      const slpValidator: any = new slpjs.LocalValidator(
-        tmpBITBOX,
-        getRawTransactions
-      )
-      const bitboxNetwork = new slpjs.BitboxNetwork(tmpBITBOX, slpValidator)
+      const bitboxNetwork = new slpjs.BitboxNetwork(tmpBITBOX)
       const fundingAddress: string = addy.toSLPAddress(
         burnConfig.fundingAddress
       )
