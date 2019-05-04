@@ -27,8 +27,8 @@ export interface IMintConfig {
 }
 
 export interface ISendConfig {
-  fundingAddress: string
-  fundingWif: string
+  fundingAddress: string | string[]
+  fundingWif: string | string[]
   tokenReceiverAddress: string | string[]
   bchChangeReceiverAddress: string
   tokenId: string

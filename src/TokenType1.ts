@@ -132,7 +132,10 @@ class TokenType1 {
       this.validateAddressFormat(sendConfig)
 
       // determine mainnet/testnet
-      const network: string = this.returnNetwork(sendConfig.fundingAddress)
+      let network: string
+      if (!Array.isArray(sendConfig.fundingAddress))
+        network = this.returnNetwork(sendConfig.fundingAddress)
+      else network = this.returnNetwork(sendConfig.fundingAddress[0])
 
       // network appropriate BITBOX instance
       const BITBOX: any = this.returnBITBOXInstance(network)
@@ -141,41 +144,113 @@ class TokenType1 {
       const bitboxNetwork = new slpjs.BitboxNetwork(BITBOX)
 
       const tokenId: string = sendConfig.tokenId
-      let amount: any = sendConfig.amount
-
-      const tokenInfo: any = await bitboxNetwork.getTokenInformation(tokenId)
-      const tokenDecimals: number = tokenInfo.decimals
-
-      const balances: any = await bitboxNetwork.getAllSlpBalancesAndUtxos(
-        sendConfig.fundingAddress
-      )
 
       const bchChangeReceiverAddress: string = addy.toSLPAddress(
         sendConfig.bchChangeReceiverAddress
       )
+      if (!Array.isArray(sendConfig.fundingAddress)) {
+        let amount: any = sendConfig.amount
 
-      if (!Array.isArray(amount)) {
-        amount = new BigNumber(amount).times(10 ** tokenDecimals) // Don't forget to account for token precision
-      } else {
-        amount.forEach((amt: number, index: number) => {
-          amount[index] = new BigNumber(amt).times(10 ** tokenDecimals) // Don't forget to account for token precision
-        })
+        const tokenInfo: any = await bitboxNetwork.getTokenInformation(tokenId)
+        const tokenDecimals: number = tokenInfo.decimals
+
+        const balances: any = await bitboxNetwork.getAllSlpBalancesAndUtxos(
+          sendConfig.fundingAddress
+        )
+
+        if (!Array.isArray(amount)) {
+          amount = new BigNumber(amount).times(10 ** tokenDecimals) // Don't forget to account for token precision
+        } else {
+          amount.forEach((amt: number, index: number) => {
+            amount[index] = new BigNumber(amt).times(10 ** tokenDecimals) // Don't forget to account for token precision
+          })
+        }
+
+        let inputUtxos = balances.slpTokenUtxos[tokenId]
+
+        inputUtxos = inputUtxos.concat(balances.nonSlpUtxos)
+
+        inputUtxos.forEach((txo: any) => (txo.wif = sendConfig.fundingWif))
+
+        const sendTxid = await bitboxNetwork.simpleTokenSend(
+          tokenId,
+          amount,
+          inputUtxos,
+          sendConfig.tokenReceiverAddress,
+          bchChangeReceiverAddress
+        )
+        return sendTxid
       }
 
-      let inputUtxos = balances.slpTokenUtxos[tokenId]
+      const utxos: any[] = []
+      const balances: any = await bitboxNetwork.getAllSlpBalancesAndUtxos(
+        sendConfig.fundingAddress
+      )
 
-      inputUtxos = inputUtxos.concat(balances.nonSlpUtxos)
+      // Sign and add input token UTXOs
+      const tokenBalances = balances.filter((i: any) => {
+        try {
+          return i.result.slpTokenBalances[tokenId].isGreaterThan(0)
+        } catch (_) {
+          return false
+        }
+      })
+      tokenBalances.map((i: any) =>
+        i.result.slpTokenUtxos[tokenId].forEach(
+          (j: any) => (j.wif = sendConfig.fundingWif[<any>i.address])
+        )
+      )
+      tokenBalances.forEach((a: any) => {
+        try {
+          a.result.slpTokenUtxos[tokenId].forEach((txo: any) => utxos.push(txo))
+        } catch (_) {}
+      })
 
-      inputUtxos.forEach((txo: any) => (txo.wif = sendConfig.fundingWif))
+      // Sign and add input BCH (non-token) UTXOs
+      const bchBalances = balances.filter(
+        (i: any) => i.result.nonSlpUtxos.length > 0
+      )
+      bchBalances.map((i: any) =>
+        i.result.nonSlpUtxos.forEach(
+          (j: any) => (j.wif = sendConfig.fundingWif[<any>i.address])
+        )
+      )
+      bchBalances.forEach((a: any) =>
+        a.result.nonSlpUtxos.forEach((txo: any) => utxos.push(txo))
+      )
 
-      const sendTxid = await bitboxNetwork.simpleTokenSend(
+      const totalToken: any = tokenBalances.reduce(
+        (t: any, v: any) => (t = t.plus(v.result.slpTokenBalances[tokenId])),
+        new BigNumber(0)
+      )
+      console.log("total token amount to distribute:", totalToken.toFixed())
+      console.log(
+        "spread amount",
+        totalToken
+          .dividedToIntegerBy(sendConfig.fundingAddress.length)
+          .toFixed()
+      )
+
+      utxos.forEach((txo: any) => {
+        if (Array.isArray(sendConfig.fundingAddress)) {
+          sendConfig.fundingAddress.forEach(
+            (address: string, index: number) => {
+              console.log(index, txo.cashAddress, addy.toCashAddress(address))
+              if (txo.cashAddress === addy.toCashAddress(address))
+                txo.wif = sendConfig.fundingWif[index]
+            }
+          )
+        }
+      })
+      return await bitboxNetwork.simpleTokenSend(
         tokenId,
-        amount,
-        inputUtxos,
-        sendConfig.tokenReceiverAddress,
+        Array(sendConfig.fundingAddress.length).fill(
+          totalToken.dividedToIntegerBy(sendConfig.fundingAddress.length)
+        ),
+        utxos,
+        sendConfig.fundingAddress,
         bchChangeReceiverAddress
       )
-      return sendTxid
     } catch (error) {
       return error
     }
@@ -242,8 +317,17 @@ class TokenType1 {
     // fundingAddress, tokenReceiverAddress and batonReceiverAddress must be simpleledger format
     // bchChangeReceiverAddress can be either simpleledger or cashAddr format
     // validate fundingAddress format
-    if (!addy.isSLPAddress(config.fundingAddress))
+    // single fundingAddress
+    if (config.fundingAddress && !addy.isSLPAddress(config.fundingAddress))
       throw Error("Funding Address must be simpleledger format")
+
+    // bulk fundingAddress
+    if (config.fundingAddress && Array.isArray(config.fundingAddress)) {
+      config.fundingAddress.forEach((address: string) => {
+        if (!addy.isSLPAddress(address))
+          throw Error("Funding Address must be simpleledger format")
+      })
+    }
 
     // validate tokenReceiverAddress format
     // single tokenReceiverAddress
