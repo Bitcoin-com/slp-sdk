@@ -26,57 +26,46 @@ class TokenType1 {
       // validate address formats
       this.validateAddressFormat(createConfig)
 
-      const tmpBITBOX: any = this.returnBITBOXInstance(
-        createConfig.fundingAddress
-      )
-      const bitboxNetwork: any = new slpjs.BitboxNetwork(tmpBITBOX)
-      const fundingAddress: string = addy.toSLPAddress(
-        createConfig.fundingAddress
-      )
-      const fundingWif: string = createConfig.fundingWif
-      const tokenReceiverAddress: string = addy.toSLPAddress(
-        createConfig.tokenReceiverAddress
-      )
+      // determine mainnet/testnet
+      const network: string = this.returnNetwork(createConfig.fundingAddress)
+
+      // network appropriate BITBOX instance
+      const BITBOX: any = this.returnBITBOXInstance(network)
+
+      // slpjs BITBOX Network instance
+      const bitboxNetwork = new slpjs.BitboxNetwork(BITBOX)
+
       let batonReceiverAddress: string
       if (
         createConfig.batonReceiverAddress !== undefined &&
         createConfig.batonReceiverAddress !== "" &&
         createConfig.batonReceiverAddress !== null
-      ) {
-        batonReceiverAddress = addy.toSLPAddress(
-          createConfig.batonReceiverAddress
-        )
-      } else {
-        batonReceiverAddress = null
-      }
-
-      const bchChangeReceiverAddress: string = addy.toSLPAddress(
-        createConfig.bchChangeReceiverAddress
       )
+        batonReceiverAddress = createConfig.batonReceiverAddress
+      else batonReceiverAddress = null
+
       const balances: any = await bitboxNetwork.getAllSlpBalancesAndUtxos(
-        fundingAddress
+        createConfig.fundingAddress
       )
-
-      const decimals: number = createConfig.decimals
-      const name: string = createConfig.name
-      const symbol: string = createConfig.symbol
-      const documentUri: string = createConfig.documentUri
-      const documentHash: any = createConfig.documentHash
 
       let initialTokenQty: number = createConfig.initialTokenQty
 
-      initialTokenQty = new BigNumber(initialTokenQty).times(10 ** decimals)
-      balances.nonSlpUtxos.forEach((txo: any) => (txo.wif = fundingWif))
+      initialTokenQty = new BigNumber(initialTokenQty).times(
+        10 ** createConfig.decimals
+      )
+      balances.nonSlpUtxos.forEach(
+        (txo: any) => (txo.wif = createConfig.fundingWif)
+      )
       const genesisTxid = await bitboxNetwork.simpleTokenGenesis(
-        name,
-        symbol,
+        createConfig.name,
+        createConfig.symbol,
         initialTokenQty,
-        documentUri,
-        documentHash,
-        decimals,
-        tokenReceiverAddress,
+        createConfig.documentUri,
+        createConfig.documentHash,
+        createConfig.decimals,
+        createConfig.tokenReceiverAddress,
         batonReceiverAddress,
-        bchChangeReceiverAddress,
+        createConfig.bchChangeReceiverAddress,
         balances.nonSlpUtxos
       )
       return genesisTxid
@@ -90,56 +79,46 @@ class TokenType1 {
       // validate address formats
       this.validateAddressFormat(mintConfig)
 
-      const tmpBITBOX: any = this.returnBITBOXInstance(
-        mintConfig.fundingAddress
-      )
-      const bitboxNetwork: any = new slpjs.BitboxNetwork(tmpBITBOX)
-      const fundingAddress: string = addy.toSLPAddress(
-        mintConfig.fundingAddress
-      )
-      const fundingWif: string = mintConfig.fundingWif
-      const tokenReceiverAddress: string = addy.toSLPAddress(
-        mintConfig.tokenReceiverAddress
-      )
+      // determine mainnet/testnet
+      const network: string = this.returnNetwork(mintConfig.fundingAddress)
+
+      // network appropriate BITBOX instance
+      const BITBOX: any = this.returnBITBOXInstance(network)
+
+      // slpjs BITBOX Network instance
+      const bitboxNetwork = new slpjs.BitboxNetwork(BITBOX)
+
       const batonReceiverAddress: string = addy.toSLPAddress(
         mintConfig.batonReceiverAddress
       )
-      const bchChangeReceiverAddress: string = addy.toSLPAddress(
-        mintConfig.bchChangeReceiverAddress
-      )
-      const tokenId: string = mintConfig.tokenId
-      const additionalTokenQty: number = mintConfig.additionalTokenQty
+
       const balances: any = await bitboxNetwork.getAllSlpBalancesAndUtxos(
-        fundingAddress
+        mintConfig.fundingAddress
       )
-      if (!balances.slpBatonUtxos[tokenId])
+      if (!balances.slpBatonUtxos[mintConfig.tokenId])
         throw Error("You don't have the minting baton for this token")
 
-      const tokenInfo: any = await bitboxNetwork.getTokenInformation(tokenId)
-      const tokenDecimals: number = tokenInfo.decimals
-
-      // 3) Multiply the specified token quantity by 10^(token decimal precision)
-      const mintQty = new BigNumber(additionalTokenQty).times(
-        10 ** tokenDecimals
+      const tokenInfo: any = await bitboxNetwork.getTokenInformation(
+        mintConfig.tokenId
       )
 
-      // 4) Filter the list to choose ONLY the baton of interest
-      // NOTE: (spending other batons for other tokens will result in losing ability to mint those tokens)
-      let inputUtxos = balances.slpBatonUtxos[tokenId]
+      const mintQty = new BigNumber(mintConfig.additionalTokenQty).times(
+        10 ** tokenInfo.decimals
+      )
 
-      // 5) Simply sweep our BCH (non-SLP) utxos to fuel the transaction
+      let inputUtxos = balances.slpBatonUtxos[mintConfig.tokenId]
+
       inputUtxos = inputUtxos.concat(balances.nonSlpUtxos)
 
-      // 6) Set the proper private key for each Utxo
-      inputUtxos.forEach((txo: any) => (txo.wif = fundingWif))
+      inputUtxos.forEach((txo: any) => (txo.wif = mintConfig.fundingWif))
 
       const mintTxid = await bitboxNetwork.simpleTokenMint(
-        tokenId,
+        mintConfig.tokenId,
         mintQty,
         inputUtxos,
-        tokenReceiverAddress,
+        mintConfig.tokenReceiverAddress,
         batonReceiverAddress,
-        bchChangeReceiverAddress
+        mintConfig.bchChangeReceiverAddress
       )
       return mintTxid
     } catch (error) {
@@ -152,22 +131,15 @@ class TokenType1 {
       // validate address formats
       this.validateAddressFormat(sendConfig)
 
-      const tmpBITBOX: any = this.returnBITBOXInstance(
-        sendConfig.fundingAddress
-      )
+      // determine mainnet/testnet
+      const network: string = this.returnNetwork(sendConfig.fundingAddress)
 
-      const bitboxNetwork = new slpjs.BitboxNetwork(tmpBITBOX)
+      // network appropriate BITBOX instance
+      const BITBOX: any = this.returnBITBOXInstance(network)
 
-      const fundingAddress: string = addy.toSLPAddress(
-        sendConfig.fundingAddress
-      )
-      const fundingWif: string = sendConfig.fundingWif
-      const tokenReceiverAddress: string | string[] =
-        sendConfig.tokenReceiverAddress
+      // slpjs BITBOX Network instance
+      const bitboxNetwork = new slpjs.BitboxNetwork(BITBOX)
 
-      const bchChangeReceiverAddress: string = addy.toSLPAddress(
-        sendConfig.bchChangeReceiverAddress
-      )
       const tokenId: string = sendConfig.tokenId
       let amount: any = sendConfig.amount
 
@@ -175,10 +147,13 @@ class TokenType1 {
       const tokenDecimals: number = tokenInfo.decimals
 
       const balances: any = await bitboxNetwork.getAllSlpBalancesAndUtxos(
-        fundingAddress
+        sendConfig.fundingAddress
       )
 
-      // 3) Calculate send amount in "Token Satoshis".  In this example we want to just send 1 token unit to someone...
+      const bchChangeReceiverAddress: string = addy.toSLPAddress(
+        sendConfig.bchChangeReceiverAddress
+      )
+
       if (!Array.isArray(amount)) {
         amount = new BigNumber(amount).times(10 ** tokenDecimals) // Don't forget to account for token precision
       } else {
@@ -187,20 +162,17 @@ class TokenType1 {
         })
       }
 
-      // 4) Get all of our token's UTXOs
       let inputUtxos = balances.slpTokenUtxos[tokenId]
 
-      // 5) Simply sweep our BCH utxos to fuel the transaction
       inputUtxos = inputUtxos.concat(balances.nonSlpUtxos)
 
-      // 6) Set the proper private key for each Utxo
-      inputUtxos.forEach((txo: any) => (txo.wif = fundingWif))
+      inputUtxos.forEach((txo: any) => (txo.wif = sendConfig.fundingWif))
 
       const sendTxid = await bitboxNetwork.simpleTokenSend(
         tokenId,
         amount,
         inputUtxos,
-        tokenReceiverAddress,
+        sendConfig.tokenReceiverAddress,
         bchChangeReceiverAddress
       )
       return sendTxid
@@ -214,13 +186,15 @@ class TokenType1 {
       // validate address formats
       this.validateAddressFormat(burnConfig)
 
-      const tmpBITBOX: any = this.returnBITBOXInstance(
-        burnConfig.fundingAddress
-      )
-      const bitboxNetwork = new slpjs.BitboxNetwork(tmpBITBOX)
-      const fundingAddress: string = addy.toSLPAddress(
-        burnConfig.fundingAddress
-      )
+      // determine mainnet/testnet
+      const network: string = this.returnNetwork(burnConfig.fundingAddress)
+
+      // network appropriate BITBOX instance
+      const BITBOX: any = this.returnBITBOXInstance(network)
+
+      // slpjs BITBOX Network instance
+      const bitboxNetwork = new slpjs.BitboxNetwork(BITBOX)
+
       const bchChangeReceiverAddress: string = addy.toSLPAddress(
         burnConfig.bchChangeReceiverAddress
       )
@@ -229,7 +203,7 @@ class TokenType1 {
       )
       const tokenDecimals = tokenInfo.decimals
       const balances = await bitboxNetwork.getAllSlpBalancesAndUtxos(
-        fundingAddress
+        burnConfig.fundingAddress
       )
       const amount = new BigNumber(burnConfig.amount).times(10 ** tokenDecimals)
       let inputUtxos = balances.slpTokenUtxos[burnConfig.tokenId]
@@ -253,15 +227,14 @@ class TokenType1 {
     return addy.detectAddressNetwork(address)
   }
 
-  returnBITBOXInstance(address: string): any {
-    const network: string = this.returnNetwork(address)
+  returnBITBOXInstance(network: string): any {
     let tmpBITBOX: any
 
-    if (network === "mainnet")
-      tmpBITBOX = new BITBOXSDK({ restURL: "https://rest.bitcoin.com/v2/" })
-    else tmpBITBOX = new BITBOXSDK({ restURL: "https://trest.bitcoin.com/v2/" })
+    let restURL: string
+    if (network === "mainnet") restURL = "https://rest.bitcoin.com/v2/"
+    else restURL = "https://trest.bitcoin.com/v2/"
 
-    return tmpBITBOX
+    return new BITBOXSDK({ restURL: restURL })
   }
 
   validateAddressFormat(config: any): string | void {
@@ -293,13 +266,10 @@ class TokenType1 {
 
     // validate bchChangeReceiverAddress format
     if (
-      !addy.isSLPAddress(config.bchChangeReceiverAddress) &&
+      config.bchChangeReceiverAddress &&
       !addy.isCashAddress(config.bchChangeReceiverAddress)
-    ) {
-      throw Error(
-        "BCH Change Receiver Address must be cashAddr or simpleledger format"
-      )
-    }
+    )
+      throw Error("BCH Change Receiver Address must be cash address format")
 
     // validate batonReceiverAddress format
     if (
