@@ -148,11 +148,11 @@ class TokenType1 {
       const bchChangeReceiverAddress: string = addy.toSLPAddress(
         sendConfig.bchChangeReceiverAddress
       )
+
+      const tokenInfo: any = await bitboxNetwork.getTokenInformation(tokenId)
+      const tokenDecimals: number = tokenInfo.decimals
       if (!Array.isArray(sendConfig.fundingAddress)) {
         let amount: any = sendConfig.amount
-
-        const tokenInfo: any = await bitboxNetwork.getTokenInformation(tokenId)
-        const tokenDecimals: number = tokenInfo.decimals
 
         const balances: any = await bitboxNetwork.getAllSlpBalancesAndUtxos(
           sendConfig.fundingAddress
@@ -219,34 +219,28 @@ class TokenType1 {
         a.result.nonSlpUtxos.forEach((txo: any) => utxos.push(txo))
       )
 
-      const totalToken: any = tokenBalances.reduce(
-        (t: any, v: any) => (t = t.plus(v.result.slpTokenBalances[tokenId])),
-        new BigNumber(0)
-      )
-      console.log("total token amount to distribute:", totalToken.toFixed())
-      console.log(
-        "spread amount",
-        totalToken
-          .dividedToIntegerBy(sendConfig.fundingAddress.length)
-          .toFixed()
-      )
-
       utxos.forEach((txo: any) => {
         if (Array.isArray(sendConfig.fundingAddress)) {
           sendConfig.fundingAddress.forEach(
             (address: string, index: number) => {
-              console.log(index, txo.cashAddress, addy.toCashAddress(address))
               if (txo.cashAddress === addy.toCashAddress(address))
                 txo.wif = sendConfig.fundingWif[index]
             }
           )
         }
       })
+
+      let amount: any = sendConfig.amount
+      if (!Array.isArray(amount)) {
+        amount = new BigNumber(amount).times(10 ** tokenDecimals) // Don't forget to account for token precision
+      } else {
+        amount.forEach((amt: number, index: number) => {
+          amount[index] = new BigNumber(amt).times(10 ** tokenDecimals) // Don't forget to account for token precision
+        })
+      }
       return await bitboxNetwork.simpleTokenSend(
         tokenId,
-        Array(sendConfig.fundingAddress.length).fill(
-          totalToken.dividedToIntegerBy(sendConfig.fundingAddress.length)
-        ),
+        amount,
         utxos,
         sendConfig.fundingAddress,
         bchChangeReceiverAddress
