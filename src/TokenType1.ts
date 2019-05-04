@@ -242,7 +242,7 @@ class TokenType1 {
         tokenId,
         amount,
         utxos,
-        sendConfig.fundingAddress,
+        sendConfig.tokenReceiverAddress,
         bchChangeReceiverAddress
       )
     } catch (error) {
