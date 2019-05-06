@@ -6,6 +6,7 @@ import { IConfig } from "./interfaces/SLPInterfaces"
 
 // import classes
 import Address from "./Address"
+import ECPair from "./ECPair"
 import HDNode from "./HDNode"
 import TokenType1 from "./TokenType1"
 import Utils from "./Utils"
@@ -24,6 +25,7 @@ class SLP extends BITBOXSDK {
     else restURL = "https://rest.bitcoin.com/v2/"
 
     this.Address = new Address(restURL)
+    this.ECPair = ECPair
     this.HDNode = new HDNode(restURL)
     this.TokenType1 = new TokenType1(restURL)
     this.Utils = new Utils(restURL)
