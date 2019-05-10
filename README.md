@@ -22,7 +22,7 @@ cd slp-sdk
 ### Handy Links
 
 - [SLP API introduction](https://developer.bitcoin.com/slp)
-- [SLP API docs](https://developer.bitcoin.com/slp/docs/getting-started)
+- [SLP API docs](https://developer.bitcoin.com/slp/docs/js/getting-started)
 - [SLP specification](https://github.com/simpleledger/slp-specifications/blob/master/slp-token-type-1.md)
 - [SLP website](https://simpleledger.cash/)
 - [SLP specification unit tests](https://github.com/simpleledger/slp-unit-test-data) (Python)
