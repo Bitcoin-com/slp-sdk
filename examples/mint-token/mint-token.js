@@ -7,7 +7,7 @@ const TOKENID = ""
 const TOKENQTY = 100
 
 // Set NETWORK to either testnet or mainnet
-const NETWORK = `mainnet`
+const NETWORK = `testnet`
 
 const SLPSDK = require("../../lib/SLP")
 
@@ -52,7 +52,7 @@ async function mintToken() {
     const cashAddress = SLP.HDNode.toCashAddress(change)
     const slpAddress = SLP.Address.toSLPAddress(cashAddress)
 
-    const fundingAddress = cashAddress
+    const fundingAddress = slpAddress
     const fundingWif = SLP.HDNode.toWIF(change) // <-- compressed WIF format
     const tokenReceiverAddress = slpAddress
     const batonReceiverAddress = slpAddress

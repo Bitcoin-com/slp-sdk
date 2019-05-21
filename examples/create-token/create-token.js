@@ -4,7 +4,7 @@
 */
 
 // Set NETWORK to either testnet or mainnet
-const NETWORK = `mainnet`
+const NETWORK = `testnet`
 
 const SLPSDK = require("../../lib/SLP")
 
@@ -45,11 +45,11 @@ async function createToken() {
 
     const change = SLP.HDNode.derivePath(account, "0/0")
 
-    // get the cash address
+    // get the cash address and get some tBCH form our faucet https://developer.bitcoin.com/faucets/bch/
     const cashAddress = SLP.HDNode.toCashAddress(change)
     const slpAddress = SLP.Address.toSLPAddress(cashAddress)
 
-    const fundingAddress = cashAddress
+    const fundingAddress = slpAddress
     const fundingWif = SLP.HDNode.toWIF(change) // <-- compressed WIF format
     const tokenReceiverAddress = slpAddress
     const batonReceiverAddress = slpAddress
@@ -67,7 +67,7 @@ async function createToken() {
       symbol: "SLPSDK",
       documentUri: "developer.bitcoin.com",
       documentHash: null,
-      initialTokenQty: 1234
+      initialTokenQty: 507
     }
 
     // Generate, sign, and broadcast a hex-encoded transaction for creating

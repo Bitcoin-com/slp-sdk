@@ -8,7 +8,7 @@ const TOKENID = ""
 const SLPADDR = ""
 
 // Set NETWORK to either testnet or mainnet
-const NETWORK = `mainnet`
+const NETWORK = `testnet`
 
 const SLPSDK = require("../../lib/SLP")
 
@@ -51,8 +51,9 @@ async function sendToken() {
 
     // get the cash address
     const cashAddress = SLP.HDNode.toCashAddress(change)
+    const slpAddress = SLP.HDNode.toSLPAddress(change)
 
-    const fundingAddress = cashAddress
+    const fundingAddress = slpAddress
     const fundingWif = SLP.HDNode.toWIF(change) // <-- compressed WIF format
     const tokenReceiverAddress = SLPADDR
     const bchChangeReceiverAddress = cashAddress
