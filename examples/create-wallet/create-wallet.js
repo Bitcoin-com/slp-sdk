@@ -4,7 +4,7 @@
 */
 
 // Set NETWORK to either testnet or mainnet
-const NETWORK = `mainnet`
+const NETWORK = `testnet`
 
 const SLPSDK = require("../../lib/SLP")
 
