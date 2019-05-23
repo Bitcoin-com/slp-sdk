@@ -745,8 +745,9 @@ describe("#details", () => {
       ],
       legacyAddress: "1NM2ozrXVSnMRm66ua6aGeXgMsU7yqwqLS",
       cashAddress: "bitcoincash:qr4zg7xth86yzq94gl8jvnf5z4wuupzt3g4hl47n9y",
+      slpAddress: "simpleledger:qr4zg7xth86yzq94gl8jvnf5z4wuupzt3gev5wtnm6",
       currentPage: 0,
-      pagesTotal: null
+      pagesTotal: 1
     }
 
     const resolved = new Promise(r => r({ data: data }))
@@ -808,6 +809,7 @@ describe("#unconfirmed", () => {
       utxos: [],
       legacyAddress: "1NM2ozrXVSnMRm66ua6aGeXgMsU7yqwqLS",
       cashAddress: "bitcoincash:qr4zg7xth86yzq94gl8jvnf5z4wuupzt3g4hl47n9y",
+      slpAddress: "simpleledger:qr4zg7xth86yzq94gl8jvnf5z4wuupzt3gev5wtnm6",
       scriptPubKey: "76a914ea2478cbb9f44100b547cf264d34155dce044b8a88ac"
     }
     const resolved = new Promise(r => r({ data: data }))

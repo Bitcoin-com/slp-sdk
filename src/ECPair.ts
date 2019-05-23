@@ -1,14 +1,16 @@
-// require deps
-const BITBOXECPair = require("bitbox-sdk/lib/ECPair").default
-const BITBOXSDK = require("bitbox-sdk")
-const BITBOX = new BITBOXSDK()
+// imports
+import { BITBOX } from "bitbox-sdk"
+
+// consts
+const BITBOXECPair = require("bitbox-sdk").ECPair
+const bitbox = new BITBOX()
 const utils = require("slpjs").Utils
 
 class ECPair extends BITBOXECPair {
-  static toSLPAddress(ecpair: any): string {
+  toSLPAddress(ecpair: any): string {
     try {
       const slpAddress: string = utils.toSlpAddress(
-        BITBOX.ECPair.toCashAddress(ecpair)
+        bitbox.ECPair.toCashAddress(ecpair)
       )
       return slpAddress
     } catch (err) {

@@ -1,7 +1,9 @@
-// require deps
-const BITBOXAddress = require("bitbox-sdk/lib/Address").default
-const BITBOXSDK = require("bitbox-sdk")
-const BITBOX = new BITBOXSDK()
+// imports
+import { BITBOX } from "bitbox-sdk"
+
+// consts
+const BITBOXAddress = require("bitbox-sdk").Address
+const bitbox = new BITBOX()
 const utils = require("slpjs").Utils
 
 class Address extends BITBOXAddress {
@@ -37,7 +39,7 @@ class Address extends BITBOXAddress {
     try {
       this._ensureValidAddress(address)
       const cashAddr: string = utils.toCashAddress(address)
-      return BITBOX.Address.toLegacyAddress(cashAddr)
+      return bitbox.Address.toLegacyAddress(cashAddr)
     } catch (err) {
       return err
     }
@@ -46,7 +48,7 @@ class Address extends BITBOXAddress {
   isLegacyAddress(address: string): boolean {
     try {
       this._ensureValidAddress(address)
-      return BITBOX.Address.isLegacyAddress(address)
+      return bitbox.Address.isLegacyAddress(address)
     } catch (err) {
       return err
     }
@@ -57,7 +59,7 @@ class Address extends BITBOXAddress {
       this._ensureValidAddress(address)
       if (utils.isSlpAddress(address)) return false
 
-      return BITBOX.Address.isCashAddress(address)
+      return bitbox.Address.isCashAddress(address)
     } catch (err) {
       return err
     }
@@ -76,7 +78,7 @@ class Address extends BITBOXAddress {
     try {
       this._ensureValidAddress(address)
       const cashaddr: string = utils.toCashAddress(address)
-      return BITBOX.Address.isMainnetAddress(cashaddr)
+      return bitbox.Address.isMainnetAddress(cashaddr)
     } catch (err) {
       return err
     }
@@ -86,7 +88,7 @@ class Address extends BITBOXAddress {
     try {
       this._ensureValidAddress(address)
       const cashAddr: string = utils.toCashAddress(address)
-      return BITBOX.Address.isTestnetAddress(cashAddr)
+      return bitbox.Address.isTestnetAddress(cashAddr)
     } catch (err) {
       return err
     }
@@ -96,7 +98,7 @@ class Address extends BITBOXAddress {
     try {
       this._ensureValidAddress(address)
       const cashAddr: string = utils.toCashAddress(address)
-      return BITBOX.Address.isP2PKHAddress(cashAddr)
+      return bitbox.Address.isP2PKHAddress(cashAddr)
     } catch (err) {
       return err
     }
@@ -106,7 +108,7 @@ class Address extends BITBOXAddress {
     try {
       this._ensureValidAddress(address)
       const cashAddr: string = utils.toCashAddress(address)
-      return BITBOX.Address.isP2SHAddress(cashAddr)
+      return bitbox.Address.isP2SHAddress(cashAddr)
     } catch (err) {
       return err
     }
@@ -117,7 +119,7 @@ class Address extends BITBOXAddress {
       this._ensureValidAddress(address)
       if (utils.isSlpAddress(address)) return "slpaddr"
 
-      return BITBOX.Address.detectAddressFormat(address)
+      return bitbox.Address.detectAddressFormat(address)
     } catch (err) {
       return err
     }
@@ -127,7 +129,7 @@ class Address extends BITBOXAddress {
     try {
       this._ensureValidAddress(address)
       const cashAddr: string = utils.toCashAddress(address)
-      return BITBOX.Address.detectAddressNetwork(cashAddr)
+      return bitbox.Address.detectAddressNetwork(cashAddr)
     } catch (err) {
       return err
     }
@@ -137,7 +139,7 @@ class Address extends BITBOXAddress {
     try {
       this._ensureValidAddress(address)
       const cashAddr: string = utils.toCashAddress(address)
-      return BITBOX.Address.detectAddressType(cashAddr)
+      return bitbox.Address.detectAddressType(cashAddr)
     } catch (err) {
       return err
     }
@@ -151,8 +153,8 @@ class Address extends BITBOXAddress {
     else network = this.detectAddressNetwork(address[0])
 
     if (network === "mainnet")
-      tmpBITBOX = new BITBOXSDK({ restURL: "https://rest.bitcoin.com/v2/" })
-    else tmpBITBOX = new BITBOXSDK({ restURL: "https://trest.bitcoin.com/v2/" })
+      tmpBITBOX = new BITBOX({ restURL: "https://rest.bitcoin.com/v2/" })
+    else tmpBITBOX = new BITBOX({ restURL: "https://trest.bitcoin.com/v2/" })
 
     try {
       if (typeof address === "string") {
@@ -174,8 +176,8 @@ class Address extends BITBOXAddress {
     else network = this.detectAddressNetwork(address[0])
 
     if (network === "mainnet")
-      tmpBITBOX = new BITBOXSDK({ restURL: "https://rest.bitcoin.com/v2/" })
-    else tmpBITBOX = new BITBOXSDK({ restURL: "https://trest.bitcoin.com/v2/" })
+      tmpBITBOX = new BITBOX({ restURL: "https://rest.bitcoin.com/v2/" })
+    else tmpBITBOX = new BITBOX({ restURL: "https://trest.bitcoin.com/v2/" })
 
     try {
       if (typeof address === "string") {
@@ -197,8 +199,8 @@ class Address extends BITBOXAddress {
     else network = this.detectAddressNetwork(address[0])
 
     if (network === "mainnet")
-      tmpBITBOX = new BITBOXSDK({ restURL: "https://rest.bitcoin.com/v2/" })
-    else tmpBITBOX = new BITBOXSDK({ restURL: "https://trest.bitcoin.com/v2/" })
+      tmpBITBOX = new BITBOX({ restURL: "https://rest.bitcoin.com/v2/" })
+    else tmpBITBOX = new BITBOX({ restURL: "https://trest.bitcoin.com/v2/" })
 
     try {
       if (typeof address === "string") {
@@ -220,8 +222,8 @@ class Address extends BITBOXAddress {
     else network = this.detectAddressNetwork(address[0])
 
     if (network === "mainnet")
-      tmpBITBOX = new BITBOXSDK({ restURL: "https://rest.bitcoin.com/v2/" })
-    else tmpBITBOX = new BITBOXSDK({ restURL: "https://trest.bitcoin.com/v2/" })
+      tmpBITBOX = new BITBOX({ restURL: "https://rest.bitcoin.com/v2/" })
+    else tmpBITBOX = new BITBOX({ restURL: "https://trest.bitcoin.com/v2/" })
 
     try {
       if (typeof address === "string") {

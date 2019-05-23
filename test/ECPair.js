@@ -1,8 +1,8 @@
 const fixtures = require("./fixtures/ECPair.json")
 const assert = require("assert")
-const assert2 = require("chai").assert
 const slp = require("./../lib/SLP")
 const SLP = new slp()
+// console.log(SLP)
 
 // Used for debugging and iterrogating JS objects.
 const util = require("util")

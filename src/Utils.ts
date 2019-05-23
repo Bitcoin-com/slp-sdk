@@ -1,17 +1,9 @@
-// require deps
-const BITBOXSDK = require("bitbox-sdk")
-const slpjs = require("slpjs")
+// imports
 import axios from "axios"
 
-// Used for debugging and iterrogating JS objects.
+// consts
 const util = require("util")
 util.inspect.defaultOptions = { depth: 1 }
-
-// import classes
-import Address from "./Address"
-const addy = new Address()
-
-let slpValidator: any
 
 class Utils {
   restURL: string

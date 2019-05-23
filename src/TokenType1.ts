@@ -1,18 +1,17 @@
 // require deps
-const BITBOXSDK: any = require("bitbox-sdk")
-const BigNumber: any = require("bignumber.js")
-const slpjs: any = require("slpjs")
-
-// import interfaces
+// imports
+import { BITBOX } from "bitbox-sdk"
+import Address from "./Address"
 import {
+  IBurnConfig,
   ICreateConfig,
   IMintConfig,
-  ISendConfig,
-  IBurnConfig
+  ISendConfig
 } from "./interfaces/SLPInterfaces"
 
-// import classes
-import Address from "./Address"
+// consts
+const BigNumber: any = require("bignumber.js")
+const slpjs: any = require("slpjs")
 const addy: any = new Address()
 
 class TokenType1 {
@@ -75,6 +74,7 @@ class TokenType1 {
   }
 
   async mint(mintConfig: IMintConfig) {
+    console.log("mintConfig", mintConfig)
     try {
       // validate address formats
       this.validateAddressFormat(mintConfig)
@@ -91,10 +91,13 @@ class TokenType1 {
       const batonReceiverAddress: string = addy.toSLPAddress(
         mintConfig.batonReceiverAddress
       )
+      console.log("batonReceiverAddress", batonReceiverAddress)
 
       const balances: any = await bitboxNetwork.getAllSlpBalancesAndUtxos(
         mintConfig.fundingAddress
       )
+      console.log("balances", balances)
+      console.log("balances.slpBatonUtxos", balances.slpBatonUtxos)
       if (!balances.slpBatonUtxos[mintConfig.tokenId])
         throw Error("You don't have the minting baton for this token")
 
@@ -303,7 +306,7 @@ class TokenType1 {
     if (network === "mainnet") restURL = "https://rest.bitcoin.com/v2/"
     else restURL = "https://trest.bitcoin.com/v2/"
 
-    return new BITBOXSDK({ restURL: restURL })
+    return new BITBOX({ restURL: restURL })
   }
 
   validateAddressFormat(config: any): string | void {

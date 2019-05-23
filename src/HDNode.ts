@@ -1,6 +1,6 @@
-const BITBOXHDNode = require("bitbox-sdk/lib/HDNode").default
-const BITBOXSDK = require("bitbox-sdk")
-const BITBOX = new BITBOXSDK()
+const BITBOXHDNode = require("bitbox-sdk").HDNode
+import { BITBOX } from "bitbox-sdk"
+const bitbox = new BITBOX()
 const utils = require("slpjs").Utils
 
 class HDNode extends BITBOXHDNode {
@@ -11,15 +11,15 @@ class HDNode extends BITBOXHDNode {
   }
 
   toLegacyAddress(hdNode: any): string {
-    return BITBOX.HDNode.toLegacyAddress(hdNode)
+    return bitbox.HDNode.toLegacyAddress(hdNode)
   }
 
   toCashAddress(hdNode: any, regtest = false): string {
-    return BITBOX.HDNode.toCashAddress(hdNode, regtest)
+    return bitbox.HDNode.toCashAddress(hdNode, regtest)
   }
 
   toSLPAddress(hdNode: any): string {
-    const cashAddr = BITBOX.HDNode.toCashAddress(hdNode)
+    const cashAddr = bitbox.HDNode.toCashAddress(hdNode)
     return utils.toSlpAddress(cashAddr)
   }
 }
