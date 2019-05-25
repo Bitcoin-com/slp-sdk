@@ -122,6 +122,18 @@ class Utils {
       throw error
     }
   }
+
+  async burnTotal(transactionId: string): Promise<Object> {
+    const path: string = `${this.restURL}slp/burnTotal/${transactionId}`
+
+    try {
+      const response = await axios.get(path)
+      return response.data
+    } catch (error) {
+      if (error.response && error.response.data) throw error.response.data
+      throw error
+    }
+  }
 }
 
 export default Utils

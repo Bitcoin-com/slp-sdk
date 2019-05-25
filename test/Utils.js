@@ -274,4 +274,25 @@ describe("#Utils", () => {
       assert2.hasAnyKeys(transactions[0], ["txid", "tokenDetails"])
     })
   })
+
+  describe("#burnTotal", () => {
+    it(`should retrieve input, output and burn totals`, async () => {
+      // Mock the call to rest.bitcoin.com
+      // if (process.env.TEST === "unit") {
+      //   nock(SERVER)
+      //     .get(uri => uri.includes("/"))
+      //     .reply(200, mockData.mockTransactions)
+      // }
+
+      const burnTotal = await SLP.Utils.burnTotal(
+        "c7078a6c7400518a513a0bde1f4158cf740d08d3b5bfb19aa7b6657e2f4160de"
+      )
+      assert2.hasAnyKeys(burnTotal, [
+        "transactionId",
+        "inputTotal",
+        "outputTotal",
+        "burnTotal"
+      ])
+    })
+  })
 })
