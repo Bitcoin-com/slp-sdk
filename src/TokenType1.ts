@@ -70,7 +70,6 @@ class TokenType1 {
   }
 
   async mint(mintConfig: IMintConfig) {
-    console.log("mintConfig", mintConfig)
     // validate address formats
     this.validateAddressFormat(mintConfig)
 
@@ -86,13 +85,10 @@ class TokenType1 {
     const batonReceiverAddress: string = addy.toSLPAddress(
       mintConfig.batonReceiverAddress
     )
-    console.log("batonReceiverAddress", batonReceiverAddress)
 
     const balances: any = await bitboxNetwork.getAllSlpBalancesAndUtxos(
       mintConfig.fundingAddress
     )
-    console.log("balances", balances)
-    console.log("balances.slpBatonUtxos", balances.slpBatonUtxos)
     if (!balances.slpBatonUtxos[mintConfig.tokenId])
       throw Error("You don't have the minting baton for this token")
 
