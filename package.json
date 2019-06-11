@@ -14,7 +14,8 @@
   "author": "Gabriel Cardona <gabriel@bitcoin.com>",
   "contributors": [
     "Chris Troutner <chris.troutner@gmail.com>",
-    "James Cramer @ SLP"
+    "James Cramer @ SLP",
+    "Jt blockparty.sh"
   ],
   "license": "MIT",
   "engines": {
