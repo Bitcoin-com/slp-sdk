@@ -1,6 +1,6 @@
 {
   "name": "slp-sdk",
-  "version": "4.4.0",
+  "version": "4.4.1",
   "description": "SLP SDK powered by BITBOX",
   "main": "lib/SLP",
   "scripts": {
@@ -31,7 +31,7 @@
     "axios": "^0.17.1",
     "babel-register": "^6.26.0",
     "bignumber.js": "^8.0.2",
-    "bitbox-sdk": "8.1.1",
+    "bitbox-sdk": "8.4.1",
     "chalk": "^2.3.0",
     "clear": "0.1.0",
     "commander": "^2.13.0",

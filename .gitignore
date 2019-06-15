@@ -7,3 +7,5 @@ coverage
 start-my-infra
 .DS_STORE
 wallet*
+
+package-lock.json
