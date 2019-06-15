@@ -6,6 +6,7 @@ const mockList = [
   {
     decimals: 0,
     timestamp: "2019-04-29 08:59",
+    timestampUnix: 1539218362,
     versionType: 1,
     documentUri: "",
     symbol: "WMW",
@@ -27,6 +28,7 @@ const mockList = [
   {
     decimals: 0,
     timestamp: "2019-04-29 08:59",
+    timestampUnix: 1539218362,
     versionType: 1,
     documentUri: "",
     symbol: "WMW",
@@ -50,6 +52,7 @@ const mockList = [
 const mockToken = {
   decimals: 0,
   timestamp: "2018-08-25 01:54",
+  timestampUnix: 1539218362,
   versionType: 1,
   documentUri: "",
   symbol: "USDT",
@@ -73,6 +76,7 @@ const mockTokens = [
   {
     decimals: 0,
     timestamp: "2018-08-25 01:54",
+    timestampUnix: 1539218362,
     versionType: 1,
     documentUri: "",
     symbol: "USDT",
@@ -94,6 +98,7 @@ const mockTokens = [
   {
     decimals: 0,
     timestamp: "2019-04-29 08:59",
+    timestampUnix: 1539218362,
     versionType: 1,
     documentUri: "",
     symbol: "WMW",
@@ -118,6 +123,7 @@ const balancesForAddress = [
   {
     tokenId: "df808a41672a0a0ae6475b44f272a107bc9961b90f29dc918d71301f24fe92fb",
     balance: "1",
+    balanceString: "1",
     slpAddress: "simpleledger:qzv3zz2trz0xgp6a96lu4m6vp2nkwag0kvyucjzqt9",
     decimalCount: 8
   },
