@@ -25,6 +25,7 @@ cd slp-sdk
 - [SLP API docs](https://developer.bitcoin.com/slp/docs/js/getting-started)
 - [SLP specification](https://github.com/simpleledger/slp-specifications/blob/master/slp-token-type-1.md)
 - [SLP website](https://simpleledger.cash/)
+- [SLP explorer](https://simpleledger.info/)
 - [SLP specification unit tests](https://github.com/simpleledger/slp-unit-test-data) (Python)
 
 ### Token-Aware Wallets

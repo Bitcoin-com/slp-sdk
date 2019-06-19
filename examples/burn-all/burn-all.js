@@ -43,18 +43,21 @@ async function burnAll() {
 
     const change = SLP.HDNode.derivePath(account, "0/0")
 
+    // get the slp address
+    const slpAddress = SLP.HDNode.toSLPAddress(change)
+    //
     // get the cash address
     const cashAddress = SLP.HDNode.toCashAddress(change)
 
     // get token balances
     try {
       const iBurnAllConfig = {
-        fundingAddress: cashAddress,
+        fundingAddress: slpAddress,
         fundingWif: SLP.HDNode.toWIF(change),
         tokenId: TOKEN_ID,
         bchChangeReceiverAddress: cashAddress
       }
-      const burnAll = await SLP.TokenType1.burnAll(iBurnAllConfig)
+      const burnAll = await SLP.TokenType1.burn(iBurnAllConfig)
       console.log("TXID: ", burnAll)
     } catch (error) {
       console.log(error.message)

@@ -8,7 +8,7 @@ const TOKENID = ""
 const SLPADDR = ""
 
 // Set NETWORK to either testnet or mainnet
-const NETWORK = `testnet`
+const NETWORK = `mainnet`
 
 const SLPSDK = require("../../lib/SLP")
 
@@ -57,6 +57,14 @@ async function sendToken() {
     const fundingWif = SLP.HDNode.toWIF(change) // <-- compressed WIF format
     const tokenReceiverAddress = SLPADDR
     const bchChangeReceiverAddress = cashAddress
+
+    // Exit if user did not update the SLPADDR.
+    if (!SLPADDR || SLPADDR === "") {
+      console.log(
+        `SLPADDR value is empty. Update the code with the SLPADDR of your token.`
+      )
+      return
+    }
 
     // Exit if user did not update the TOKENID.
     if (!TOKENID || TOKENID === "") {
