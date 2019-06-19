@@ -245,10 +245,6 @@
   dependencies:
     "@types/node" "*"
 
-"@types/chai@^4.1.7":
-  version "4.1.7"
-  resolved "https://registry.yarnpkg.com/@types/chai/-/chai-4.1.7.tgz#1b8e33b61a8c09cbe1f85133071baa0dbf9fa71a"
-
 "@types/events@*":
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/@types/events/-/events-3.0.0.tgz#2862f3f58a9a7f7c3e78d79f130dd4d71c25c2a7"
@@ -268,10 +264,6 @@
 "@types/minimatch@*":
   version "3.0.3"
   resolved "https://registry.yarnpkg.com/@types/minimatch/-/minimatch-3.0.3.tgz#3dca0e3f33b200fc7d1139c0cd96c1268cadfd9d"
-
-"@types/mocha@^5.2.6":
-  version "5.2.7"
-  resolved "https://registry.yarnpkg.com/@types/mocha/-/mocha-5.2.7.tgz#315d570ccb56c53452ff8638738df60726d5b6ea"
 
 "@types/node@*":
   version "12.0.8"
@@ -294,10 +286,6 @@
 "@types/retry@^0.12.0":
   version "0.12.0"
   resolved "https://registry.yarnpkg.com/@types/retry/-/retry-0.12.0.tgz#2b35eccfcee7d38cd72ad99232fbd58bffb3c84d"
-
-"@types/sinon@^7.0.11":
-  version "7.0.13"
-  resolved "https://registry.yarnpkg.com/@types/sinon/-/sinon-7.0.13.tgz#ca039c23a9e27ebea53e0901ef928ea2a1a6d313"
 
 "@types/wif@^2.0.1":
   version "2.0.1"
@@ -990,13 +978,13 @@ bip-schnorr@^0.3.0:
     random-bytes "^1.0.0"
     safe-buffer "^5.0.1"
 
-bip21@Bitcoin-com/bip21:
+"bip21@github:Bitcoin-com/bip21":
   version "2.0.1"
   resolved "https://codeload.github.com/Bitcoin-com/bip21/tar.gz/28f8d03a3a16ed11eb5b963248ed1be8c46c6d6f"
   dependencies:
     qs "^6.3.0"
 
-bip32-utils@Bitcoin-com/bip32-utils#0.13.1:
+"bip32-utils@github:Bitcoin-com/bip32-utils#0.13.1":
   version "0.13.1"
   resolved "https://codeload.github.com/Bitcoin-com/bip32-utils/tar.gz/b8a33ebd0a0ac39de7cd987e5c3f77a8c5d84e58"
   dependencies:
@@ -1033,17 +1021,14 @@ bip66@^1.1.0, bip66@^1.1.5:
   dependencies:
     safe-buffer "^5.0.1"
 
-bitbox-sdk@8.4.1:
-  version "8.4.1"
-  resolved "https://registry.yarnpkg.com/bitbox-sdk/-/bitbox-sdk-8.4.1.tgz#3b38df9b84d24095379bf19a156eefa6b8b62e67"
+bitbox-sdk@8.4.2:
+  version "8.4.2"
+  resolved "https://registry.yarnpkg.com/bitbox-sdk/-/bitbox-sdk-8.4.2.tgz#0d9ebc77f92b7884faae8a1a9ebbabf48315c877"
   dependencies:
     "@types/bigi" "^1.4.2"
     "@types/bip39" "^2.4.2"
-    "@types/chai" "^4.1.7"
-    "@types/mocha" "^5.2.6"
     "@types/node" "^10.11.7"
     "@types/randombytes" "^2.0.0"
-    "@types/sinon" "^7.0.11"
     "@types/wif" "^2.0.1"
     assert "^1.4.1"
     axios "0.19.0"
@@ -1073,11 +1058,11 @@ bitbox-sdk@8.4.1:
     socket.io-client "^2.1.1"
     wif "^2.0.6"
 
-bitcoincash-ops@Bitcoin-com/bitcoincash-ops#2.0.0:
+bitcoincash-ops@Bitcoin-com/bitcoincash-ops#2.0.0, "bitcoincash-ops@github:Bitcoin-com/bitcoincash-ops#2.0.0":
   version "2.0.0"
   resolved "https://codeload.github.com/Bitcoin-com/bitcoincash-ops/tar.gz/6ab82cc7326c67236f3b2d9d0457258ac2ef48e3"
 
-bitcoincashjs-lib@Bitcoin-com/bitcoincashjs-lib#v4.0.1:
+"bitcoincashjs-lib@github:Bitcoin-com/bitcoincashjs-lib#v4.0.1":
   version "4.0.1"
   resolved "https://codeload.github.com/Bitcoin-com/bitcoincashjs-lib/tar.gz/28447b40a4ccd23913f7ade6589dc7214c99e60a"
   dependencies:
@@ -1719,7 +1704,7 @@ code-point-at@^1.0.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/code-point-at/-/code-point-at-1.1.0.tgz#0d070b4d043a5bea33a2f1a40e2edb3d9a4ccf77"
 
-coininfo@Bitcoin-com/coininfo:
+"coininfo@github:Bitcoin-com/coininfo":
   version "4.0.0"
   resolved "https://codeload.github.com/Bitcoin-com/coininfo/tar.gz/eece2c6141d08c3e7783929f2a1e1e681aa1a82c"
   dependencies:
