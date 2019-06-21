@@ -62,6 +62,7 @@ describe("#Utils", () => {
         "name",
         "symbol",
         "timestamp",
+        "timestampUnix",
         "totalBurned",
         "totalMinted",
         "txnsSinceGenesis",
@@ -99,6 +100,7 @@ describe("#Utils", () => {
         "name",
         "symbol",
         "timestamp",
+        "timestampUnix",
         "totalBurned",
         "totalMinted",
         "txnsSinceGenesis",
@@ -139,6 +141,7 @@ describe("#Utils", () => {
         "name",
         "symbol",
         "timestamp",
+        "timestampUnix",
         "totalBurned",
         "totalMinted",
         "txnsSinceGenesis",
@@ -166,6 +169,7 @@ describe("#Utils", () => {
       assert2.isArray(balances)
       assert2.hasAllKeys(balances[0], [
         "tokenId",
+        "balanceString",
         "balance",
         "decimalCount",
         "slpAddress"
@@ -187,7 +191,7 @@ describe("#Utils", () => {
         "df808a41672a0a0ae6475b44f272a107bc9961b90f29dc918d71301f24fe92fb"
       )
 
-      assert2.hasAllKeys(balance, ["tokenId", "balance"])
+      assert2.hasAllKeys(balance, ["tokenId", "balance", "balanceString"])
     })
   })
 
@@ -269,7 +273,7 @@ describe("#Utils", () => {
 
       const transactions = await SLP.Utils.transactions(
         "495322b37d6b2eae81f045eda612b95870a0c2b6069c58f70cf8ef4e6a9fd43a",
-        "qrhvcy5xlegs858fjqf8ssl6a4f7wpstaqlsy4gusz"
+        "simpleledger:qrhvcy5xlegs858fjqf8ssl6a4f7wpstaqnt0wauwu"
       )
       assert2.hasAnyKeys(transactions[0], ["txid", "tokenDetails"])
     })

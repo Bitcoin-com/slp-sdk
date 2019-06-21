@@ -40,30 +40,35 @@ async function createNFT() {
 
     const change = SLP.HDNode.derivePath(account, "0/0")
 
-    // get the cash address
-    const cashAddress = SLP.HDNode.toCashAddress(change)
+    // get the SLP address
+    const slpAddress = SLP.HDNode.toSLPAddress(change)
 
-    const fundingAddress = cashAddress
+    const fundingAddress = slpAddress
     const fundingWif = SLP.HDNode.toWIF(change)
-    const tokenReceiverAddress = fundingAddress
-    const bchChangeReceiverAddress = fundingAddress
+    const tokenReceiverAddress = slpAddress
+    const batonReceiverAddress = null
+    const bchChangeReceiverAddress = SLP.HDNode.toCashAddress(change)
 
     const decimals = 0
-    const initialQty = 1
+    const name = "Non Fungible Token"
+    const symbol = "NFT"
+    const documentUri = "documentUri"
+    const documentHash =
+      "1010101010101010101010101010101010101010101010101010101010101010"
+    const initialTokenQty = 1
 
     const genesisTxId = await SLP.TokenType1.create({
-      fundingAddress: fundingAddress,
-      fundingWif: fundingWif,
-      tokenReceiverAddress: tokenReceiverAddress,
-      batonReceiverAddress: null,
-      bchChangeReceiverAddress: bchChangeReceiverAddress,
-      decimals: decimals,
-      name: "Non Fungible Token",
-      symbol: "NFT",
-      documentUri: "documentUri",
-      documentHash:
-        "1010101010101010101010101010101010101010101010101010101010101010",
-      initialTokenQty: initialQty
+      fundingAddress,
+      fundingWif,
+      tokenReceiverAddress,
+      batonReceiverAddress,
+      bchChangeReceiverAddress,
+      decimals,
+      name,
+      symbol,
+      documentUri,
+      documentHash,
+      initialTokenQty
     })
     console.log(`genesisTxID: ${genesisTxId}`)
     console.log(

@@ -1,11 +1,11 @@
 {
-  "name": "burn-all",
+  "name": "burn",
   "version": "1.0.0",
-  "description": "Burn all tokens for an address by tokenId",
-  "main": "burn-all.js",
+  "description": "Burn an amount of tokens for an address by tokenId and amount",
+  "main": "burn.js",
   "scripts": {
     "test": "echo no tests yet",
-    "start": "node burn-all.js"
+    "start": "node burn.js"
   },
   "repository": {
     "type": "git",

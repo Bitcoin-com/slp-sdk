@@ -8,7 +8,7 @@ const NETWORK = `mainnet`
 
 // Set the TOKEN ID you are interested in
 const TOKEN_ID =
-  "b71dfb1adcd015dfa62c3ff58496b3c153498d1f3ed2b91b2d139f11a85cec39"
+  "9f2b1b91a6ab0686d48e46345669889357b48dbfe8a5d817b857607d89693adc"
 
 const SLPSDK = require("../../lib/SLP")
 

@@ -1,12 +1,16 @@
 /*
-  Burn all tokens for an address by tokenId
+  Burn an amount of tokens for an address by tokenId and amount
 */
 
 // Set NETWORK to either testnet or mainnet
-const NETWORK = `mainnet`
+const NETWORK = "mainnet"
 
 // Set the token ID you want to burn.
-const TOKEN_ID = ""
+const TOKEN_ID =
+  "9f2b1b91a6ab0686d48e46345669889357b48dbfe8a5d817b857607d89693adc"
+
+// Set the amount of tokens you want to burn.
+const TOKEN_AMOUNT = "6"
 
 const SLPSDK = require("../../lib/SLP")
 
@@ -43,19 +47,23 @@ async function burnAll() {
 
     const change = SLP.HDNode.derivePath(account, "0/0")
 
+    // get the slp address
+    const slpAddress = SLP.HDNode.toSLPAddress(change)
+    //
     // get the cash address
     const cashAddress = SLP.HDNode.toCashAddress(change)
 
     // get token balances
     try {
-      const iBurnAllConfig = {
-        fundingAddress: cashAddress,
+      const iBurnConfig = {
+        fundingAddress: slpAddress,
         fundingWif: SLP.HDNode.toWIF(change),
         tokenId: TOKEN_ID,
+        amount: TOKEN_AMOUNT,
         bchChangeReceiverAddress: cashAddress
       }
-      const burnAll = await SLP.TokenType1.burnAll(iBurnAllConfig)
-      console.log("TXID: ", burnAll)
+      const burn = await SLP.TokenType1.burn(iBurnConfig)
+      console.log("TXID: ", burn)
     } catch (error) {
       console.log(error.message)
     }
