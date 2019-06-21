@@ -53,7 +53,8 @@ async function createNFT() {
     const name = "Non Fungible Token"
     const symbol = "NFT"
     const documentUri = "documentUri"
-    const documentHash = "1010101010101010101010101010101010101010101010101010101010101010"
+    const documentHash =
+      "1010101010101010101010101010101010101010101010101010101010101010"
     const initialTokenQty = 1
 
     const genesisTxId = await SLP.TokenType1.create({
