@@ -4,7 +4,7 @@
 
 // EDIT THIS WITH THE TOKEN ID YOU WANT TO LOOK UP
 const TOKENID =
-  "03aacae278a8722b03cfbb75cf8ca2bc1810f09d17e8e6b484da51360a6203e6"
+  "9f2b1b91a6ab0686d48e46345669889357b48dbfe8a5d817b857607d89693adc"
 
 // Set NETWORK to either testnet or mainnet
 const NETWORK = `mainnet`
