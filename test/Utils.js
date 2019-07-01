@@ -4,6 +4,7 @@ const slp = require("./../lib/SLP")
 const SLP = new slp()
 const nock = require("nock") // http call mocking
 const sinon = require("sinon")
+const axios = require("axios")
 
 // Mock data used for unit tests
 const mockData = require("./fixtures/mock-utils")
@@ -157,9 +158,12 @@ describe("#Utils", () => {
       // Mock the call to rest.bitcoin.com
       if (process.env.TEST === "unit") {
         sandbox
-          .stub(SLP.Utils, "balancesForAddress")
-          .resolves(mockData.balancesForAddress)
+          .stub(axios, "get")
+          .resolves({ data: mockData.balancesForAddress })
       }
+      //sandbox
+      //  .stub(SLP.Utils, "balancesForAddress")
+      //  .resolves(mockData.balancesForAddress)
 
       const balances = await SLP.Utils.balancesForAddress(
         "simpleledger:qzv3zz2trz0xgp6a96lu4m6vp2nkwag0kvyucjzqt9"
@@ -180,16 +184,14 @@ describe("#Utils", () => {
   describe("#balance", () => {
     it(`should fetch balance of single token for address: simpleledger:qzv3zz2trz0xgp6a96lu4m6vp2nkwag0kvyucjzqt9`, async () => {
       // Mock the call to rest.bitcoin.com
-      if (process.env.TEST === "unit") {
-        sandbox
-          .stub(SLP.Utils, "balancesForAddress")
-          .resolves(mockData.balancesForAddress)
-      }
+      if (process.env.TEST === "unit")
+        sandbox.stub(axios, "get").resolves({ data: mockData.mockBalance })
 
       const balance = await SLP.Utils.balance(
         "simpleledger:qzv3zz2trz0xgp6a96lu4m6vp2nkwag0kvyucjzqt9",
         "df808a41672a0a0ae6475b44f272a107bc9961b90f29dc918d71301f24fe92fb"
       )
+      //console.log(`balance: ${JSON.stringify(balance, null, 2)}`)
 
       assert2.hasAllKeys(balance, ["tokenId", "balance", "balanceString"])
     })
@@ -282,15 +284,17 @@ describe("#Utils", () => {
   describe("#burnTotal", () => {
     it(`should retrieve input, output and burn totals`, async () => {
       // Mock the call to rest.bitcoin.com
-      // if (process.env.TEST === "unit") {
-      //   nock(SERVER)
-      //     .get(uri => uri.includes("/"))
-      //     .reply(200, mockData.mockTransactions)
-      // }
+      if (process.env.TEST === "unit") {
+        nock(SERVER)
+          .get(uri => uri.includes("/"))
+          .reply(200, mockData.mockBurnTotal)
+      }
 
       const burnTotal = await SLP.Utils.burnTotal(
         "c7078a6c7400518a513a0bde1f4158cf740d08d3b5bfb19aa7b6657e2f4160de"
       )
+      //console.log(`burnTotal: ${JSON.stringify(burnTotal, null, 2)}`)
+
       assert2.hasAnyKeys(burnTotal, [
         "transactionId",
         "inputTotal",
