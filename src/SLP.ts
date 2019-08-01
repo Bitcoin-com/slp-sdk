@@ -5,6 +5,7 @@ import Address from "./Address"
 import ECPair from "./ECPair"
 import HDNode from "./HDNode"
 import { IConfig } from "./interfaces/SLPInterfaces"
+import NFT1 from "./NFT1"
 import TokenType1 from "./TokenType1"
 import Utils from "./Utils"
 
@@ -14,8 +15,9 @@ const slpjs = require("slpjs")
 class SLP extends BITBOX {
   Address: any
   HDNode: any
-  TokenType1: any
-  Utils: any
+  TokenType1: TokenType1
+  NFT1: NFT1
+  Utils: Utils
   slpjs: any
   constructor(config: IConfig = {}) {
     super(config)
@@ -28,6 +30,7 @@ class SLP extends BITBOX {
     this.ECPair = new ECPair()
     this.HDNode = new HDNode(restURL)
     this.TokenType1 = new TokenType1(restURL)
+    this.NFT1 = new NFT1(restURL)
     this.Utils = new Utils(restURL)
     this.slpjs = slpjs
   }

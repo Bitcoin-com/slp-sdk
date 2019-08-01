@@ -1,11 +1,16 @@
 // require deps
 // imports
-import { BITBOX } from "bitbox-sdk"
 import Address from "./Address"
+import {
+  returnBITBOXInstance,
+  returnNetwork,
+  validateAddressFormat
+} from "./common"
 import {
   IBurnConfig,
   ICreateConfig,
   IMintConfig,
+  INFTConfig,
   ISendConfig
 } from "./interfaces/SLPInterfaces"
 
@@ -22,13 +27,13 @@ class TokenType1 {
 
   async create(createConfig: ICreateConfig) {
     // validate address formats
-    this.validateAddressFormat(createConfig)
+    validateAddressFormat(createConfig)
 
     // determine mainnet/testnet
-    const network: string = this.returnNetwork(createConfig.fundingAddress)
+    const network: string = returnNetwork(createConfig.fundingAddress)
 
     // network appropriate BITBOX instance
-    const BITBOX: any = this.returnBITBOXInstance(network)
+    const BITBOX: any = returnBITBOXInstance(network)
 
     // slpjs BITBOX Network instance
     const bitboxNetwork = new slpjs.BitboxNetwork(BITBOX)
@@ -69,15 +74,91 @@ class TokenType1 {
     return genesisTxid
   }
 
-  async mint(mintConfig: IMintConfig) {
+  async nft(nftConfig: INFTConfig) {
     // validate address formats
-    this.validateAddressFormat(mintConfig)
+    validateAddressFormat(nftConfig)
 
     // determine mainnet/testnet
-    const network: string = this.returnNetwork(mintConfig.fundingAddress)
+    const network: string = returnNetwork(nftConfig.fundingAddress)
+
+    // // network appropriate BITBOX instance
+    const BITBOX: any = returnBITBOXInstance(network)
+
+    // // slpjs BITBOX Network instance
+    const bitboxNetwork = new slpjs.BitboxNetwork(BITBOX)
+    console.log("yy")
+    // 1) Get all balances at the funding address.
+    let balances = await bitboxNetwork.getAllSlpBalancesAndUtxos(
+      nftConfig.fundingAddress
+    )
+    console.log("'balances' variable is set.")
+    console.log("BCH balance:", balances.satoshis_available_bch)
+
+    // 2) Calculate the token quantity with decimal precision included
+    let initialTokenQtyBN = new BigNumber(nftConfig.initialTokenQty)
+
+    // 3) Set private keys
+    balances!.nonSlpUtxos.forEach(
+      (txo: any) => (txo.wif = nftConfig.fundingWif)
+    )
+
+    // 4) Use "simpleTokenGenesis()" helper method
+    let genesisTxid = await bitboxNetwork.simpleNFT1ParentGenesis(
+      nftConfig.name,
+      nftConfig.symbol,
+      initialTokenQtyBN,
+      nftConfig.documentUri,
+      nftConfig.documentHash,
+      nftConfig.tokenReceiverAddress,
+      nftConfig.batonReceiverAddress,
+      nftConfig.bchChangeReceiverAddress,
+      balances!.nonSlpUtxos
+    )
+    console.log("NFT1 Parent GENESIS txn complete:", genesisTxid)
+
+    // let batonReceiverAddress: string
+    // if (
+    //   nftConfig.batonReceiverAddress !== undefined &&
+    //   nftConfig.batonReceiverAddress !== "" &&
+    //   nftConfig.batonReceiverAddress !== null
+    // )
+    //   batonReceiverAddress = nftConfig.batonReceiverAddress
+    // else batonReceiverAddress = null
+
+    // const balances: any = await bitboxNetwork.getAllSlpBalancesAndUtxos(
+    //   nftConfig.fundingAddress
+    // )
+
+    // let initialTokenQty: number = nftConfig.initialTokenQty
+
+    // initialTokenQty = new BigNumber(initialTokenQty).times(
+    //   10 ** nftConfig.decimals
+    // )
+    // balances.nonSlpUtxos.forEach((txo: any) => (txo.wif = nftConfig.fundingWif))
+    // const genesisTxid = await bitboxNetwork.simpleTokenGenesis(
+    //   nftConfig.name,
+    //   nftConfig.symbol,
+    //   initialTokenQty,
+    //   nftConfig.documentUri,
+    //   nftConfig.documentHash,
+    //   nftConfig.decimals,
+    //   nftConfig.tokenReceiverAddress,
+    //   batonReceiverAddress,
+    //   nftConfig.bchChangeReceiverAddress,
+    //   balances.nonSlpUtxos
+    // )
+    // return genesisTxid
+  }
+
+  async mint(mintConfig: IMintConfig) {
+    // validate address formats
+    validateAddressFormat(mintConfig)
+
+    // determine mainnet/testnet
+    const network: string = returnNetwork(mintConfig.fundingAddress)
 
     // network appropriate BITBOX instance
-    const BITBOX: any = this.returnBITBOXInstance(network)
+    const BITBOX: any = returnBITBOXInstance(network)
 
     // slpjs BITBOX Network instance
     const bitboxNetwork = new slpjs.BitboxNetwork(BITBOX)
@@ -119,16 +200,16 @@ class TokenType1 {
 
   async send(sendConfig: ISendConfig) {
     // validate address formats
-    this.validateAddressFormat(sendConfig)
+    validateAddressFormat(sendConfig)
 
     // determine mainnet/testnet
     let network: string
     if (!Array.isArray(sendConfig.fundingAddress))
-      network = this.returnNetwork(sendConfig.fundingAddress)
-    else network = this.returnNetwork(sendConfig.fundingAddress[0])
+      network = returnNetwork(sendConfig.fundingAddress)
+    else network = returnNetwork(sendConfig.fundingAddress[0])
 
     // network appropriate BITBOX instance
-    const BITBOX: any = this.returnBITBOXInstance(network)
+    const BITBOX: any = returnBITBOXInstance(network)
 
     // slpjs BITBOX Network instance
     const bitboxNetwork = new slpjs.BitboxNetwork(BITBOX)
@@ -211,12 +292,10 @@ class TokenType1 {
 
     utxos.forEach((txo: any) => {
       if (Array.isArray(sendConfig.fundingAddress)) {
-        sendConfig.fundingAddress.forEach(
-          (address: string, index: number) => {
-            if (txo.cashAddress === addy.toCashAddress(address))
-              txo.wif = sendConfig.fundingWif[index]
-          }
-        )
+        sendConfig.fundingAddress.forEach((address: string, index: number) => {
+          if (txo.cashAddress === addy.toCashAddress(address))
+            txo.wif = sendConfig.fundingWif[index]
+        })
       }
     })
 
@@ -239,13 +318,13 @@ class TokenType1 {
 
   async burn(burnConfig: IBurnConfig) {
     // validate address formats
-    this.validateAddressFormat(burnConfig)
+    validateAddressFormat(burnConfig)
 
     // determine mainnet/testnet
-    const network: string = this.returnNetwork(burnConfig.fundingAddress)
+    const network: string = returnNetwork(burnConfig.fundingAddress)
 
     // network appropriate BITBOX instance
-    const BITBOX: any = this.returnBITBOXInstance(network)
+    const BITBOX: any = returnBITBOXInstance(network)
 
     // slpjs BITBOX Network instance
     const bitboxNetwork = new slpjs.BitboxNetwork(BITBOX)
@@ -273,71 +352,6 @@ class TokenType1 {
       bchChangeReceiverAddress
     )
     return burnTxid
-  }
-
-  returnNetwork(address: string): string {
-    return addy.detectAddressNetwork(address)
-  }
-
-  returnBITBOXInstance(network: string): any {
-    let tmpBITBOX: any
-
-    let restURL: string
-    if (network === "mainnet") restURL = "https://rest.bitcoin.com/v2/"
-    else restURL = "https://trest.bitcoin.com/v2/"
-
-    return new BITBOX({ restURL: restURL })
-  }
-
-  validateAddressFormat(config: any): string | void {
-    // validate address formats
-    // fundingAddress, tokenReceiverAddress and batonReceiverAddress must be simpleledger format
-    // bchChangeReceiverAddress can be either simpleledger or cashAddr format
-    // validate fundingAddress format
-    // single fundingAddress
-    if (config.fundingAddress && !addy.isSLPAddress(config.fundingAddress))
-      throw Error("Funding Address must be simpleledger format")
-
-    // bulk fundingAddress
-    if (config.fundingAddress && Array.isArray(config.fundingAddress)) {
-      config.fundingAddress.forEach((address: string) => {
-        if (!addy.isSLPAddress(address))
-          throw Error("Funding Address must be simpleledger format")
-      })
-    }
-
-    // validate tokenReceiverAddress format
-    // single tokenReceiverAddress
-    if (
-      config.tokenReceiverAddress &&
-      !addy.isSLPAddress(config.tokenReceiverAddress)
-    )
-      throw Error("Token Receiver Address must be simpleledger format")
-
-    // bulk tokenReceiverAddress
-    if (
-      config.tokenReceiverAddress &&
-      Array.isArray(config.tokenReceiverAddress)
-    ) {
-      config.tokenReceiverAddress.forEach((address: string) => {
-        if (!addy.isSLPAddress(address))
-          throw Error("Token Receiver Address must be simpleledger format")
-      })
-    }
-
-    // validate bchChangeReceiverAddress format
-    if (
-      config.bchChangeReceiverAddress &&
-      !addy.isCashAddress(config.bchChangeReceiverAddress)
-    )
-      throw Error("BCH Change Receiver Address must be cash address format")
-
-    // validate batonReceiverAddress format
-    if (
-      config.batonReceiverAddress &&
-      !addy.isSLPAddress(config.batonReceiverAddress)
-    )
-      throw Error("Baton Receiver Address must be simpleledger format")
   }
 }
 

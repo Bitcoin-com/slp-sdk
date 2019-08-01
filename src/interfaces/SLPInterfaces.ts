@@ -16,6 +16,20 @@ export interface ICreateConfig {
   initialTokenQty: number
 }
 
+export interface INFTConfig {
+  fundingAddress: string
+  fundingWif: string
+  tokenReceiverAddress: string
+  batonReceiverAddress: string
+  bchChangeReceiverAddress: string
+  decimals: number
+  name: string
+  symbol: string
+  documentUri: string
+  documentHash: any
+  initialTokenQty: number
+}
+
 export interface IMintConfig {
   fundingAddress: string
   fundingWif: string

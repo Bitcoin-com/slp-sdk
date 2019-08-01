@@ -39,6 +39,7 @@
     "commander": "^2.13.0",
     "figlet": "^1.2.1",
     "git-clone": "^0.1.0",
+    "grpc-bchrpc-node": "^0.5.3",
     "mkdirp": "^0.5.1",
     "node-emoji": "^1.8.1",
     "repl.history": "^0.1.4",
