@@ -1000,10 +1000,10 @@ bip66@^1.1.0, bip66@^1.1.5:
   dependencies:
     safe-buffer "^5.0.1"
 
-bitbox-sdk@8.5.1:
-  version "8.5.1"
-  resolved "https://registry.yarnpkg.com/bitbox-sdk/-/bitbox-sdk-8.5.1.tgz#f9172de10bb8d608b023a3343fc6407d80ad6b38"
-  integrity sha512-IKdmsMBTyVI/aDGHU4qXx/1KiMrj4t4iO7+AO3l+312oENJiKK+M/PovA6VekYvVACU8hL0MNK7BXhmmN637Vg==
+bitbox-sdk@8.6.0:
+  version "8.6.0"
+  resolved "https://registry.yarnpkg.com/bitbox-sdk/-/bitbox-sdk-8.6.0.tgz#89c91926d9e90cd09bdce794e580a961a3d8a9d5"
+  integrity sha512-O2Wpm+jQp0IAXYHOLGnS04dc/Lp9PddDHhfunMPDjbSQM2BjI6N1xJFTHAHrp02kiru01nQZzQae1KrJ5+0kvg==
   dependencies:
     assert "^1.4.1"
     axios "0.19.0"

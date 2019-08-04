@@ -1,5 +1,6 @@
 export interface IConfig {
   restURL?: string
+  slpdbURL?: string
 }
 
 export interface ICreateConfig {
@@ -41,4 +42,14 @@ export interface IBurnConfig {
   tokenId: string
   bchChangeReceiverAddress: string
   amount: number
+}
+
+export interface QueryInterface {
+  amount?: number
+  label?: string
+  message?: string
+}
+
+export interface SLPDBResponse {
+  message: string
 }
