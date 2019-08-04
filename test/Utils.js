@@ -193,7 +193,14 @@ describe("#Utils", () => {
       )
       //console.log(`balance: ${JSON.stringify(balance, null, 2)}`)
 
-      assert2.hasAllKeys(balance, ["tokenId", "balance", "balanceString"])
+      assert2.hasAllKeys(balance, [
+        "cashAddress",
+        "legacyAddress",
+        "slpAddress",
+        "tokenId",
+        "balance",
+        "balanceString"
+      ])
     })
   })
 
