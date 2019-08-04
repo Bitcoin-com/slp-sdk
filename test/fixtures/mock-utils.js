@@ -139,7 +139,7 @@ const mockBalance = {
   balance: 1,
   cashAddress: "bitcoincash:qqeuq3yxsr9rys39am985gcv7xg6hzzqqgu9x00ua2",
   legacyAddress: "15idnmzhbFY3LE2aNqnbm9NjyLXcgXzSQj",
-  slpAdress: "simpleledger:qqeuq3yxsr9rys39am985gcv7xg6hzzqqgs7d56ur5",
+  slpAddress: "simpleledger:qqeuq3yxsr9rys39am985gcv7xg6hzzqqgs7d56ur5",
   balanceString: "1"
 }
 
