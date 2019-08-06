@@ -1,10 +1,8 @@
 const BITBOXSocket = require("bitbox-sdk").Socket
 import { SLPSocketConfig } from "./interfaces/SLPInterfaces"
 
-const io: any = require("socket.io-client")
 export class Socket extends BITBOXSocket {
   socket: any
-  websocketURL: string
   slpsocketURL: string
   constructor(config: SLPSocketConfig = {}) {
     super(config)
