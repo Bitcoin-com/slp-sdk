@@ -5,6 +5,7 @@ import ECPair from "./ECPair"
 import HDNode from "./HDNode"
 import { IConfig } from "./interfaces/SLPInterfaces"
 import { SLPDB } from "./SLPDB"
+import { Socket } from "./Socket"
 import TokenType1 from "./TokenType1"
 import Utils from "./Utils"
 
@@ -40,6 +41,7 @@ class SLP extends BITBOX {
     this.ECPair = new ECPair()
     this.HDNode = new HDNode(restURL)
     this.SLPDB = new SLPDB(this.slpdbURL)
+    this.Socket = Socket
     this.TokenType1 = new TokenType1(restURL)
     this.Utils = new Utils(restURL)
     this.slpjs = slpjs
