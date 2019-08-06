@@ -53,3 +53,10 @@ export interface QueryInterface {
 export interface SLPDBResponse {
   message: string
 }
+
+export interface SLPSocketConfig {
+  restURL?: string
+  wsURL?: string
+  slpsocketURL?: string
+  callback?: Function
+}
