@@ -3,6 +3,16 @@ export interface IConfig {
   slpdbURL?: string
 }
 
+export interface P2SHConfig {
+  wif: string
+  tokenReceiverAddress: string[]
+  bchChangeReceiverAddress: string
+  tokenId: string
+  sendAmounts: number[]
+  redeemScript: Buffer
+  locktime: string
+}
+
 export interface ICreateConfig {
   fundingAddress: string
   fundingWif: string
