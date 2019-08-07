@@ -1,13 +1,8 @@
 // require deps
 // imports
-import { BITBOX } from "bitbox-sdk"
-import Address from "./Address"
-import {
-  IBurnConfig,
-  ICreateConfig,
-  IMintConfig,
-  ISendConfig
-} from "./interfaces/SLPInterfaces"
+import { BITBOX } from "bitbox-sdk";
+import Address from "./Address";
+import { IBurnConfig, ICreateConfig, IMintConfig, ISendConfig, P2SHConfig } from "./interfaces/SLPInterfaces";
 
 // consts
 const BigNumber: any = require("bignumber.js")
@@ -18,6 +13,97 @@ class TokenType1 {
   restURL: string
   constructor(restURL?: string) {
     this.restURL = restURL
+  }
+
+  async p2sh(p2shConfig: P2SHConfig): Promise<string> {
+    const wif: string = p2shConfig.wif
+    const tokenReceiverAddress: string[] = p2shConfig.tokenReceiverAddress
+    const bchChangeReceiverAddress: string = p2shConfig.bchChangeReceiverAddress
+    let tokenId: string = p2shConfig.tokenId
+    let sendAmounts: number[] = p2shConfig.sendAmounts
+    let redeemScript: Buffer = p2shConfig.redeemScript
+
+    // determine mainnet/testnet
+    const network: string = this.returnNetwork(bchChangeReceiverAddress)
+
+    // network appropriate BITBOX instance
+    const bitbox: BITBOX = this.returnBITBOXInstance(network)
+    const slp: any = new slpjs.Slp(bitbox)
+    const helpers: any = new slpjs.TransactionHelpers(slp)
+
+    // Calculate the address for this script contract
+    // We need to send some token and BCH to it before we can spend it!
+    let fundingAddress: string = slpjs.Utils.slpAddressFromHash160(
+      bitbox.Crypto.hash160(redeemScript),
+      network,
+      "p2sh"
+    )
+    const bitboxNetwork: any = new slpjs.BitboxNetwork(bitbox)
+
+    // Fetch critical token information
+    let tokenDecimals: number = 0
+    const tokenInfo: any = await bitboxNetwork.getTokenInformation(tokenId)
+    tokenDecimals = tokenInfo.decimals
+
+    // Check that token balance is greater than our desired sendAmount
+    let balances: any
+    balances = await bitboxNetwork.getAllSlpBalancesAndUtxos(fundingAddress)
+    if (balances.slpTokenBalances[tokenId] === undefined)
+      console.log(
+        "You need to fund the addresses provided in this example with tokens and BCH.  Change the tokenId as required."
+      )
+    console.log(
+      "Token balance:",
+      balances.slpTokenBalances[tokenId].toFixed() / 10 ** tokenDecimals
+    )
+
+    // Calculate send amount in "Token Satoshis".  In this example we want to just send 1 token unit to someone...
+    sendAmounts = sendAmounts.map(a =>
+      new BigNumber(a).times(10 ** tokenDecimals)
+    ) // Don't forget to account for token precision
+
+    // Get all of our token's UTXOs
+    let inputUtxos: any = balances.slpTokenUtxos[tokenId]
+
+    // Simply sweep our BCH utxos to fuel the transaction
+    inputUtxos = inputUtxos.concat(balances.nonSlpUtxos)
+
+    // Estimate the additional fee for our larger p2sh scriptSigs
+    let extraFee: number = 8 * inputUtxos.length // for OP_CTLV and timelock data push // this many times since we swept inputs from p2sh address
+
+    // Build an unsigned transaction
+    let unsignedTxnHex: any = helpers.simpleTokenSend(
+      tokenId,
+      sendAmounts,
+      inputUtxos,
+      tokenReceiverAddress,
+      bchChangeReceiverAddress,
+      [],
+      extraFee
+    )
+    unsignedTxnHex = helpers.enableInputsCLTV(unsignedTxnHex)
+    unsignedTxnHex = helpers.setTxnLocktime(unsignedTxnHex, p2shConfig.locktime)
+
+    // Build scriptSigs
+    let scriptSigs: any = inputUtxos.map((txo: any, i: any) => {
+      let sigObj: any = helpers.get_transaction_sig_p2sh(
+        unsignedTxnHex,
+        wif,
+        i,
+        txo.satoshis,
+        redeemScript
+      )
+      return {
+        index: i,
+        lockingScriptBuf: redeemScript,
+        unlockingScriptBufArray: [sigObj.signatureBuf]
+      }
+    })
+
+    let signedTxn: any = helpers.addScriptSigs(unsignedTxnHex, scriptSigs)
+
+    // 11) Send token
+    return await bitboxNetwork.sendTx(signedTxn)
   }
 
   async create(createConfig: ICreateConfig) {
@@ -211,12 +297,10 @@ class TokenType1 {
 
     utxos.forEach((txo: any) => {
       if (Array.isArray(sendConfig.fundingAddress)) {
-        sendConfig.fundingAddress.forEach(
-          (address: string, index: number) => {
-            if (txo.cashAddress === addy.toCashAddress(address))
-              txo.wif = sendConfig.fundingWif[index]
-          }
-        )
+        sendConfig.fundingAddress.forEach((address: string, index: number) => {
+          if (txo.cashAddress === addy.toCashAddress(address))
+            txo.wif = sendConfig.fundingWif[index]
+        })
       }
     })
 
@@ -279,9 +363,7 @@ class TokenType1 {
     return addy.detectAddressNetwork(address)
   }
 
-  returnBITBOXInstance(network: string): any {
-    let tmpBITBOX: any
-
+  returnBITBOXInstance(network: string): BITBOX {
     let restURL: string
     if (network === "mainnet") restURL = "https://rest.bitcoin.com/v2/"
     else restURL = "https://trest.bitcoin.com/v2/"
