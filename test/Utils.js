@@ -310,4 +310,10 @@ describe("#Utils", () => {
       ])
     })
   })
+
+  describe("#isTokenUtxo", () => {
+    it("should do something", async () => {
+      await SLP.Utils.isTokenUtxo()
+    })
+  })
 })

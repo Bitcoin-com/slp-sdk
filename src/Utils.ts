@@ -134,6 +134,19 @@ class Utils {
       throw error
     }
   }
+
+  // Expects an array of UTXO objects as input. Returns an array of Boolean
+  // values indicating if a UTXO is associated with SLP tokens (true) or not
+  // (false).
+  async isTokenUtxo(utxos: Array<Object>): Promise<Object> {
+    try {
+      console.log(`test`)
+      return true
+    } catch(error) {
+      if (error.response && error.response.data) throw error.response.data
+      throw error
+    }
+  }
 }
 
 export default Utils
