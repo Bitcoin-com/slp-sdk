@@ -138,10 +138,43 @@ class Utils {
   // Expects an array of UTXO objects as input. Returns an array of Boolean
   // values indicating if a UTXO is associated with SLP tokens (true) or not
   // (false).
-  async isTokenUtxo(utxos: Array<Object>): Promise<Object> {
+  async isTokenUtxo(utxos: Array<any>): Promise<Object> {
     try {
-      console.log(`test`)
-      return true
+      // Throw error if input is not an array.
+      if(!Array.isArray(utxos)) throw new Error(`Input must be an array.`)
+
+      // Loop through each element in the array and spot check the required
+      // properties.
+      for(let i=0; i < utxos.length; i++) {
+        const thisUtxo = utxos[i]
+
+        // Throw error if utxo does not have a satoshis property.
+        if(!thisUtxo.satoshis) throw new Error(`utxo ${i} does not have a satoshis property.`)
+
+        // Throw error if utxo does not have a txid property.
+        if(!thisUtxo.txid) throw new Error(`utxo ${i} does not have a txid property.`)
+      }
+
+      // Create an array of txid strings to feed to validateTxid
+      const txids = utxos.map(x => x.txid)
+
+      // Validate the array of txids.
+      let validations: any = await this.validateTxid(txids)
+
+      // Extract the boolean result
+      validations = validations.map((x: any) => x.valid)
+
+      // Loop through each element and compute final validation.
+      for(let i=0; i < utxos.length; i++) {
+        const thisUtxo = utxos[i]
+
+        // Invalidate the utxo if it contains more than dust, since SLP token
+        // UTXOs only contain dust values.
+        if(thisUtxo.satoshis > 546) validations[i] = false
+      }
+
+      return validations
+
     } catch(error) {
       if (error.response && error.response.data) throw error.response.data
       throw error
