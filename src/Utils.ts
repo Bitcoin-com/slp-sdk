@@ -138,6 +138,7 @@ class Utils {
   // Expects an array of UTXO objects as input. Returns an array of Boolean
   // values indicating if a UTXO is associated with SLP tokens (true) or not
   // (false).
+  // Note: There is no way to validate SLP UTXOs without inspecting the OP_RETURN.
   async isTokenUtxo(utxos: Array<any>): Promise<Object> {
     try {
       // Throw error if input is not an array.
@@ -170,6 +171,8 @@ class Utils {
 
         // Invalidate the utxo if it contains more than dust, since SLP token
         // UTXOs only contain dust values.
+        // Note: This is not a very accurate way to make a determination.
+        // See https://gist.github.com/christroutner/434ae0c710001b57e33a4fa8abb7d478
         if(thisUtxo.satoshis > 546) validations[i] = false
       }
 
