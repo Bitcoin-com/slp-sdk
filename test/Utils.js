@@ -1,3 +1,11 @@
+/*
+  Util class tests.
+
+  TODO:
+  - Finish integration tests for isTokenUtxo() and decodeOpReturn().
+  - Mock calls made by isTokenUtxo() and decodeOpReturn() to turn them into unit tests.
+*/
+
 const assert = require("assert")
 const assert2 = require("chai").assert
 const slp = require("./../lib/SLP")
@@ -418,7 +426,7 @@ describe("#Utils", () => {
       ]
 
       const data = await SLP.Utils.isTokenUtxo(utxos)
-      console.log(`data: ${JSON.stringify(data, null, 2)}`)
+      //console.log(`data: ${JSON.stringify(data, null, 2)}`)
 
       assert.equal(
         data[0],
@@ -430,6 +438,46 @@ describe("#Utils", () => {
   })
 
   describe("#decodeOpReturn", () => {
+    it("should throw an error for a non-string input", async () => {
+      try {
+        const txid = 53423 // Not a string.
+
+        await SLP.Utils.decodeOpReturn(txid)
+
+        assert2.equal(true, false, "Unexpected result.")
+      } catch (err) {
+        assert2.include(err.error, `parameter 1 must be hexadecimal string`)
+      }
+    })
+
+    it("should throw an error for non-SLP transaction", async () => {
+      try {
+        const txid =
+          "3793d4906654f648e659f384c0f40b19c8f10c1e9fb72232a9b8edd61abaa1ec"
+
+        await SLP.Utils.decodeOpReturn(txid)
+
+        assert2.equal(true, false, "Unexpected result.")
+      } catch (err) {
+        assert2.include(err.message, `Not an OP_RETURN`)
+        //console.log(`err: ${util.inspect(err)}`)
+      }
+    })
+
+    it("should throw an error for non-SLP transaction with OP_RETURN", async () => {
+      try {
+        const txid =
+          "2ff74c48a5d657cf45f699601990bffbbe7a2a516d5480674cbf6c6a4497908f"
+
+        await SLP.Utils.decodeOpReturn(txid)
+
+        assert2.equal(true, false, "Unexpected result.")
+      } catch (err) {
+        assert2.include(err.message, `Not a SLP OP_RETURN`)
+        //console.log(`err: ${util.inspect(err)}`)
+      }
+    })
+
     it("should decode a genesis transaction", async () => {
       const txid =
         "bd158c564dd4ef54305b14f44f8e94c44b649f246dab14bcb42fb0d0078b8a90"

@@ -177,7 +177,7 @@ class Utils {
         const thisUtxo = utxos[i]
 
         // Invalidate the utxo if it contains more than dust, since SLP token
-        // UTXOs only contain dust values.
+        // UTXOs only contain dust values. <--- NOT TRUE
         // Note: This is not a very accurate way to make a determination.
         // See https://gist.github.com/christroutner/434ae0c710001b57e33a4fa8abb7d478
         if (thisUtxo.satoshis > 546) validations[i] = false
