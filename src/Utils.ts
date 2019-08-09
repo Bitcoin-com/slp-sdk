@@ -1,9 +1,14 @@
 // imports
 import axios from "axios"
 
+import { BITBOX } from "bitbox-sdk"
+const bitbox = new BITBOX()
+
 // consts
 const util = require("util")
 util.inspect.defaultOptions = { depth: 1 }
+
+const BigNumber = require('bignumber.js')
 
 class Utils {
   restURL: string
@@ -142,18 +147,20 @@ class Utils {
   async isTokenUtxo(utxos: Array<any>): Promise<Object> {
     try {
       // Throw error if input is not an array.
-      if(!Array.isArray(utxos)) throw new Error(`Input must be an array.`)
+      if (!Array.isArray(utxos)) throw new Error(`Input must be an array.`)
 
       // Loop through each element in the array and spot check the required
       // properties.
-      for(let i=0; i < utxos.length; i++) {
+      for (let i = 0; i < utxos.length; i++) {
         const thisUtxo = utxos[i]
 
         // Throw error if utxo does not have a satoshis property.
-        if(!thisUtxo.satoshis) throw new Error(`utxo ${i} does not have a satoshis property.`)
+        if (!thisUtxo.satoshis)
+          throw new Error(`utxo ${i} does not have a satoshis property.`)
 
         // Throw error if utxo does not have a txid property.
-        if(!thisUtxo.txid) throw new Error(`utxo ${i} does not have a txid property.`)
+        if (!thisUtxo.txid)
+          throw new Error(`utxo ${i} does not have a txid property.`)
       }
 
       // Create an array of txid strings to feed to validateTxid
@@ -166,19 +173,82 @@ class Utils {
       validations = validations.map((x: any) => x.valid)
 
       // Loop through each element and compute final validation.
-      for(let i=0; i < utxos.length; i++) {
+      for (let i = 0; i < utxos.length; i++) {
         const thisUtxo = utxos[i]
 
         // Invalidate the utxo if it contains more than dust, since SLP token
         // UTXOs only contain dust values.
         // Note: This is not a very accurate way to make a determination.
         // See https://gist.github.com/christroutner/434ae0c710001b57e33a4fa8abb7d478
-        if(thisUtxo.satoshis > 546) validations[i] = false
+        if (thisUtxo.satoshis > 546) validations[i] = false
       }
 
       return validations
+    } catch (error) {
+      if (error.response && error.response.data) throw error.response.data
+      throw error
+    }
+  }
 
-    } catch(error) {
+  // Retrieves transactions data from a txid and decodes the SLP OP_RETURN data.
+  async decodeOpReturn(txid: string) {
+    try {
+      const path: string = `${this.restURL}rawtransactions/getRawTransaction/${txid}?verbose=true`
+      const lokadIdHex = "534c5000"
+
+      // Retrieve the transaction object from the full node.
+      const response = await axios.get(path)
+      const txDetails = response.data
+
+      // Retrieve the OP_RETURN data.
+      const script = bitbox.Script.toASM(
+        Buffer.from(txDetails.vout[0].scriptPubKey.hex, "hex")
+      ).split(" ")
+
+      if (script[0] !== "OP_RETURN") throw new Error("Not an OP_RETURN")
+
+      if (script[1] !== lokadIdHex) throw new Error("Not a SLP OP_RETURN")
+      script[1] = Buffer.from(script[1], "hex")
+        .toString("ascii")
+        .toLowerCase()
+
+      if (script[2] !== "OP_1") {
+        // NOTE: bitcoincashlib-js converts hex 01 to OP_1 due to BIP62.3 enforcement
+        throw new Error("Unknown token type")
+      }
+
+      const type = Buffer.from(script[3], "hex")
+        .toString("ascii")
+        .toLowerCase()
+      script[3] = type
+
+      if (type === "genesis") {
+        // Convert the next four entries into ascii.
+        for (let i = 4; i < 8; i++) {
+          script[i] = Buffer.from(script[i], "hex")
+            .toString("ascii")
+            .toLowerCase()
+        }
+
+        // decimal precision of the token.
+        if (typeof script[8] === "string" && script[8].startsWith("OP_"))
+          script[8] = parseInt(script[8].slice(3)).toString(16)
+
+        const decimals = Number(script[8])
+
+        // Mint Baton vout.
+        if (typeof script[9] === "string" && script[9].startsWith("OP_"))
+          script[9] = parseInt(script[9].slice(3)).toString(16)
+
+        // Initial quantity of tokens created.
+        let qty = new BigNumber(script[10], 16)
+        qty = qty/(Math.pow(10,decimals))
+        script[10] = qty
+
+      }
+
+      return script
+    } catch (error) {
       if (error.response && error.response.data) throw error.response.data
       throw error
     }

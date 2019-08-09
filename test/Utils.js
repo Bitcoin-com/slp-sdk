@@ -428,4 +428,14 @@ describe("#Utils", () => {
       assert.equal(data[1], true, "SLP UTXO correctly identified.")
     })
   })
+
+  describe("#decodeOpReturn", () => {
+    it("should do something", async () => {
+      const txid =
+        "bd158c564dd4ef54305b14f44f8e94c44b649f246dab14bcb42fb0d0078b8a90"
+
+      const data = await SLP.Utils.decodeOpReturn(txid)
+      console.log(`data: ${JSON.stringify(data, null, 2)}`)
+    })
+  })
 })
