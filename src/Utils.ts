@@ -191,10 +191,15 @@ class Utils {
   }
 
   // Retrieves transactions data from a txid and decodes the SLP OP_RETURN data.
+  // Returns an object with properties corresponding to the SLP spec:
+  // https://github.com/simpleledger/slp-specifications/blob/master/slp-token-type-1.md
   async decodeOpReturn(txid: string) {
     try {
       const path: string = `${this.restURL}rawtransactions/getRawTransaction/${txid}?verbose=true`
       const lokadIdHex = "534c5000"
+
+      // Create an empty output object that will be populated with metadata.
+      const outObj: any = {}
 
       // Retrieve the transaction object from the full node.
       const response = await axios.get(path)
@@ -208,14 +213,13 @@ class Utils {
       if (script[0] !== "OP_RETURN") throw new Error("Not an OP_RETURN")
 
       if (script[1] !== lokadIdHex) throw new Error("Not a SLP OP_RETURN")
-      script[1] = Buffer.from(script[1], "hex")
-        .toString("ascii")
-        .toLowerCase()
 
+      // Validate token type.
       if (script[2] !== "OP_1") {
         // NOTE: bitcoincashlib-js converts hex 01 to OP_1 due to BIP62.3 enforcement
         throw new Error("Unknown token type")
       }
+      outObj.tokenType = 1
 
       const type = Buffer.from(script[3], "hex")
         .toString("ascii")
@@ -223,31 +227,41 @@ class Utils {
       script[3] = type
 
       if (type === "genesis") {
+        outObj.transactionType = 'genesis'
+
         // Convert the next four entries into ascii.
         for (let i = 4; i < 8; i++) {
           script[i] = Buffer.from(script[i], "hex")
             .toString("ascii")
-            .toLowerCase()
+            //.toLowerCase()
         }
+
+        outObj.ticker = script[4]
+        outObj.name = script[5]
+        outObj.documentUrl = script[6]
+        outObj.documentHash = script[7]
 
         // decimal precision of the token.
         if (typeof script[8] === "string" && script[8].startsWith("OP_"))
           script[8] = parseInt(script[8].slice(3)).toString(16)
 
         const decimals = Number(script[8])
+        outObj.decimals = decimals
 
         // Mint Baton vout.
         if (typeof script[9] === "string" && script[9].startsWith("OP_"))
           script[9] = parseInt(script[9].slice(3)).toString(16)
+        outObj.mintBatonVout = Number(script[9])
 
         // Initial quantity of tokens created.
         let qty = new BigNumber(script[10], 16)
         qty = qty/(Math.pow(10,decimals))
         script[10] = qty
+        outObj.initialQty = qty
 
       }
 
-      return script
+      return outObj
     } catch (error) {
       if (error.response && error.response.data) throw error.response.data
       throw error

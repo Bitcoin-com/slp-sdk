@@ -430,12 +430,24 @@ describe("#Utils", () => {
   })
 
   describe("#decodeOpReturn", () => {
-    it("should do something", async () => {
+    it("should decode a genesis transaction", async () => {
       const txid =
         "bd158c564dd4ef54305b14f44f8e94c44b649f246dab14bcb42fb0d0078b8a90"
 
       const data = await SLP.Utils.decodeOpReturn(txid)
-      console.log(`data: ${JSON.stringify(data, null, 2)}`)
+      //console.log(`data: ${JSON.stringify(data, null, 2)}`)
+
+      assert2.hasAnyKeys(data, [
+        "tokenType",
+        "transactionType",
+        "ticker",
+        "name",
+        "documentUrl",
+        "documentHash",
+        "decimals",
+        "mintBatonVout",
+        "initialQty"
+      ])
     })
   })
 })
