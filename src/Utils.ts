@@ -41,13 +41,29 @@ class Utils {
     }
   }
 
-  // Retrieve token balances for a given address.
-  async balancesForAddress(address: string): Promise<Object> {
-    const path: string = `${this.restURL}slp/balancesForAddress/${address}`
-
+  // Retrieve token balances for a given address or array of addresses.
+  async balancesForAddress(address: string | string[]): Promise<Object> {
     try {
-      const response = await axios.get(path)
-      return response.data
+      // Single address.
+      if (typeof address === "string") {
+        const path: string = `${this.restURL}slp/balancesForAddress/${address}`
+
+        const response = await axios.get(path)
+        return response.data
+
+        // Array of addresses.
+      } else if (Array.isArray(address)) {
+        const path: string = `${this.restURL}slp/balancesForAddress`
+
+        // Dev note: must use axios.post for unit test stubbing.
+        const response: any = await axios.post(path, {
+          addresses: address
+        })
+
+        return response.data
+      }
+
+      throw new Error(`Input address must be a string or array of strings.`)
     } catch (error) {
       if (error.response && error.response.data) throw error.response.data
       throw error

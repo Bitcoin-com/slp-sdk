@@ -154,6 +154,22 @@ describe("#Utils", () => {
   })
 
   describe("#balancesForAddress", () => {
+    it(`should throw an error if input is not a string or array of strings`, async () => {
+      try {
+        const address = 1234
+
+        await SLP.Utils.balancesForAddress(address)
+
+        assert2.equal(true, false, "Uh oh. Code path should not end here.")
+      } catch (err) {
+        //console.log(`Error: `, err)
+        assert2.include(
+          err.message,
+          `Input address must be a string or array of strings`
+        )
+      }
+    })
+
     it(`should fetch all balances for address: simpleledger:qzv3zz2trz0xgp6a96lu4m6vp2nkwag0kvyucjzqt9`, async () => {
       // Mock the call to rest.bitcoin.com
       if (process.env.TEST === "unit") {
@@ -161,9 +177,6 @@ describe("#Utils", () => {
           .stub(axios, "get")
           .resolves({ data: mockData.balancesForAddress })
       }
-      //sandbox
-      //  .stub(SLP.Utils, "balancesForAddress")
-      //  .resolves(mockData.balancesForAddress)
 
       const balances = await SLP.Utils.balancesForAddress(
         "simpleledger:qzv3zz2trz0xgp6a96lu4m6vp2nkwag0kvyucjzqt9"
@@ -172,6 +185,33 @@ describe("#Utils", () => {
 
       assert2.isArray(balances)
       assert2.hasAllKeys(balances[0], [
+        "tokenId",
+        "balanceString",
+        "balance",
+        "decimalCount",
+        "slpAddress"
+      ])
+    })
+
+    it(`should fetch balances for multiple addresses.`, async () => {
+      const addresses = [
+        "simpleledger:qzv3zz2trz0xgp6a96lu4m6vp2nkwag0kvyucjzqt9",
+        "simpleledger:qqss4zp80hn6szsa4jg2s9fupe7g5tcg5ucdyl3r57"
+      ]
+
+      // Mock the call to rest.bitcoin.com
+      if (process.env.TEST === "unit") {
+        sandbox
+          .stub(axios, "get")
+          .resolves({ data: mockData.balancesForAddresses })
+      }
+
+      const balances = await SLP.Utils.balancesForAddress(addresses)
+      //console.log(`balances: ${JSON.stringify(balances, null, 2)}`)
+
+      assert2.isArray(balances)
+      assert2.isArray(balances[0])
+      assert2.hasAllKeys(balances[0][0], [
         "tokenId",
         "balanceString",
         "balance",
