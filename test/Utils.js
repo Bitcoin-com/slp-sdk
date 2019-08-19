@@ -508,6 +508,7 @@ describe("#Utils", () => {
       //console.log(`data: ${JSON.stringify(data, null, 2)}`)
 
       assert2.hasAnyKeys(data, [
+        "transactionType",
         "tokenType",
         "tokenId",
         "mintBatonVout",
@@ -525,7 +526,12 @@ describe("#Utils", () => {
       const data = await SLP.Utils.decodeOpReturn(txid)
       //console.log(`data: ${JSON.stringify(data, null, 2)}`)
 
-      assert2.hasAnyKeys(data, ["tokenType", "tokenId", "spendData"])
+      assert2.hasAnyKeys(data, [
+        "transactionType",
+        "tokenType",
+        "tokenId",
+        "spendData"
+      ])
       assert2.isArray(data.spendData)
       assert2.hasAnyKeys(data.spendData[0], ["quantity", "sentTo", "vout"])
     })

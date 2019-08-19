@@ -144,6 +144,10 @@ class Utils {
   // values indicating if a UTXO is associated with SLP tokens (true) or not
   // (false).
   // Note: There is no way to validate SLP UTXOs without inspecting the OP_RETURN.
+  // If a UTXO returns false when its txid is passed to validateTxid(), then the
+  // UTXO is not associated with SLP. This is a fast and quick check.
+  // If a UTXO returns true though, the OP_RETURN has to be inspected to determine
+  // for sure that it *is* associated with an SLP transaction not just change.
   async isTokenUtxo(utxos: Array<any>): Promise<Object> {
     try {
       // Throw error if input is not an array.
@@ -172,9 +176,40 @@ class Utils {
       // Extract the boolean result
       validations = validations.map((x: any) => x.valid)
 
-      // Loop through each element and compute final validation.
+      // Loop through each element and compute final validation on any that
+      // returned true.
       for (let i = 0; i < utxos.length; i++) {
         const thisUtxo = utxos[i]
+        const thisValidation = validations[i]
+
+        // Only need to worry about validations that are still true.
+        if (thisValidation) {
+          const slpData = await this.decodeOpReturn(thisUtxo.txid)
+
+          // Handle Genesis and Mint SLP transactions.
+          if (
+            slpData.transactionType === "genesis" ||
+            slpData.transactionType === "mint"
+          ) {
+            if (
+              thisUtxo.vout !== slpData.mintBatonVout && // UTXO is not a mint baton output.
+              thisUtxo.vout !== 1 // UTXO is not the reciever of the genesis or mint tokens.
+            )
+              // Can safely be marked as false.
+              validations[i] = false
+          } else if (slpData.transactionType === "send") {
+            // Loop through the spendData array.
+            for (let j = 0; j < slpData.spendData.length; j++) {
+              const thisVout = slpData.spendData[j].vout
+
+              // Assume false to start.
+              validations[i] = false
+
+              // UTXO vout value should match if it's truely an SLP UTXO.
+              if (thisUtxo.vout === thisVout) validations[i] = true
+            }
+          }
+        }
 
         //const slpData = await this.decodeOpReturn(thisUtxo.txid)
         //console.log(`slpData: ${JSON.stringify(slpData, null, 2)}`)
@@ -183,7 +218,7 @@ class Utils {
         // UTXOs only contain dust values. <--- NOT TRUE
         // Note: This is not a very accurate way to make a determination.
         // See https://gist.github.com/christroutner/434ae0c710001b57e33a4fa8abb7d478
-        if (thisUtxo.satoshis > 546) validations[i] = false
+        //if (thisUtxo.satoshis > 546) validations[i] = false
       }
 
       return validations
@@ -276,6 +311,7 @@ class Utils {
       } else if (type === "mint") {
         //console.log(`txDetails: ${JSON.stringify(txDetails, null, 2)}`)
 
+        outObj.transactionType = "mint"
         outObj.tokenId = script[4]
 
         // Locate the vout UTXO containing the minting baton.
@@ -313,6 +349,8 @@ class Utils {
 
         if (script.length <= 4) throw new Error("Not a SLP txout")
 
+        outObj.transactionType = "send"
+
         // Retrieve the token ID.
         outObj.tokenId = script[4]
 
@@ -325,8 +363,10 @@ class Utils {
           if (typeof thisScript === "string" && thisScript.startsWith("OP_"))
             thisScript = parseInt(thisScript.slice(3)).toString(16)
 
+          // Compute the quantity of tokens.
           spendObj.quantity = new BigNumber(thisScript, 16)
 
+          // Calculate which vouts are SLP UTXOs.
           const thisVout = i - 4
           spendObj.sentTo = txDetails.vout[thisVout].scriptPubKey.addresses[0]
           spendObj.vout = thisVout
