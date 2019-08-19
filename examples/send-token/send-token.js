@@ -3,9 +3,9 @@
 */
 
 // CUSTOMIZE THESE VALUES FOR YOUR USE
-const TOKENQTY = 1
+const TOKENQTY = 3
 const TOKENID =
-  "bd158c564dd4ef54305b14f44f8e94c44b649f246dab14bcb42fb0d0078b8a90"
+  "023cd3e95a3947058b994fd15a9a4c47937a9d9b6e0c0b1b5898d2ce84f354e4"
 const SLPADDR = "simpleledger:qzv7t2pzn2d0pklnetdjt65crh6fe8vnhuzhutr2dd"
 
 // Set NETWORK to either testnet or mainnet

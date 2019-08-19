@@ -8,7 +8,7 @@ const bitbox = new BITBOX()
 const util = require("util")
 util.inspect.defaultOptions = { depth: 1 }
 
-const BigNumber = require('bignumber.js')
+const BigNumber = require("bignumber.js")
 
 class Utils {
   restURL: string
@@ -205,6 +205,7 @@ class Utils {
       const response = await axios.get(path)
       const txDetails = response.data
 
+
       // Retrieve the OP_RETURN data.
       const script = bitbox.Script.toASM(
         Buffer.from(txDetails.vout[0].scriptPubKey.hex, "hex")
@@ -225,16 +226,16 @@ class Utils {
         .toString("ascii")
         .toLowerCase()
       script[3] = type
+      console.log(`type: ${type}`)
 
+      // Decode a GENSIS SLP transaction.
       if (type === "genesis") {
-        outObj.transactionType = 'genesis'
+        outObj.transactionType = "genesis"
 
         // Convert the next four entries into ascii.
-        for (let i = 4; i < 8; i++) {
-          script[i] = Buffer.from(script[i], "hex")
-            .toString("ascii")
-            //.toLowerCase()
-        }
+        for (let i = 4; i < 8; i++)
+          script[i] = Buffer.from(script[i], "hex").toString("ascii")
+        //.toLowerCase()
 
         outObj.ticker = script[4]
         outObj.name = script[5]
@@ -255,10 +256,42 @@ class Utils {
 
         // Initial quantity of tokens created.
         let qty = new BigNumber(script[10], 16)
-        qty = qty/(Math.pow(10,decimals))
+        qty = qty / Math.pow(10, decimals)
         script[10] = qty
         outObj.initialQty = qty
 
+        // Mint type transaction
+      } else if (type === "mint") {
+        //console.log(`txDetails: ${JSON.stringify(txDetails, null, 2)}`)
+
+        outObj.tokenId = script[4]
+
+        // Locate the vout UTXO containing the minting baton.
+        let mintBatonVout = 0
+        if (typeof script[5] === "string" && script[5].startsWith("OP_"))
+          mintBatonVout = parseInt(script[5].slice(3))
+
+        outObj.mintBatonVout = mintBatonVout
+
+        // Check if baton was passed or destroyed.
+        outObj.batonStillExists = false // false by default.
+        if (mintBatonVout > 1) outObj.batonStillExists = true
+
+        // Parse the quantity generated in this minting operation.
+        // Returns a string. But without the decimals information included,
+        // I'm not sure how to properly represent the quantity.
+        if (typeof script[6] === "string" && script[6].startsWith("OP_")) {
+          script[6] = parseInt(script[6].slice(3)).toString(16)
+        }
+        outObj.quantity = new BigNumber(script[6], 16)
+
+        // Report the reciever of the minted tokens.
+        outObj.tokensSentTo = txDetails.vout[1].scriptPubKey.addresses[0]
+
+        // Report the address that controls the mint baton.
+        if(outObj.batonStillExists) {
+          outObj.batonHolder = txDetails.vout[mintBatonVout].scriptPubKey.addresses[0]
+        }
       }
 
       return outObj

@@ -497,5 +497,23 @@ describe("#Utils", () => {
         "initialQty"
       ])
     })
+
+    it("should decode a mint transaction", async () => {
+      const txid =
+        "65f21bbfcd545e5eb515e38e861a9dfe2378aaa2c4e458eb9e59e4d40e38f3a4"
+
+      const data = await SLP.Utils.decodeOpReturn(txid)
+      //console.log(`data: ${JSON.stringify(data, null, 2)}`)
+
+      assert2.hasAnyKeys(data, [
+        "tokenType",
+        "tokenId",
+        "mintBatonVout",
+        "batonStillExists",
+        "quantity",
+        "tokensSentTo",
+        "batonHolder"
+      ])
+    })
   })
 })
