@@ -176,6 +176,9 @@ class Utils {
       for (let i = 0; i < utxos.length; i++) {
         const thisUtxo = utxos[i]
 
+        //const slpData = await this.decodeOpReturn(thisUtxo.txid)
+        //console.log(`slpData: ${JSON.stringify(slpData, null, 2)}`)
+
         // Invalidate the utxo if it contains more than dust, since SLP token
         // UTXOs only contain dust values. <--- NOT TRUE
         // Note: This is not a very accurate way to make a determination.
@@ -229,6 +232,9 @@ class Utils {
 
       // Decode a GENSIS SLP transaction.
       if (type === "genesis") {
+        //console.log(`txDetails: ${JSON.stringify(txDetails, null, 2)}`)
+        //console.log(`script: ${JSON.stringify(script, null, 2)}`)
+
         outObj.transactionType = "genesis"
 
         // Convert the next four entries into ascii.
@@ -258,6 +264,13 @@ class Utils {
         qty = qty / Math.pow(10, decimals)
         script[10] = qty
         outObj.initialQty = qty
+
+        // Address initial tokens were sent to.
+        outObj.tokensSentTo = txDetails.vout[1].scriptPubKey.addresses[0]
+
+        // Mint baton address holder.
+        outObj.batonHolder =
+          txDetails.vout[outObj.mintBatonVout].scriptPubKey.addresses[0]
 
         // Mint type transaction
       } else if (type === "mint") {
@@ -293,7 +306,7 @@ class Utils {
             txDetails.vout[mintBatonVout].scriptPubKey.addresses[0]
         }
 
-      // Send tokens.
+        // Send tokens.
       } else if (type === "send") {
         //console.log(`txDetails: ${JSON.stringify(txDetails, null, 2)}`)
         //console.log(`script: ${JSON.stringify(script,null,2)}`)
@@ -305,19 +318,16 @@ class Utils {
 
         // Loop through each output.
         const spendData = []
-        for(let i=5; i < script.length; i++) {
+        for (let i = 5; i < script.length; i++) {
           let thisScript = script[i]
           const spendObj: any = {}
 
-          if (
-            typeof thisScript === "string" &&
-            thisScript.startsWith("OP_")
-          )
+          if (typeof thisScript === "string" && thisScript.startsWith("OP_"))
             thisScript = parseInt(thisScript.slice(3)).toString(16)
 
           spendObj.quantity = new BigNumber(thisScript, 16)
 
-          const thisVout = i-4
+          const thisVout = i - 4
           spendObj.sentTo = txDetails.vout[thisVout].scriptPubKey.addresses[0]
           spendObj.vout = thisVout
 
@@ -325,7 +335,6 @@ class Utils {
         }
 
         outObj.spendData = spendData
-
       }
 
       return outObj

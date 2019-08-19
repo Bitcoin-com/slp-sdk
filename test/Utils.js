@@ -494,7 +494,9 @@ describe("#Utils", () => {
         "documentHash",
         "decimals",
         "mintBatonVout",
-        "initialQty"
+        "initialQty",
+        "tokensSentTo",
+        "batonHolder"
       ])
     })
 
