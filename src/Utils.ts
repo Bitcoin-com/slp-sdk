@@ -205,7 +205,6 @@ class Utils {
       const response = await axios.get(path)
       const txDetails = response.data
 
-
       // Retrieve the OP_RETURN data.
       const script = bitbox.Script.toASM(
         Buffer.from(txDetails.vout[0].scriptPubKey.hex, "hex")
@@ -226,7 +225,7 @@ class Utils {
         .toString("ascii")
         .toLowerCase()
       script[3] = type
-      console.log(`type: ${type}`)
+      //console.log(`type: ${type}`)
 
       // Decode a GENSIS SLP transaction.
       if (type === "genesis") {
@@ -280,18 +279,53 @@ class Utils {
         // Parse the quantity generated in this minting operation.
         // Returns a string. But without the decimals information included,
         // I'm not sure how to properly represent the quantity.
-        if (typeof script[6] === "string" && script[6].startsWith("OP_")) {
+        if (typeof script[6] === "string" && script[6].startsWith("OP_"))
           script[6] = parseInt(script[6].slice(3)).toString(16)
-        }
+
         outObj.quantity = new BigNumber(script[6], 16)
 
         // Report the reciever of the minted tokens.
         outObj.tokensSentTo = txDetails.vout[1].scriptPubKey.addresses[0]
 
         // Report the address that controls the mint baton.
-        if(outObj.batonStillExists) {
-          outObj.batonHolder = txDetails.vout[mintBatonVout].scriptPubKey.addresses[0]
+        if (outObj.batonStillExists) {
+          outObj.batonHolder =
+            txDetails.vout[mintBatonVout].scriptPubKey.addresses[0]
         }
+
+      // Send tokens.
+      } else if (type === "send") {
+        //console.log(`txDetails: ${JSON.stringify(txDetails, null, 2)}`)
+        //console.log(`script: ${JSON.stringify(script,null,2)}`)
+
+        if (script.length <= 4) throw new Error("Not a SLP txout")
+
+        // Retrieve the token ID.
+        outObj.tokenId = script[4]
+
+        // Loop through each output.
+        const spendData = []
+        for(let i=5; i < script.length; i++) {
+          let thisScript = script[i]
+          const spendObj: any = {}
+
+          if (
+            typeof thisScript === "string" &&
+            thisScript.startsWith("OP_")
+          )
+            thisScript = parseInt(thisScript.slice(3)).toString(16)
+
+          spendObj.quantity = new BigNumber(thisScript, 16)
+
+          const thisVout = i-4
+          spendObj.sentTo = txDetails.vout[thisVout].scriptPubKey.addresses[0]
+          spendObj.vout = thisVout
+
+          spendData.push(spendObj)
+        }
+
+        outObj.spendData = spendData
+
       }
 
       return outObj

@@ -515,5 +515,17 @@ describe("#Utils", () => {
         "batonHolder"
       ])
     })
+
+    it("should decode a send transaction", async () => {
+      const txid =
+        "4f922565af664b6fdf0a1ba3924487344be721b3d8815c62cafc8a51e04a8afa"
+
+      const data = await SLP.Utils.decodeOpReturn(txid)
+      //console.log(`data: ${JSON.stringify(data, null, 2)}`)
+
+      assert2.hasAnyKeys(data, ["tokenType", "tokenId", "spendData"])
+      assert2.isArray(data.spendData)
+      assert2.hasAnyKeys(data.spendData[0], ["quantity", "sentTo", "vout"])
+    })
   })
 })
