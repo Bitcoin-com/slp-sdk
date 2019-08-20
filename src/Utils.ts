@@ -172,6 +172,7 @@ class Utils {
 
       // Validate the array of txids.
       let validations: any = await this.validateTxid(txids)
+      //console.log(`validations: ${JSON.stringify(validations,null,2)}`)
 
       // Extract the boolean result
       validations = validations.map((x: any) => x.valid)
@@ -185,6 +186,7 @@ class Utils {
         // Only need to worry about validations that are still true.
         if (thisValidation) {
           const slpData = await this.decodeOpReturn(thisUtxo.txid)
+          //console.log(`slpData: ${JSON.stringify(slpData,null,2)}`)
 
           // Handle Genesis and Mint SLP transactions.
           if (
@@ -231,6 +233,10 @@ class Utils {
   // https://github.com/simpleledger/slp-specifications/blob/master/slp-token-type-1.md
   async decodeOpReturn(txid: string) {
     try {
+      if(!txid || txid === "" || typeof txid !== 'string') {
+        throw new Error(`txid string must be included.`)
+      }
+
       const path: string = `${this.restURL}rawtransactions/getRawTransaction/${txid}?verbose=true`
       const lokadIdHex = "534c5000"
 
@@ -240,6 +246,7 @@ class Utils {
       // Retrieve the transaction object from the full node.
       const response = await axios.get(path)
       const txDetails = response.data
+      //console.log(`txDetails: ${JSON.stringify(txDetails,null,2)}`)
 
       // Retrieve the OP_RETURN data.
       const script = bitbox.Script.toASM(

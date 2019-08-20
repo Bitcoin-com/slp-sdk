@@ -404,6 +404,39 @@ describe("#Utils", () => {
     // This captures an important corner-case. When an SLP token is created, the
     // change UTXO will contain the same SLP txid, but it is not an SLP UTXO.
     it("should correctly invalidate change in an SLP token creation transaction", async () => {
+      // Mock the call to rest.bitcoin.com
+      if (process.env.TEST === "unit") {
+        // Stub the call to validateTxid
+        sandbox.stub(SLP.Utils, "validateTxid").resolves([
+          {
+            txid:
+              "bd158c564dd4ef54305b14f44f8e94c44b649f246dab14bcb42fb0d0078b8a90",
+            valid: true
+          },
+          {
+            txid:
+              "bd158c564dd4ef54305b14f44f8e94c44b649f246dab14bcb42fb0d0078b8a90",
+            valid: true
+          }
+        ])
+
+        // Stub the calls to decodeOpReturn.
+        sandbox.stub(SLP.Utils, "decodeOpReturn").resolves({
+          tokenType: 1,
+          transactionType: "genesis",
+          ticker: "SLPSDK",
+          name: "SLP SDK example using BITBOX",
+          documentUrl: "developer.bitcoin.com",
+          documentHash: "",
+          decimals: 8,
+          mintBatonVout: 2,
+          initialQty: 507,
+          tokensSentTo:
+            "bitcoincash:qpcqs0n5xap26un2828n55gan2ylj7wavvzeuwdx05",
+          batonHolder: "bitcoincash:qpcqs0n5xap26un2828n55gan2ylj7wavvzeuwdx05"
+        })
+      }
+
       const utxos = [
         {
           txid:
@@ -446,12 +479,20 @@ describe("#Utils", () => {
 
         assert2.equal(true, false, "Unexpected result.")
       } catch (err) {
-        assert2.include(err.error, `parameter 1 must be hexadecimal string`)
+        //console.log(`err: ${util.inspect(err)}`)
+        assert2.include(err.message, `txid string must be included`)
       }
     })
 
     it("should throw an error for non-SLP transaction", async () => {
       try {
+        // Mock the call to rest.bitcoin.com
+        if (process.env.TEST === "unit") {
+          sandbox
+            .stub(axios, "get")
+            .resolves({ data: mockData.nonSLPTxDetailsWithoutOpReturn })
+        }
+
         const txid =
           "3793d4906654f648e659f384c0f40b19c8f10c1e9fb72232a9b8edd61abaa1ec"
 
@@ -466,6 +507,13 @@ describe("#Utils", () => {
 
     it("should throw an error for non-SLP transaction with OP_RETURN", async () => {
       try {
+        // Mock the call to rest.bitcoin.com
+        if (process.env.TEST === "unit") {
+          sandbox
+            .stub(axios, "get")
+            .resolves({ data: mockData.nonSLPTxDetailsWithOpReturn })
+        }
+
         const txid =
           "2ff74c48a5d657cf45f699601990bffbbe7a2a516d5480674cbf6c6a4497908f"
 
@@ -479,6 +527,13 @@ describe("#Utils", () => {
     })
 
     it("should decode a genesis transaction", async () => {
+      // Mock the call to rest.bitcoin.com
+      if (process.env.TEST === "unit") {
+        sandbox
+          .stub(axios, "get")
+          .resolves({ data: mockData.txDetailsSLPGenesis })
+      }
+
       const txid =
         "bd158c564dd4ef54305b14f44f8e94c44b649f246dab14bcb42fb0d0078b8a90"
 
@@ -501,6 +556,10 @@ describe("#Utils", () => {
     })
 
     it("should decode a mint transaction", async () => {
+      // Mock the call to rest.bitcoin.com
+      if (process.env.TEST === "unit")
+        sandbox.stub(axios, "get").resolves({ data: mockData.txDetailsSLPMint })
+
       const txid =
         "65f21bbfcd545e5eb515e38e861a9dfe2378aaa2c4e458eb9e59e4d40e38f3a4"
 
@@ -520,6 +579,10 @@ describe("#Utils", () => {
     })
 
     it("should decode a send transaction", async () => {
+      // Mock the call to rest.bitcoin.com
+      if (process.env.TEST === "unit")
+        sandbox.stub(axios, "get").resolves({ data: mockData.txDetailsSLPSend })
+
       const txid =
         "4f922565af664b6fdf0a1ba3924487344be721b3d8815c62cafc8a51e04a8afa"
 
