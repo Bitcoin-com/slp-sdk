@@ -211,9 +211,7 @@ class Utils {
           }
         }
 
-        //const slpData = await this.decodeOpReturn(thisUtxo.txid)
-        //console.log(`slpData: ${JSON.stringify(slpData, null, 2)}`)
-
+        // Below is deprecated, but kept for posterity:
         // Invalidate the utxo if it contains more than dust, since SLP token
         // UTXOs only contain dust values. <--- NOT TRUE
         // Note: This is not a very accurate way to make a determination.
