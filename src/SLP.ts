@@ -17,6 +17,7 @@ const TSLPDB_URL = "https://tslpdb.bitcoin.com/"
 
 // consts
 const slpjs = require("slpjs")
+//const slpjs = require("/home/trout/work/bch/slpjs/lib/slp.js")
 // SLP SDK is a superset of BITBOX SDK <3
 class SLP extends BITBOX {
   slpdbURL: string

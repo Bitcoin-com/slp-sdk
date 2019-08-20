@@ -3,7 +3,8 @@
 */
 
 // EDIT THESE VALUES FOR YOUR USE.
-const TOKENID = ""
+const TOKENID =
+  "023cd3e95a3947058b994fd15a9a4c47937a9d9b6e0c0b1b5898d2ce84f354e4"
 const TOKENQTY = 100
 
 // Set NETWORK to either testnet or mainnet
