@@ -3,6 +3,7 @@ import axios from "axios"
 
 import { BITBOX } from "bitbox-sdk"
 const bitbox = new BITBOX()
+const BITBOXUtil = require("bitbox-sdk").Util
 
 // consts
 const util = require("util")
@@ -10,9 +11,10 @@ util.inspect.defaultOptions = { depth: 1 }
 
 const BigNumber = require("bignumber.js")
 
-class Utils {
+class Utils extends BITBOXUtil {
   restURL: string
-  constructor(restURL: string) {
+  constructor(restURL?: string) {
+    super(restURL)
     this.restURL = restURL
   }
 

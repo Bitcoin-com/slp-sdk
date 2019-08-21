@@ -27,8 +27,10 @@ class SLP extends BITBOX {
   TokenType1: TokenType1
   Utils: Utils
   slpjs: any
+
   constructor(config: IConfig = {}) {
     super(config)
+
     let restURL: string
     if (config && config.restURL && config.restURL !== "")
       restURL = config.restURL
@@ -45,6 +47,12 @@ class SLP extends BITBOX {
     this.Socket = Socket
     this.TokenType1 = new TokenType1(restURL)
     this.Utils = new Utils(restURL)
+
+    // Overwrite the BITBOX Util class with the extended class from slp-sdk.
+    delete this.Util
+    this.Util = this.Utils // Make compatible with BITBOX singular syntax.
+
+    // Expose slpjs
     this.slpjs = slpjs
   }
 }
