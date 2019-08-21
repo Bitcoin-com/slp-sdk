@@ -11,7 +11,7 @@ util.inspect.defaultOptions = { depth: 1 }
 
 const BigNumber = require("bignumber.js")
 
-class Utils extends BITBOXUtil {
+class Util extends BITBOXUtil {
   restURL: string
   constructor(restURL?: string) {
     super(restURL)
@@ -251,9 +251,8 @@ class Utils extends BITBOXUtil {
   // https://github.com/simpleledger/slp-specifications/blob/master/slp-token-type-1.md
   async decodeOpReturn(txid: string) {
     try {
-      if(!txid || txid === "" || typeof txid !== 'string') {
+      if (!txid || txid === "" || typeof txid !== "string")
         throw new Error(`txid string must be included.`)
-      }
 
       const path: string = `${this.restURL}rawtransactions/getRawTransaction/${txid}?verbose=true`
       const lokadIdHex = "534c5000"
@@ -408,4 +407,4 @@ class Utils extends BITBOXUtil {
   }
 }
 
-export default Utils
+export default Util
