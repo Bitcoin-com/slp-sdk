@@ -3,6 +3,7 @@ import axios from "axios"
 
 import { BITBOX } from "bitbox-sdk"
 const bitbox = new BITBOX()
+const BITBOXUtil = require("bitbox-sdk").Util
 
 // consts
 const util = require("util")
@@ -10,9 +11,10 @@ util.inspect.defaultOptions = { depth: 1 }
 
 const BigNumber = require("bignumber.js")
 
-class Utils {
+class Util extends BITBOXUtil {
   restURL: string
-  constructor(restURL: string) {
+  constructor(restURL?: string) {
+    super(restURL)
     this.restURL = restURL
   }
 
@@ -249,9 +251,8 @@ class Utils {
   // https://github.com/simpleledger/slp-specifications/blob/master/slp-token-type-1.md
   async decodeOpReturn(txid: string) {
     try {
-      if(!txid || txid === "" || typeof txid !== 'string') {
+      if (!txid || txid === "" || typeof txid !== "string")
         throw new Error(`txid string must be included.`)
-      }
 
       const path: string = `${this.restURL}rawtransactions/getRawTransaction/${txid}?verbose=true`
       const lokadIdHex = "534c5000"
@@ -406,4 +407,4 @@ class Utils {
   }
 }
 
-export default Utils
+export default Util
