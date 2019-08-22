@@ -644,32 +644,33 @@ describe("#Utils", () => {
 
       if (process.env.TEST === "unit") {
         // Stub the call to validateTxid
-        // sandbox.stub(slp.Utils, "validateTxid").resolves([
-        //   {
-        //     txid:
-        //       "fde117b1f176b231e2fa9a6cb022e0f7c31c288221df6bcb05f8b7d040ca87cb",
-        //     valid: true
-        //   }
-        // ])
-        // Stub the calls to decodeOpReturn.
-        // sandbox.stub(slp.Utils, "decodeOpReturn").resolves({
-        //   tokenType: 1,
-        //   transactionType: "send",
-        //   tokenId:
-        //     "497291b8a1dfe69c8daea50677a3d31a5ef0e9484d8bebb610dac64bbc202fb7",
-        //   spendData: [
-        //     {
-        //       quantity: "200000000",
-        //       sentTo: "bitcoincash:qqll3st8xl0k8cgv8dgrrrkntv6hqdn8huv3xm2ztf",
-        //       vout: 1
-        //     },
-        //     {
-        //       quantity: "99887500000000",
-        //       sentTo: "bitcoincash:qzv7t2pzn2d0pklnetdjt65crh6fe8vnhuwvhsk2nn",
-        //       vout: 2
-        //     }
-        //   ]
-        // })
+        sandbox.stub(SLP.Utils, "validateTxid").resolves([
+          {
+            txid:
+              "fde117b1f176b231e2fa9a6cb022e0f7c31c288221df6bcb05f8b7d040ca87cb",
+            valid: true
+          }
+        ])
+
+        //Stub the calls to decodeOpReturn.
+        sandbox.stub(SLP.Utils, "decodeOpReturn").resolves({
+          tokenType: 1,
+          transactionType: "send",
+          tokenId:
+            "497291b8a1dfe69c8daea50677a3d31a5ef0e9484d8bebb610dac64bbc202fb7",
+          spendData: [
+            {
+              quantity: "200000000",
+              sentTo: "bitcoincash:qqll3st8xl0k8cgv8dgrrrkntv6hqdn8huv3xm2ztf",
+              vout: 1
+            },
+            {
+              quantity: "99887500000000",
+              sentTo: "bitcoincash:qzv7t2pzn2d0pklnetdjt65crh6fe8vnhuwvhsk2nn",
+              vout: 2
+            }
+          ]
+        })
       }
 
       const utxos = [
