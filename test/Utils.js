@@ -359,157 +359,6 @@ describe("#Utils", () => {
     })
   })
 
-  describe("#isTokenUtxo", () => {
-    it("should throw error if input is not an array.", async () => {
-      try {
-        await SLP.Utils.isTokenUtxo("test")
-
-        assert2.equal(true, false, "Unexpected result.")
-      } catch (err) {
-        assert2.include(
-          err.message,
-          `Input must be an array`,
-          "Expected error message."
-        )
-      }
-    })
-
-    it("should throw error if utxo does not have satoshis property.", async () => {
-      try {
-        const utxos = [
-          {
-            txid:
-              "bd158c564dd4ef54305b14f44f8e94c44b649f246dab14bcb42fb0d0078b8a90",
-            vout: 3,
-            amount: 0.00002015,
-            satoshis: 2015,
-            height: 594892,
-            confirmations: 5
-          },
-          {
-            txid:
-              "bd158c564dd4ef54305b14f44f8e94c44b649f246dab14bcb42fb0d0078b8a90",
-            vout: 2,
-            amount: 0.00000546,
-            height: 594892,
-            confirmations: 5
-          }
-        ]
-
-        await SLP.Utils.isTokenUtxo(utxos)
-
-        assert2.equal(true, false, "Unexpected result.")
-      } catch (err) {
-        assert2.include(
-          err.message,
-          `utxo 1 does not have a satoshis property`,
-          "Expected error message."
-        )
-      }
-    })
-
-    it("should throw error if utxo does not have txid property.", async () => {
-      try {
-        const utxos = [
-          {
-            txid:
-              "bd158c564dd4ef54305b14f44f8e94c44b649f246dab14bcb42fb0d0078b8a90",
-            vout: 3,
-            amount: 0.00002015,
-            satoshis: 2015,
-            height: 594892,
-            confirmations: 5
-          },
-          {
-            vout: 2,
-            amount: 0.00000546,
-            satoshis: 546,
-            height: 594892,
-            confirmations: 5
-          }
-        ]
-
-        await SLP.Utils.isTokenUtxo(utxos)
-
-        assert2.equal(true, false, "Unexpected result.")
-      } catch (err) {
-        assert2.include(
-          err.message,
-          `utxo 1 does not have a txid property`,
-          "Expected error message."
-        )
-      }
-    })
-
-    // This captures an important corner-case. When an SLP token is created, the
-    // change UTXO will contain the same SLP txid, but it is not an SLP UTXO.
-    it("should correctly invalidate change in an SLP token creation transaction", async () => {
-      // Mock the call to rest.bitcoin.com
-      if (process.env.TEST === "unit") {
-        // Stub the call to validateTxid
-        sandbox.stub(SLP.Utils, "validateTxid").resolves([
-          {
-            txid:
-              "bd158c564dd4ef54305b14f44f8e94c44b649f246dab14bcb42fb0d0078b8a90",
-            valid: true
-          },
-          {
-            txid:
-              "bd158c564dd4ef54305b14f44f8e94c44b649f246dab14bcb42fb0d0078b8a90",
-            valid: true
-          }
-        ])
-
-        // Stub the calls to decodeOpReturn.
-        sandbox.stub(SLP.Utils, "decodeOpReturn").resolves({
-          tokenType: 1,
-          transactionType: "genesis",
-          ticker: "SLPSDK",
-          name: "SLP SDK example using BITBOX",
-          documentUrl: "developer.bitcoin.com",
-          documentHash: "",
-          decimals: 8,
-          mintBatonVout: 2,
-          initialQty: 507,
-          tokensSentTo:
-            "bitcoincash:qpcqs0n5xap26un2828n55gan2ylj7wavvzeuwdx05",
-          batonHolder: "bitcoincash:qpcqs0n5xap26un2828n55gan2ylj7wavvzeuwdx05"
-        })
-      }
-
-      const utxos = [
-        {
-          txid:
-            "bd158c564dd4ef54305b14f44f8e94c44b649f246dab14bcb42fb0d0078b8a90",
-          vout: 3,
-          amount: 0.00002015,
-          satoshis: 2015,
-          height: 594892,
-          confirmations: 5
-        },
-        {
-          txid:
-            "bd158c564dd4ef54305b14f44f8e94c44b649f246dab14bcb42fb0d0078b8a90",
-          vout: 2,
-          amount: 0.00000546,
-          satoshis: 546,
-          height: 594892,
-          confirmations: 5
-        }
-      ]
-
-      const data = await SLP.Utils.isTokenUtxo(utxos)
-      //console.log(`data: ${JSON.stringify(data, null, 2)}`)
-
-      assert.equal(
-        data[0],
-        false,
-        "Change should not be identified as SLP utxo."
-      )
-      assert.equal(data[1], true, "SLP UTXO correctly identified.")
-    })
-  })
-
   describe("#decodeOpReturn", () => {
     it("should throw an error for a non-string input", async () => {
       try {
@@ -637,6 +486,208 @@ describe("#Utils", () => {
       ])
       assert2.isArray(data.spendData)
       assert2.hasAnyKeys(data.spendData[0], ["quantity", "sentTo", "vout"])
+    })
+  })
+
+  describe("#isTokenUtxo", () => {
+    it("should throw error if input is not an array.", async () => {
+      try {
+        await SLP.Utils.isTokenUtxo("test")
+
+        assert2.equal(true, false, "Unexpected result.")
+      } catch (err) {
+        assert2.include(
+          err.message,
+          `Input must be an array`,
+          "Expected error message."
+        )
+      }
+    })
+
+    it("should throw error if utxo does not have satoshis property.", async () => {
+      try {
+        const utxos = [
+          {
+            txid:
+              "bd158c564dd4ef54305b14f44f8e94c44b649f246dab14bcb42fb0d0078b8a90",
+            vout: 3,
+            amount: 0.00002015,
+            satoshis: 2015,
+            height: 594892,
+            confirmations: 5
+          },
+          {
+            txid:
+              "bd158c564dd4ef54305b14f44f8e94c44b649f246dab14bcb42fb0d0078b8a90",
+            vout: 2,
+            amount: 0.00000546,
+            height: 594892,
+            confirmations: 5
+          }
+        ]
+
+        await SLP.Utils.isTokenUtxo(utxos)
+
+        assert2.equal(true, false, "Unexpected result.")
+      } catch (err) {
+        assert2.include(
+          err.message,
+          `utxo 1 does not have a satoshis property`,
+          "Expected error message."
+        )
+      }
+    })
+
+    it("should throw error if utxo does not have txid property.", async () => {
+      try {
+        const utxos = [
+          {
+            txid:
+              "bd158c564dd4ef54305b14f44f8e94c44b649f246dab14bcb42fb0d0078b8a90",
+            vout: 3,
+            amount: 0.00002015,
+            satoshis: 2015,
+            height: 594892,
+            confirmations: 5
+          },
+          {
+            vout: 2,
+            amount: 0.00000546,
+            satoshis: 546,
+            height: 594892,
+            confirmations: 5
+          }
+        ]
+
+        await SLP.Utils.isTokenUtxo(utxos)
+
+        assert2.equal(true, false, "Unexpected result.")
+      } catch (err) {
+        assert2.include(
+          err.message,
+          `utxo 1 does not have a txid property`,
+          "Expected error message."
+        )
+      }
+    })
+
+    // This captures an important corner-case. When an SLP token is created, the
+    // change UTXO will contain the same SLP txid, but it is not an SLP UTXO.
+    it("should return false for change in an SLP token creation transaction", async () => {
+      // Mock the call to rest.bitcoin.com
+      if (process.env.TEST === "unit") {
+        // Stub the call to validateTxid
+        sandbox.stub(SLP.Utils, "validateTxid").resolves([
+          {
+            txid:
+              "bd158c564dd4ef54305b14f44f8e94c44b649f246dab14bcb42fb0d0078b8a90",
+            valid: true
+          },
+          {
+            txid:
+              "bd158c564dd4ef54305b14f44f8e94c44b649f246dab14bcb42fb0d0078b8a90",
+            valid: true
+          }
+        ])
+
+        // Stub the calls to decodeOpReturn.
+        sandbox.stub(SLP.Utils, "decodeOpReturn").resolves({
+          tokenType: 1,
+          transactionType: "genesis",
+          ticker: "SLPSDK",
+          name: "SLP SDK example using BITBOX",
+          documentUrl: "developer.bitcoin.com",
+          documentHash: "",
+          decimals: 8,
+          mintBatonVout: 2,
+          initialQty: 507,
+          tokensSentTo:
+            "bitcoincash:qpcqs0n5xap26un2828n55gan2ylj7wavvzeuwdx05",
+          batonHolder: "bitcoincash:qpcqs0n5xap26un2828n55gan2ylj7wavvzeuwdx05"
+        })
+      }
+
+      const utxos = [
+        {
+          txid:
+            "bd158c564dd4ef54305b14f44f8e94c44b649f246dab14bcb42fb0d0078b8a90",
+          vout: 3,
+          amount: 0.00002015,
+          satoshis: 2015,
+          height: 594892,
+          confirmations: 5
+        },
+        {
+          txid:
+            "bd158c564dd4ef54305b14f44f8e94c44b649f246dab14bcb42fb0d0078b8a90",
+          vout: 2,
+          amount: 0.00000546,
+          satoshis: 546,
+          height: 594892,
+          confirmations: 5
+        }
+      ]
+
+      const data = await SLP.Utils.isTokenUtxo(utxos)
+      //console.log(`data: ${JSON.stringify(data, null, 2)}`)
+
+      assert.equal(
+        data[0],
+        false,
+        "Change should not be identified as SLP utxo."
+      )
+      assert.equal(data[1], true, "SLP UTXO correctly identified.")
+    })
+
+    it("should return true for a simple SEND SLP token utxo", async () => {
+      // Mock the call to the REST API
+
+      if (process.env.TEST === "unit") {
+        // Stub the call to validateTxid
+        // sandbox.stub(slp.Utils, "validateTxid").resolves([
+        //   {
+        //     txid:
+        //       "fde117b1f176b231e2fa9a6cb022e0f7c31c288221df6bcb05f8b7d040ca87cb",
+        //     valid: true
+        //   }
+        // ])
+        // Stub the calls to decodeOpReturn.
+        // sandbox.stub(slp.Utils, "decodeOpReturn").resolves({
+        //   tokenType: 1,
+        //   transactionType: "send",
+        //   tokenId:
+        //     "497291b8a1dfe69c8daea50677a3d31a5ef0e9484d8bebb610dac64bbc202fb7",
+        //   spendData: [
+        //     {
+        //       quantity: "200000000",
+        //       sentTo: "bitcoincash:qqll3st8xl0k8cgv8dgrrrkntv6hqdn8huv3xm2ztf",
+        //       vout: 1
+        //     },
+        //     {
+        //       quantity: "99887500000000",
+        //       sentTo: "bitcoincash:qzv7t2pzn2d0pklnetdjt65crh6fe8vnhuwvhsk2nn",
+        //       vout: 2
+        //     }
+        //   ]
+        // })
+      }
+
+      const utxos = [
+        {
+          txid:
+            "fde117b1f176b231e2fa9a6cb022e0f7c31c288221df6bcb05f8b7d040ca87cb",
+          vout: 1,
+          amount: 0.00000546,
+          satoshis: 546,
+          height: 596089,
+          confirmations: 748
+        }
+      ]
+
+      const data = await SLP.Utils.isTokenUtxo(utxos)
+      //console.log(`data: ${JSON.stringify(data, null, 2)}`)
+
+      assert.equal(data[0], true, "Simple send UTXO correctly identified")
     })
   })
 })
