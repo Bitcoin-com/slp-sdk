@@ -487,6 +487,23 @@ describe("#Utils", () => {
       assert2.isArray(data.spendData)
       assert2.hasAnyKeys(data.spendData[0], ["quantity", "sentTo", "vout"])
     })
+
+    it("should properly decode a Genesis transaction with no minting baton", async () => {
+      // Mock the call to the REST API.
+      if (process.env.TEST === "unit") {
+        sandbox
+          .stub(axios, "get")
+          .resolves({ data: mockData.txDetailsSLPGenesisNoBaton })
+      }
+
+      const txid =
+        "497291b8a1dfe69c8daea50677a3d31a5ef0e9484d8bebb610dac64bbc202fb7"
+
+      const data = await SLP.Utils.decodeOpReturn(txid)
+      //console.log(`data: ${JSON.stringify(data, null, 2)}`)
+
+      assert2.include(data.batonHolder, "NEVER_CREATED")
+    })
   })
 
   describe("#isTokenUtxo", () => {

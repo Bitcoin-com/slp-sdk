@@ -238,7 +238,9 @@ class Util extends BITBOXUtil {
         outObj.tokensSentTo = txDetails.vout[1].scriptPubKey.addresses[0]
 
         // Mint baton address holder.
-        if (outObj.batonStillExists) {
+        if (!outObj.mintBatonVout) {
+          outObj.batonHolder = "NEVER_CREATED"
+        } else {
           outObj.batonHolder =
             txDetails.vout[outObj.mintBatonVout].scriptPubKey.addresses[0]
         }
