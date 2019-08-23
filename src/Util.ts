@@ -390,17 +390,6 @@ class Util extends BITBOXUtil {
 
             // If there are no vout matches, the UTXO can safely be marked as false.
             if (voutMatch.length === 0) validations[i] = false
-
-            // // Loop through the spendData array.
-            // for (let j = 0; j < slpData.spendData.length; j++) {
-            //   const thisVout = slpData.spendData[j].vout
-            //
-            //   // Assume false to start.
-            //   validations[i] = false
-            //
-            //   // UTXO vout value should match if it's truely an SLP UTXO.
-            //   if (thisUtxo.vout === thisVout) validations[i] = true
-            // }
           }
         }
 
@@ -410,6 +399,134 @@ class Util extends BITBOXUtil {
         // Note: This is not a very accurate way to make a determination.
         // See https://gist.github.com/christroutner/434ae0c710001b57e33a4fa8abb7d478
         //if (thisUtxo.satoshis > 546) validations[i] = false
+      }
+
+      return validations
+    } catch (error) {
+      if (error.response && error.response.data) throw error.response.data
+      throw error
+    }
+  }
+
+  // Hydrate a UTXO with SLP token metadata.
+  //
+  // Expects an array of UTXO objects as input. Returns an array of equal size.
+  // If the UTXO does not belong to a SLP transaction, it will return false.
+  // If the UTXO is part of an SLP transaction, it will return the UTXO object
+  // with additional SLP information attached.
+  async tokenUtxoDetails(utxos: any) {
+    try {
+      // Throw error if input is not an array.
+      if (!Array.isArray(utxos)) throw new Error(`Input must be an array.`)
+
+      // Loop through each element in the array and validate the input before
+      // further processing.
+      for (let i = 0; i < utxos.length; i++) {
+        const thisUtxo = utxos[i]
+
+        // Throw error if utxo does not have a satoshis property.
+        if (!thisUtxo.satoshis)
+          throw new Error(`utxo ${i} does not have a satoshis property.`)
+
+        // Throw error if utxo does not have a txid property.
+        if (!thisUtxo.txid)
+          throw new Error(`utxo ${i} does not have a txid property.`)
+      }
+
+      // Create an array of txid strings to feed to validateTxid
+      const txids = utxos.map((x: any) => x.txid)
+
+      // Validate the array of txids.
+      let validations: any = await this.validateTxid(txids)
+      // console.log(`validations: ${JSON.stringify(validations, null, 2)}`)
+
+      // Extract the boolean result
+      validations = validations.map((x: any) => x.valid)
+
+      // Loop through each element and compute final validation on any that
+      // returned true.
+      for (let i = 0; i < utxos.length; i++) {
+        const thisValidation = validations[i]
+        const thisUtxo = utxos[i]
+        // console.log(`thisUtxo: ${JSON.stringify(thisUtxo, null, 2)}`)
+
+        // Only need to worry about validations that are still true.
+        if (thisValidation) {
+          const slpData = await this.decodeOpReturn(thisUtxo.txid)
+          // console.log(`slpData: ${JSON.stringify(slpData, null, 2)}`)
+
+          // Handle Genesis SLP transactions.
+          if (slpData.transactionType === "genesis") {
+            if (
+              thisUtxo.vout !== slpData.mintBatonVout && // UTXO is not a mint baton output.
+              thisUtxo.vout !== 1 // UTXO is not the reciever of the genesis or mint tokens.
+            ) {
+              // Can safely be marked as false.
+              validations[i] = false
+            }
+
+            // If this is a valid SLP UTXO, then return the decoded OP_RETURN data.
+            else {
+              thisUtxo.tokenType = "minting-baton"
+              thisUtxo.tokenId = thisUtxo.txid
+              thisUtxo.tokenTicker = slpData.ticker
+              thisUtxo.tokenName = slpData.name
+              thisUtxo.tokenDocumentUrl = slpData.documentUrl
+              thisUtxo.tokenDocumentHash = slpData.documentHash
+              thisUtxo.decimals = slpData.decimals
+
+              // something
+              validations[i] = thisUtxo
+            }
+          }
+
+          // Handle Mint SLP transactions.
+          if (slpData.transactionType === "mint") {
+            if (
+              thisUtxo.vout !== slpData.mintBatonVout && // UTXO is not a mint baton output.
+              thisUtxo.vout !== 1 // UTXO is not the reciever of the genesis or mint tokens.
+            )
+              // Can safely be marked as false.
+              validations[i] = false
+          }
+
+          // Handle Send SLP transactions.
+          if (slpData.transactionType === "send") {
+            // Filter out any vouts that match.
+            const voutMatch = slpData.spendData.filter(
+              (x: any) => thisUtxo.vout === x.vout
+            )
+            // console.log(`voutMatch: ${JSON.stringify(voutMatch, null, 2)}`)
+
+            // If there are no vout matches, the UTXO can safely be marked as false.
+            if (voutMatch.length === 0) {
+              validations[i] = false
+            }
+
+            // If UTXO passes validation, then return formatted token data.
+            else {
+              const genesisData = await this.decodeOpReturn(slpData.tokenId)
+              // console.log(
+              //   `genesisData: ${JSON.stringify(genesisData, null, 2)}`
+              // )
+
+              // Hydrate the UTXO object with information about the SLP token.
+              thisUtxo.utxoType = "token"
+              thisUtxo.tokenId = slpData.tokenId
+              thisUtxo.tokenTicker = genesisData.ticker
+              thisUtxo.tokenName = genesisData.name
+              thisUtxo.tokenDocumentUrl = genesisData.documentUrl
+              thisUtxo.tokenDocumentHash = genesisData.documentHash
+              thisUtxo.decimals = genesisData.decimals
+
+              // Calculate the real token quantity.
+              thisUtxo.tokenQty =
+                voutMatch[0].quantity / Math.pow(10, thisUtxo.decimals)
+
+              validations[i] = thisUtxo
+            }
+          }
+        }
       }
 
       return validations
