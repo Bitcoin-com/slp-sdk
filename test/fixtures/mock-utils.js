@@ -663,6 +663,70 @@ const txDetailsSLPSend = {
   blocktime: 1566227300
 }
 
+const txDetailsSLPGenesisNoBaton = {
+  txid: "497291b8a1dfe69c8daea50677a3d31a5ef0e9484d8bebb610dac64bbc202fb7",
+  hash: "497291b8a1dfe69c8daea50677a3d31a5ef0e9484d8bebb610dac64bbc202fb7",
+  version: 1,
+  size: 285,
+  locktime: 575672,
+  vin: [
+    {
+      txid: "805728012bc3349d1a05dc503aaf389c7a743917d7af6adfb844baff8ff2f89f",
+      vout: 2,
+      scriptSig: {
+        asm:
+          "3045022100e4c0e18d97ea6d24c15d60e4032131e985091dec0d844fe00065cb6852b2cfaa02207b6334f72e1aa70f26a88e0e0bff183966405b59bf3a9eaa89d03155cd155505[ALL|FORKID] 03adb6ee2ccaf17f407704c91aae7327bd12fa81aa1bad63bc1685a9ded76d6f2a",
+        hex:
+          "483045022100e4c0e18d97ea6d24c15d60e4032131e985091dec0d844fe00065cb6852b2cfaa02207b6334f72e1aa70f26a88e0e0bff183966405b59bf3a9eaa89d03155cd155505412103adb6ee2ccaf17f407704c91aae7327bd12fa81aa1bad63bc1685a9ded76d6f2a"
+      },
+      sequence: 4294967294
+    }
+  ],
+  vout: [
+    {
+      value: 0,
+      n: 0,
+      scriptPubKey: {
+        asm:
+          "OP_RETURN 5262419 1 47454e45534953 544f4b2d4348 546f6b796f43617368 0 0 8 0 000775f05a074000",
+        hex:
+          "6a04534c500001010747454e4553495306544f4b2d434809546f6b796f436173684c004c0001084c0008000775f05a074000",
+        type: "nulldata"
+      }
+    },
+    {
+      value: 0.00000546,
+      n: 1,
+      scriptPubKey: {
+        asm:
+          "OP_DUP OP_HASH160 17c068626a1085ab782b94fe5577b67b9168a1d9 OP_EQUALVERIFY OP_CHECKSIG",
+        hex: "76a91417c068626a1085ab782b94fe5577b67b9168a1d988ac",
+        reqSigs: 1,
+        type: "pubkeyhash",
+        addresses: ["bitcoincash:qqtuq6rzdgggt2mc9w20u4thkeaez69pmy6ur897sr"]
+      }
+    },
+    {
+      value: 0.00474263,
+      n: 2,
+      scriptPubKey: {
+        asm:
+          "OP_DUP OP_HASH160 8b3decf88562b3a8037d8e88171e14bff010ea3d OP_EQUALVERIFY OP_CHECKSIG",
+        hex: "76a9148b3decf88562b3a8037d8e88171e14bff010ea3d88ac",
+        reqSigs: 1,
+        type: "pubkeyhash",
+        addresses: ["bitcoincash:qz9nmm8cs43t82qr0k8gs9c7zjllqy82853g26y3tc"]
+      }
+    }
+  ],
+  hex:
+    "01000000019ff8f28fffba44b8df6aafd71739747a9c38af3a50dc051a9d34c32b01285780020000006b483045022100e4c0e18d97ea6d24c15d60e4032131e985091dec0d844fe00065cb6852b2cfaa02207b6334f72e1aa70f26a88e0e0bff183966405b59bf3a9eaa89d03155cd155505412103adb6ee2ccaf17f407704c91aae7327bd12fa81aa1bad63bc1685a9ded76d6f2afeffffff030000000000000000326a04534c500001010747454e4553495306544f4b2d434809546f6b796f436173684c004c0001084c0008000775f05a07400022020000000000001976a91417c068626a1085ab782b94fe5577b67b9168a1d988ac973c0700000000001976a9148b3decf88562b3a8037d8e88171e14bff010ea3d88acb8c80800",
+  blockhash: "0000000000000000003e44676df0c4f80b68aff24bf04823444c0069729631f8",
+  confirmations: 21249,
+  time: 1553714591,
+  blocktime: 1553714591
+}
+
 module.exports = {
   mockList,
   mockToken,
@@ -680,5 +744,6 @@ module.exports = {
   nonSLPTxDetailsWithOpReturn,
   txDetailsSLPGenesis,
   txDetailsSLPMint,
-  txDetailsSLPSend
+  txDetailsSLPSend,
+  txDetailsSLPGenesisNoBaton
 }
