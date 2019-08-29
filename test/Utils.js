@@ -504,6 +504,30 @@ describe("#Utils", () => {
 
       assert2.include(data.batonHolder, "NEVER_CREATED")
     })
+
+    it("should decode a send transaction with alternate encoding", async () => {
+      // Mock the call to rest.bitcoin.com
+      if (process.env.TEST === "unit") {
+        sandbox
+          .stub(axios, "get")
+          .resolves({ data: mockData.txDetailsSLPSendAlt })
+      }
+
+      const txid =
+        "d94357179775425ebc59c93173bd6dc9854095f090a2eb9dcfe9797398bc8eae"
+
+      const data = await SLP.Utils.decodeOpReturn(txid)
+      //console.log(`data: ${JSON.stringify(data, null, 2)}`)
+
+      assert2.hasAnyKeys(data, [
+        "transactionType",
+        "tokenType",
+        "tokenId",
+        "spendData"
+      ])
+      assert2.isArray(data.spendData)
+      assert2.hasAnyKeys(data.spendData[0], ["quantity", "sentTo", "vout"])
+    })
   })
 
   describe("#isTokenUtxo", () => {

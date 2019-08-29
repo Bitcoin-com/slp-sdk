@@ -187,7 +187,7 @@ class Util extends BITBOXUtil {
       if (script[1] !== lokadIdHex) throw new Error("Not a SLP OP_RETURN")
 
       // Validate token type.
-      if (script[2] !== "OP_1") {
+      if (script[2] !== "OP_1" && script[2] !== "0001") {
         // NOTE: bitcoincashlib-js converts hex 01 to OP_1 due to BIP62.3 enforcement
         throw new Error("Unknown token type")
       }
