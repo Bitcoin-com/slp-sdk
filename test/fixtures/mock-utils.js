@@ -727,6 +727,77 @@ const txDetailsSLPGenesisNoBaton = {
   blocktime: 1553714591
 }
 
+const txDetailsSLPSendAlt = {
+  txid: "d94357179775425ebc59c93173bd6dc9854095f090a2eb9dcfe9797398bc8eae",
+  hash: "d94357179775425ebc59c93173bd6dc9854095f090a2eb9dcfe9797398bc8eae",
+  version: 2,
+  size: 438,
+  locktime: 0,
+  vin: [
+    {
+      txid: "984a8fc8093e1db5489a8856ab0ecbaef188662535f08de6f87da8622978146f",
+      vout: 0,
+      scriptSig: {
+        asm:
+          "3045022100f3f84a7c0a72e6df55ad8ff4596aae2d040403b38f8054d95ee48f3d554790050220776b0833891e65c52685ce3a498e3ee0aa804a85e9b79f21bb74a367ad88a569[ALL|FORKID] 03440d292d554f524a1a16fab1c4384c82a15aa191b6a25187c03f6ec4db57d61e",
+        hex:
+          "483045022100f3f84a7c0a72e6df55ad8ff4596aae2d040403b38f8054d95ee48f3d554790050220776b0833891e65c52685ce3a498e3ee0aa804a85e9b79f21bb74a367ad88a569412103440d292d554f524a1a16fab1c4384c82a15aa191b6a25187c03f6ec4db57d61e"
+      },
+      sequence: 4294967295
+    },
+    {
+      txid: "164ff37f47a1be6550a81f3d76f3d57e121d82ed04ed8b7bc932e2273141ebbc",
+      vout: 1,
+      scriptSig: {
+        asm:
+          "30440220177d3583516caf6a3d8e99ed9c0a76595a4187d04c575c0f7dab6a6dfa4630c502207fc842e03ca73a2c9d1f9d7406145bb4ea6eb90d1585ea7c4e82491707fadb74[ALL|FORKID] 0252996f42e5908cc6fe5e2df42888a7226f352f2d496e7f9bb17aaf55e41d997b",
+        hex:
+          "4730440220177d3583516caf6a3d8e99ed9c0a76595a4187d04c575c0f7dab6a6dfa4630c502207fc842e03ca73a2c9d1f9d7406145bb4ea6eb90d1585ea7c4e82491707fadb7441210252996f42e5908cc6fe5e2df42888a7226f352f2d496e7f9bb17aaf55e41d997b"
+      },
+      sequence: 4294967295
+    }
+  ],
+  vout: [
+    {
+      value: 0,
+      n: 0,
+      scriptPubKey: {
+        asm:
+          "OP_RETURN 5262419 256 1145980243 73db55368981e4878440637e448d4abe7f661be5c3efdcbcb63bd86a01a76b5a 0000000000000001",
+        hex:
+          "6a04534c50000200010453454e442073db55368981e4878440637e448d4abe7f661be5c3efdcbcb63bd86a01a76b5a080000000000000001",
+        type: "nulldata"
+      }
+    },
+    {
+      value: 0.00000546,
+      n: 1,
+      scriptPubKey: {
+        asm:
+          "OP_DUP OP_HASH160 f037d66efd7235ae4eeb03f666845a7c23ace91a OP_EQUALVERIFY OP_CHECKSIG",
+        hex: "76a914f037d66efd7235ae4eeb03f666845a7c23ace91a88ac",
+        reqSigs: 1,
+        type: "pubkeyhash",
+        addresses: ["bitcoincash:qrcr04nwl4erttjwavplve5ytf7z8t8frg94efy6ts"]
+      }
+    },
+    {
+      value: 0.00047367,
+      n: 2,
+      scriptPubKey: {
+        asm:
+          "OP_DUP OP_HASH160 d5669ba347fd2abe6a06d0310f817d1f1304ba71 OP_EQUALVERIFY OP_CHECKSIG",
+        hex: "76a914d5669ba347fd2abe6a06d0310f817d1f1304ba7188ac",
+        reqSigs: 1,
+        type: "pubkeyhash",
+        addresses: ["bitcoincash:qr2kdxargl7j40n2qmgrzrup0503xp96wyn5ju6p5l"]
+      }
+    }
+  ],
+  hex:
+    "02000000026f14782962a87df8e68df035256688f1aecb0eab56889a48b51d3e09c88f4a98000000006b483045022100f3f84a7c0a72e6df55ad8ff4596aae2d040403b38f8054d95ee48f3d554790050220776b0833891e65c52685ce3a498e3ee0aa804a85e9b79f21bb74a367ad88a569412103440d292d554f524a1a16fab1c4384c82a15aa191b6a25187c03f6ec4db57d61effffffffbceb413127e232c97b8bed04ed821d127ed5f3763d1fa85065bea1477ff34f16010000006a4730440220177d3583516caf6a3d8e99ed9c0a76595a4187d04c575c0f7dab6a6dfa4630c502207fc842e03ca73a2c9d1f9d7406145bb4ea6eb90d1585ea7c4e82491707fadb7441210252996f42e5908cc6fe5e2df42888a7226f352f2d496e7f9bb17aaf55e41d997bffffffff030000000000000000386a04534c50000200010453454e442073db55368981e4878440637e448d4abe7f661be5c3efdcbcb63bd86a01a76b5a08000000000000000122020000000000001976a914f037d66efd7235ae4eeb03f666845a7c23ace91a88ac07b90000000000001976a914d5669ba347fd2abe6a06d0310f817d1f1304ba7188ac00000000"
+}
+
 module.exports = {
   mockList,
   mockToken,
@@ -745,5 +816,6 @@ module.exports = {
   txDetailsSLPGenesis,
   txDetailsSLPMint,
   txDetailsSLPSend,
-  txDetailsSLPGenesisNoBaton
+  txDetailsSLPGenesisNoBaton,
+  txDetailsSLPSendAlt
 }
