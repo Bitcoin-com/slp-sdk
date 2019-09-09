@@ -2,7 +2,7 @@
   A Mocha test file for running end-to-end (e2e) tests.
 */
 
-const mocha = require("mocha")
+//const mocha = require("mocha")
 const assert = require("chai").assert
 
 const sendToken = require("./send-token/send-token")
