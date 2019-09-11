@@ -81,7 +81,9 @@ async function sendTokenTest() {
     console.log(`SLPDB updated token balance in ${deltaTime} minutes.`)
 
     // Consolidate the SLP UTXOs on the recieve wallet.
-    await lib.sendToken(recvWallet, recvWallet)
+    // CT 9/11/19: This causes the test to fail if done every time. This will
+    // have to be done manually.
+    //await lib.sendToken(recvWallet, recvWallet)
 
     return deltaTime // Return the time in minutes it took for SLPDB to update.
   } catch (err) {
