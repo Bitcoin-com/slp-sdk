@@ -94,15 +94,11 @@ class Address extends BITBOXAddress {
   }
 
   async details(address: string | Array<string>): Promise<Object> {
-    let tmpBITBOX: any
+    let tmpBITBOX: any = new BITBOX({ restURL: this.restURL })
     let network: string
     if (typeof address === "string")
       network = this.detectAddressNetwork(address)
     else network = this.detectAddressNetwork(address[0])
-
-    if (network === "mainnet")
-      tmpBITBOX = new BITBOX({ restURL: "https://rest.bitcoin.com/v2/" })
-    else tmpBITBOX = new BITBOX({ restURL: "https://trest.bitcoin.com/v2/" })
 
     if (typeof address === "string") {
       const cashAddr: string = utils.toCashAddress(address)
@@ -113,15 +109,11 @@ class Address extends BITBOXAddress {
   }
 
   async utxo(address: string | Array<string>): Promise<Object> {
-    let tmpBITBOX: any
+    let tmpBITBOX: any = new BITBOX({ restURL: this.restURL })
     let network: string
     if (typeof address === "string")
       network = this.detectAddressNetwork(address)
     else network = this.detectAddressNetwork(address[0])
-
-    if (network === "mainnet")
-      tmpBITBOX = new BITBOX({ restURL: "https://rest.bitcoin.com/v2/" })
-    else tmpBITBOX = new BITBOX({ restURL: "https://trest.bitcoin.com/v2/" })
 
     if (typeof address === "string") {
       const cashAddr: string = utils.toCashAddress(address)
@@ -132,15 +124,11 @@ class Address extends BITBOXAddress {
   }
 
   async unconfirmed(address: string | Array<string>): Promise<Object> {
-    let tmpBITBOX: any
+    let tmpBITBOX: any = new BITBOX({ restURL: this.restURL })
     let network: string
     if (typeof address === "string")
       network = this.detectAddressNetwork(address)
     else network = this.detectAddressNetwork(address[0])
-
-    if (network === "mainnet")
-      tmpBITBOX = new BITBOX({ restURL: "https://rest.bitcoin.com/v2/" })
-    else tmpBITBOX = new BITBOX({ restURL: "https://trest.bitcoin.com/v2/" })
 
     if (typeof address === "string") {
       const cashAddr: string = utils.toCashAddress(address)
@@ -151,15 +139,11 @@ class Address extends BITBOXAddress {
   }
 
   async transactions(address: string | Array<string>): Promise<Object> {
-    let tmpBITBOX: any
+    let tmpBITBOX: any = new BITBOX({ restURL: this.restURL })
     let network: string
     if (typeof address === "string")
       network = this.detectAddressNetwork(address)
     else network = this.detectAddressNetwork(address[0])
-
-    if (network === "mainnet")
-      tmpBITBOX = new BITBOX({ restURL: "https://rest.bitcoin.com/v2/" })
-    else tmpBITBOX = new BITBOX({ restURL: "https://trest.bitcoin.com/v2/" })
 
     if (typeof address === "string") {
       const cashAddr: string = utils.toCashAddress(address)
