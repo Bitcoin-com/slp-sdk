@@ -1111,10 +1111,10 @@ bip66@^1.1.0, bip66@^1.1.5:
   dependencies:
     safe-buffer "^5.0.1"
 
-bitbox-sdk@8.8.0:
-  version "8.8.0"
-  resolved "https://registry.yarnpkg.com/bitbox-sdk/-/bitbox-sdk-8.8.0.tgz#fb266e208214ed78368ede3afa2b021ce06cda63"
-  integrity sha512-C6sXoBYISwK1Ke2MWELvb5JWuTS5hE1wKv+1FbSOmi0uB1WfbMONBiTDBJl0SPETFkIXr/dt3NQdNsKUL3qyew==
+bitbox-sdk@8.9.0:
+  version "8.9.0"
+  resolved "https://registry.yarnpkg.com/bitbox-sdk/-/bitbox-sdk-8.9.0.tgz#d6edfc7ae5e6e1f0525affcd201db213d4352112"
+  integrity sha512-YK2UOdWZFnyyvYbsxHWdV7oBqGI8QqC/wpJgc0MXdKu4maTGW8/n4d0830sj3bA5VnrAXoKQMmM5DeoD/z+5WA==
   dependencies:
     assert "^1.4.1"
     axios "0.19.0"
