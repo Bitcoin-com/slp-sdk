@@ -13,8 +13,8 @@ module.exports = {
 const SLPSDK = require("../../../lib/SLP")
 const slpsdk = new SLPSDK()
 
-const testTokenId =
-  "cc1b2084a9c43bb5a633df7f38201adde5c5f5cef2fed945d12f8dcd4e505c67"
+const TEST_TOKEN_ID =
+  "f3fcb5eb95bb02e0532952ac4f209c55c8022ae24979a1c4098dd171a2a28b78"
 
 // Open a wallet and return an object with its address, BCH balance, and SLP
 // token balance.
@@ -70,8 +70,7 @@ async function sendToken(wallet1, wallet2) {
       fundingWif,
       tokenReceiverAddress,
       bchChangeReceiverAddress,
-      tokenId:
-        "cc1b2084a9c43bb5a633df7f38201adde5c5f5cef2fed945d12f8dcd4e505c67",
+      tokenId: TEST_TOKEN_ID,
       amount: 1
     }
 
@@ -96,7 +95,10 @@ async function getTestTokenBalance(walletData) {
     )
     // console.log(`tokenBalance: ${JSON.stringify(tokenBalance, null, 2)}`)
 
-    const testTokens = tokenBalance.filter(x => testTokenId === x.tokenId)
+    let testTokens = tokenBalance.filter(x => TEST_TOKEN_ID === x.tokenId)
+
+    // Bootstrap initial state when wallet has no balance yet.
+    if (testTokens.length === 0) testTokens = [{ balance: 0 }]
 
     return testTokens[0].balance
   } catch (err) {
