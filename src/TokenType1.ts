@@ -160,7 +160,7 @@ class TokenType1 {
       // console.log(`inputUtxos: ${JSON.stringify(inputUtxos, null, 2)}`)
       // console.log(`balances.nonSlpUtxos: ${JSON.stringify(balances.nonSlpUtxos, null, 2)}`)
 
-      if(inputUtxos === undefined) throw new Error(`Could not find any non-SLP UTXOs`)
+      if(inputUtxos === undefined) throw new Error(`Could not find any SLP token UTXOs`)
 
       inputUtxos = inputUtxos.concat(balances.nonSlpUtxos)
 
