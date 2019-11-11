@@ -981,12 +981,13 @@ bc-bip68@^1.0.5:
   resolved "https://registry.yarnpkg.com/bc-bip68/-/bc-bip68-1.0.5.tgz#4d3774067d8c9e922e225f5f2c4178ee9ae8dc94"
   integrity sha512-GzaMlN7pNthrY5BhReVhnfr4Ixx+GUSfyNRHYh0QiMUF0d0+0YaD8MpEdv6AjFBksg/zlqL1fVCBBm6PpTt2Rg==
 
-"bchaddrjs-slp@git://github.com/simpleledger/bchaddrjs.git#master":
-  version "0.2.6"
-  resolved "git://github.com/simpleledger/bchaddrjs.git#ea05d679783a6737f2f99adc37ebf485dc64f006"
+bchaddrjs-slp@0.2.7:
+  version "0.2.7"
+  resolved "https://registry.yarnpkg.com/bchaddrjs-slp/-/bchaddrjs-slp-0.2.7.tgz#df90e5ccfa54646cacd9020f714cb49b69a8102e"
+  integrity sha512-wqd4RFMGWzT3ukNbIzLR3pG6EMpcbCUcqXHa0UsegNKkKXZUFXg3dIfa01MRFr4R9D4jnJgDCgY0pa4B4ih4vQ==
   dependencies:
     bs58check "^2.1.2"
-    cashaddrjs-slp "^0.2.11"
+    cashaddrjs-slp "^0.2.12"
 
 bcrypt-pbkdf@^1.0.0:
   version "1.0.2"
@@ -1474,10 +1475,10 @@ caseless@~0.12.0:
   resolved "https://registry.yarnpkg.com/caseless/-/caseless-0.12.0.tgz#1b681c21ff84033c826543090689420d187151dc"
   integrity sha1-G2gcIf+EAzyCZUMJBolCDRhxUdw=
 
-cashaddrjs-slp@^0.2.11:
-  version "0.2.11"
-  resolved "https://registry.yarnpkg.com/cashaddrjs-slp/-/cashaddrjs-slp-0.2.11.tgz#ca3c23c2a1dd6b65da3976819dca7d50894bd489"
-  integrity sha512-c6od4HHecD+1aEl0WmTEw+ncWBKZNqRW9Q8F+jwB1m1VozbNAmcwy0P8ihVD+cZEpwiviFyOva2simH2txINwg==
+cashaddrjs-slp@^0.2.12:
+  version "0.2.12"
+  resolved "https://registry.yarnpkg.com/cashaddrjs-slp/-/cashaddrjs-slp-0.2.12.tgz#30eda56cfc3ad4a949911258a0356459f45879d4"
+  integrity sha512-n2TTIuW6vZZxYvjvsUAA+wOM0Zkj+3RRKUtDC1XSu4Ic4XVr0yFJkl1bzQkHWda7nkVT51sxjZneygz7D0SyrQ==
   dependencies:
     big-integer "^1.6.34"
 
@@ -7525,14 +7526,14 @@ slide@^1.1.6, slide@~1.1.3, slide@~1.1.6:
   resolved "https://registry.yarnpkg.com/slide/-/slide-1.1.6.tgz#56eb027d65b4d2dce6cb2e2d32c4d4afc9e1d707"
   integrity sha1-VusCfWW00tzmyy4tMsTUr8nh1wc=
 
-slpjs@0.21.1:
-  version "0.21.1"
-  resolved "https://registry.yarnpkg.com/slpjs/-/slpjs-0.21.1.tgz#5542039dfe091033235600b86fc314b75504cb35"
-  integrity sha512-f030k+bsYOyNuuU7qmbvtQ19Xs75vkvlBZDP965j9Y9O6ehvTtiF5EDzMW5xA3Y4ur0fir01h2KbJPpEncTqqA==
+slpjs@0.22.0:
+  version "0.22.0"
+  resolved "https://registry.yarnpkg.com/slpjs/-/slpjs-0.22.0.tgz#4d9a5e19c8f1f5c1a26cd39ed9dbdca1339bc1b1"
+  integrity sha512-BAE2fZu5l3tRqlb8dVZHHB22tBXtRz5G8JU0z1F0sCZ9rcXRM0fP9kGsmSZPZRraACBbXOxmyZ4blYh0kKQG4w==
   dependencies:
     "@types/lodash" "^4.14.120"
     axios "^0.18.1"
-    bchaddrjs-slp "git://github.com/simpleledger/bchaddrjs.git#master"
+    bchaddrjs-slp "0.2.7"
     bignumber.js "^8.1.1"
     bitcore-lib-cash "^0.19.0"
     lodash "^4.17.14"
