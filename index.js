@@ -13,7 +13,7 @@ const repl = require("repl")
 const SLP = require("./lib/SLP")
 const clone = require("git-clone")
 
-program.version("4.4.1", "-v, --version")
+program.version("4.13.2", "-v, --version")
 
 program
   .command("new <name>")
