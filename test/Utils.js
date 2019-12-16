@@ -1059,5 +1059,31 @@ describe("#Utils", () => {
         "tokenQty"
       ])
     })
+
+    it("should process problematic utxos", async () => {
+      const utxos = [
+        {
+          txid:
+            "0e3a217fc22612002031d317b4cecd9b692b66b52951a67b23c43041aefa3959",
+          vout: 0,
+          amount: 0.00018362,
+          satoshis: 18362,
+          height: 613483,
+          confirmations: 124
+        },
+        {
+          txid:
+            "67fd3c7c3a6eb0fea9ab311b91039545086220f7eeeefa367fa28e6e43009f19",
+          vout: 1,
+          amount: 0.00000546,
+          satoshis: 546,
+          height: 612075,
+          confirmations: 1532
+        }
+      ]
+
+      const data = await SLP.Utils.tokenUtxoDetails(utxos)
+      console.log(`data: ${JSON.stringify(data, null, 2)}`)
+    })
   })
 })
