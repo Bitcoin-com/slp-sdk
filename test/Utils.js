@@ -201,7 +201,7 @@ describe("#Utils", () => {
       ])
     })
 
-    it(`should fetch balances for multiple addresses.`, async () => {
+    it(`should fetch balances for multiple addresses`, async () => {
       const addresses = [
         "simpleledger:qzv3zz2trz0xgp6a96lu4m6vp2nkwag0kvyucjzqt9",
         "simpleledger:qqss4zp80hn6szsa4jg2s9fupe7g5tcg5ucdyl3r57"
@@ -210,12 +210,12 @@ describe("#Utils", () => {
       // Mock the call to rest.bitcoin.com
       if (process.env.TEST === "unit") {
         sandbox
-          .stub(axios, "get")
+          .stub(axios, "post")
           .resolves({ data: mockData.balancesForAddresses })
       }
 
       const balances = await SLP.Utils.balancesForAddress(addresses)
-      //console.log(`balances: ${JSON.stringify(balances, null, 2)}`)
+      // console.log(`balances: ${JSON.stringify(balances, null, 2)}`)
 
       assert2.isArray(balances)
       assert2.isArray(balances[0])
