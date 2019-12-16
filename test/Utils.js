@@ -201,7 +201,7 @@ describe("#Utils", () => {
       ])
     })
 
-    it(`should fetch balances for multiple addresses.`, async () => {
+    it(`should fetch balances for multiple addresses`, async () => {
       const addresses = [
         "simpleledger:qzv3zz2trz0xgp6a96lu4m6vp2nkwag0kvyucjzqt9",
         "simpleledger:qqss4zp80hn6szsa4jg2s9fupe7g5tcg5ucdyl3r57"
@@ -210,12 +210,12 @@ describe("#Utils", () => {
       // Mock the call to rest.bitcoin.com
       if (process.env.TEST === "unit") {
         sandbox
-          .stub(axios, "get")
+          .stub(axios, "post")
           .resolves({ data: mockData.balancesForAddresses })
       }
 
       const balances = await SLP.Utils.balancesForAddress(addresses)
-      //console.log(`balances: ${JSON.stringify(balances, null, 2)}`)
+      // console.log(`balances: ${JSON.stringify(balances, null, 2)}`)
 
       assert2.isArray(balances)
       assert2.isArray(balances[0])
@@ -1058,6 +1058,107 @@ describe("#Utils", () => {
         "batonStillExists",
         "tokenQty"
       ])
+    })
+
+    it("should process problematic utxos", async () => {
+      // Mock the call to REST API
+      if (process.env.TEST === "unit") {
+        // Stub the call to validateTxid
+        sandbox.stub(SLP.Utils, "validateTxid").resolves([
+          {
+            txid:
+              "67fd3c7c3a6eb0fea9ab311b91039545086220f7eeeefa367fa28e6e43009f19",
+            valid: true
+          },
+          {
+            txid:
+              "0e3a217fc22612002031d317b4cecd9b692b66b52951a67b23c43041aefa3959",
+            valid: false
+          }
+        ])
+
+        // Stub the calls to decodeOpReturn.
+        sandbox
+          .stub(SLP.Utils, "decodeOpReturn")
+          .onCall(0)
+          .resolves({
+            tokenType: 1,
+            transactionType: "send",
+            tokenId:
+              "f05faf13a29c7f5e54ab921750aafb6afaa953db863bd2cf432e918661d4132f",
+            spendData: [
+              {
+                quantity: "5000000",
+                sentTo:
+                  "bitcoincash:qr06e2fetka9fyh207ff3cq8xh9zfe78gyx24yadjz",
+                vout: 1
+              },
+              {
+                quantity: "395010942",
+                sentTo:
+                  "bitcoincash:qqzjzzlmx8h3hum3drsuk894jnf8r909kueykgrkk2",
+                vout: 2
+              }
+            ]
+          })
+          .onCall(1)
+          .resolves({
+            tokenType: 1,
+            transactionType: "genesis",
+            ticker: "AUDC",
+            name: "AUD Coin",
+            documentUrl: "audcoino@gmail.com",
+            documentHash: "",
+            decimals: 6,
+            mintBatonVout: 0,
+            initialQty: 2000000000000,
+            tokensSentTo:
+              "bitcoincash:qp5pup5vpdcq3qyq8f858nuqmgfq8krupvsxxuxctx",
+            batonHolder: "NEVER_CREATED"
+          })
+      }
+
+      const utxos = [
+        {
+          txid:
+            "0e3a217fc22612002031d317b4cecd9b692b66b52951a67b23c43041aefa3959",
+          vout: 0,
+          amount: 0.00018362,
+          satoshis: 18362,
+          height: 613483,
+          confirmations: 124
+        },
+        {
+          txid:
+            "67fd3c7c3a6eb0fea9ab311b91039545086220f7eeeefa367fa28e6e43009f19",
+          vout: 1,
+          amount: 0.00000546,
+          satoshis: 546,
+          height: 612075,
+          confirmations: 1532
+        }
+      ]
+
+      const data = await SLP.Utils.tokenUtxoDetails(utxos)
+      // console.log(`data: ${JSON.stringify(data, null, 2)}`)
+
+      assert2.isArray(data)
+      assert2.equal(data[0], false)
+
+      assert2.property(data[1], "txid")
+      assert2.property(data[1], "vout")
+      assert2.property(data[1], "amount")
+      assert2.property(data[1], "satoshis")
+      assert2.property(data[1], "height")
+      assert2.property(data[1], "confirmations")
+      assert2.property(data[1], "utxoType")
+      assert2.property(data[1], "tokenId")
+      assert2.property(data[1], "tokenTicker")
+      assert2.property(data[1], "tokenName")
+      assert2.property(data[1], "tokenDocumentUrl")
+      assert2.property(data[1], "tokenDocumentHash")
+      assert2.property(data[1], "decimals")
+      assert2.property(data[1], "tokenQty")
     })
   })
 })
