@@ -978,5 +978,86 @@ describe("#Utils", () => {
         "tokenQty"
       ])
     })
+
+    it("should return details for a MINT token utxo", async () => {
+      // Mock the call to REST API
+      if (process.env.TEST === "unit") {
+        // Stub the call to validateTxid
+        sandbox.stub(SLP.Utils, "validateTxid").resolves([
+          {
+            txid:
+              "cf4b922d1e1aa56b52d752d4206e1448ea76c3ebe69b3b97d8f8f65413bd5c76",
+            valid: true
+          }
+        ])
+
+        // Stub the calls to decodeOpReturn.
+        sandbox
+          .stub(SLP.Utils, "decodeOpReturn")
+          .onCall(0)
+          .resolves({
+            tokenType: 1,
+            transactionType: "mint",
+            tokenId:
+              "38e97c5d7d3585a2cbf3f9580c82ca33985f9cb0845d4dcce220cb709f9538b0",
+            mintBatonVout: 2,
+            batonStillExists: true,
+            quantity: "1000000000000",
+            tokensSentTo:
+              "bitcoincash:qpszr2za8hht020trekw4jc9kar2v7jva5xej5uqns"
+          })
+          .onCall(1)
+          .resolves({
+            tokenType: 1,
+            transactionType: "genesis",
+            ticker: "PSF",
+            name: "Permissionless Software Foundation",
+            documentUrl: "psfoundation.cash",
+            documentHash: "",
+            decimals: 8,
+            mintBatonVout: 2,
+            initialQty: 19882.09163133,
+            tokensSentTo:
+              "bitcoincash:qpgeu2kvk4assnj3klez6yv8z2mv6q9vdy48m62vhn",
+            batonHolder:
+              "bitcoincash:qpgeu2kvk4assnj3klez6yv8z2mv6q9vdy48m62vhn"
+          })
+      }
+
+      const utxos = [
+        {
+          txid:
+            "cf4b922d1e1aa56b52d752d4206e1448ea76c3ebe69b3b97d8f8f65413bd5c76",
+          vout: 1,
+          amount: 0.00000546,
+          satoshis: 546,
+          height: 600297,
+          confirmations: 76
+        }
+      ]
+
+      const data = await SLP.Utils.tokenUtxoDetails(utxos)
+      // console.log(`data: ${JSON.stringify(data, null, 2)}`)
+
+      assert2.hasAnyKeys(data[0], [
+        "txid",
+        "vout",
+        "amount",
+        "satoshis",
+        "height",
+        "confirmations",
+        "utxoType",
+        "transactionType",
+        "tokenId",
+        "tokenTicker",
+        "tokenName",
+        "tokenDocumentUrl",
+        "tokenDocumentHash",
+        "decimals",
+        "mintBatonVout",
+        "batonStillExists",
+        "tokenQty"
+      ])
+    })
   })
 })

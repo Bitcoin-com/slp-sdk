@@ -254,12 +254,20 @@ class Util extends BITBOXUtil {
 
         // Locate the vout UTXO containing the minting baton.
         let mintBatonVout = 0
+        // Dev note: Haven't seen this if-statement in the wild. Copied from
+        // Badger Wallet code.
         if (typeof script[5] === "string" && script[5].startsWith("OP_"))
           mintBatonVout = parseInt(script[5].slice(3))
+        // This is the common use case with slp-sdk examples.
+        else mintBatonVout = parseInt(script[5])
 
         outObj.mintBatonVout = mintBatonVout
 
         // Check if baton was passed or destroyed.
+        // Dev Note: There should be some more extensive checking here. The most
+        // common way of 'burning' the minting baton is to set script[5] to a
+        // value of 0, but it could also point to a non-existant vout.
+        // TODO: Add checking if script[5] refers to a non-existant vout.
         outObj.batonStillExists = false // false by default.
         if (mintBatonVout > 1) outObj.batonStillExists = true
 
@@ -485,9 +493,34 @@ class Util extends BITBOXUtil {
             if (
               thisUtxo.vout !== slpData.mintBatonVout && // UTXO is not a mint baton output.
               thisUtxo.vout !== 1 // UTXO is not the reciever of the genesis or mint tokens.
-            )
+            ) {
               // Can safely be marked as false.
               validations[i] = false
+
+              // If UTXO passes validation, then return formatted token data.
+            } else {
+              const genesisData = await this.decodeOpReturn(slpData.tokenId)
+
+              // Hydrate the UTXO object with information about the SLP token.
+              thisUtxo.utxoType = "token"
+              thisUtxo.transactionType = "mint"
+              thisUtxo.tokenId = slpData.tokenId
+
+              thisUtxo.tokenTicker = genesisData.ticker
+              thisUtxo.tokenName = genesisData.name
+              thisUtxo.tokenDocumentUrl = genesisData.documentUrl
+              thisUtxo.tokenDocumentHash = genesisData.documentHash
+              thisUtxo.decimals = genesisData.decimals
+
+              thisUtxo.mintBatonVout = slpData.mintBatonVout
+              thisUtxo.batonStillExists = slpData.batonStillExists
+
+              // Calculate the real token quantity.
+              thisUtxo.tokenQty =
+                slpData.quantity / Math.pow(10, thisUtxo.decimals)
+
+              validations[i] = thisUtxo
+            }
           }
 
           // Handle Send SLP transactions.
