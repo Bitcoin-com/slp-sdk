@@ -458,14 +458,18 @@ class Util extends BITBOXUtil {
         const thisUtxo = utxos[i]
         // console.log(`thisUtxo: ${JSON.stringify(thisUtxo, null, 2)}`)
 
-        // const thisValidation = validations[i]
-        const thisValidation = validations.filter((x: any) => x.txid === thisUtxo.txid)
+        // Find the validation entry that matches the current UTXO.
+        const thisValidation = validations.filter((x: any) => {
+          if(x !== null)
+            return x.txid === thisUtxo.txid
+          return false
+        })
         // console.log(
         //   `thisValidation: ${JSON.stringify(thisValidation, null, 2)}`
         // )
 
         // If the utxo is not SLP, then skip the loop.
-        if (!thisValidation[0].valid) {
+        if (!thisValidation[0] || !thisValidation[0].valid) {
           outAry[i] = false
           continue
         }

@@ -1160,5 +1160,41 @@ describe("#Utils", () => {
       assert2.property(data[1], "decimals")
       assert2.property(data[1], "tokenQty")
     })
+
+    it("should return false for BCH-only UTXOs", async () => {
+      // Mock the call to REST API
+      if (process.env.TEST === "unit") {
+        // Stub the call to validateTxid
+        sandbox.stub(SLP.Utils, "validateTxid").resolves([null, null])
+      }
+
+      const utxos = [
+        {
+          txid:
+            "a937f792c7c9eb23b4f344ce5c233d1ac0909217d0a504d71e6b1e4efb864a3b",
+          vout: 0,
+          amount: 0.00001,
+          satoshis: 1000,
+          confirmations: 0,
+          ts: 1578424704
+        },
+        {
+          txid:
+            "53fd141c2e999e080a5860887441a2c45e9cbe262027e2bd2ac998fc76e43c44",
+          vout: 0,
+          amount: 0.00001,
+          satoshis: 1000,
+          confirmations: 0,
+          ts: 1578424634
+        }
+      ]
+
+      const data = await SLP.Utils.tokenUtxoDetails(utxos)
+      // console.log(`data: ${JSON.stringify(data, null, 2)}`)
+
+      assert2.isArray(data)
+      assert2.equal(false, data[0])
+      assert2.equal(false, data[1])
+    })
   })
 })
