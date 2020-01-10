@@ -365,7 +365,12 @@ class Util extends BITBOXUtil {
       //console.log(`validations: ${JSON.stringify(validations,null,2)}`)
 
       // Extract the boolean result
-      validations = validations.map((x: any) => x.valid)
+      validations = validations.map((x: any) => {
+        if (x !== null)
+          return x.valid;
+
+        return false;
+      })
 
       // Loop through each element and compute final validation on any that
       // returned true.
