@@ -1,7 +1,7 @@
 const assert = require("assert")
 const slp = require("./../lib/SLP")
 const SLP = new slp({
-  restURL: "https://rest.bitcoin.com/v2/"
+  restURL: "https://slp.api.wallet.bitcoin.com/v2/"
 })
 const fixtures = require("./fixtures/Address.json")
 const axios = require("axios")

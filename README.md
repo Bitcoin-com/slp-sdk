@@ -17,6 +17,8 @@ cd slp-sdk
 
 - Install dependencies: `npm install`
 
+- Run integration tests `npm run test:integration`
+
 - Explore the [example apps](examples/README.md)
 
 ### Handy Links

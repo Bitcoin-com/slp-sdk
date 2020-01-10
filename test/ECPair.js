@@ -1,7 +1,9 @@
 const fixtures = require("./fixtures/ECPair.json")
 const assert = require("assert")
 const slp = require("./../lib/SLP")
-const SLP = new slp()
+const SLP = new slp({
+  restURL: "https://slp.api.wallet.bitcoin.com/v2/"
+})
 // console.log(SLP)
 
 // Used for debugging and iterrogating JS objects.

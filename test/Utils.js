@@ -9,7 +9,9 @@
 const assert = require("assert")
 const assert2 = require("chai").assert
 const slp = require("./../lib/SLP")
-const SLP = new slp()
+const SLP = new slp({
+  restURL: "https://slp.api.wallet.bitcoin.com/v2/"
+})
 const nock = require("nock") // http call mocking
 const sinon = require("sinon")
 const axios = require("axios")
