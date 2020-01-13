@@ -1069,11 +1069,6 @@ describe("#Utils", () => {
             txid:
               "67fd3c7c3a6eb0fea9ab311b91039545086220f7eeeefa367fa28e6e43009f19",
             valid: true
-          },
-          {
-            txid:
-              "0e3a217fc22612002031d317b4cecd9b692b66b52951a67b23c43041aefa3959",
-            valid: false
           }
         ])
 
@@ -1081,6 +1076,8 @@ describe("#Utils", () => {
         sandbox
           .stub(SLP.Utils, "decodeOpReturn")
           .onCall(0)
+          .throws({ message: "Not an OP_RETURN" })
+          .onCall(1)
           .resolves({
             tokenType: 1,
             transactionType: "send",
@@ -1101,7 +1098,7 @@ describe("#Utils", () => {
               }
             ]
           })
-          .onCall(1)
+          .onCall(2)
           .resolves({
             tokenType: 1,
             transactionType: "genesis",
@@ -1151,7 +1148,6 @@ describe("#Utils", () => {
       assert2.property(data[1], "satoshis")
       assert2.property(data[1], "height")
       assert2.property(data[1], "confirmations")
-      assert2.property(data[1], "utxoType")
       assert2.property(data[1], "tokenId")
       assert2.property(data[1], "tokenTicker")
       assert2.property(data[1], "tokenName")
@@ -1164,8 +1160,9 @@ describe("#Utils", () => {
     it("should return false for BCH-only UTXOs", async () => {
       // Mock the call to REST API
       if (process.env.TEST === "unit") {
-        // Stub the call to validateTxid
-        sandbox.stub(SLP.Utils, "validateTxid").resolves([null, null])
+        sandbox
+          .stub(SLP.Utils, "decodeOpReturn")
+          .throws({ message: "Not an OP_RETURN" })
       }
 
       const utxos = [
