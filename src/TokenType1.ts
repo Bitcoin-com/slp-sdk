@@ -1,3 +1,8 @@
+/*
+  This library is concerned with the Token Type 1 defined in this specification:
+  https://github.com/simpleledger/slp-specifications/blob/master/slp-token-type-1.md
+*/
+
 // require deps
 // imports
 import { BITBOX } from "bitbox-sdk"
