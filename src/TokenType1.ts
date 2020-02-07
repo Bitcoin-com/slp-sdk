@@ -24,8 +24,12 @@ class TokenType1 {
     // validate address formats
     this.validateAddressFormat(createConfig)
 
+    // normalize funding properties
+    const fundingAddresses = [].concat(createConfig.fundingAddress);
+    const fundingWifs = [].concat(createConfig.fundingWif);
+
     // determine mainnet/testnet
-    const network: string = this.returnNetwork(createConfig.fundingAddress)
+    const network: string = this.returnNetwork(fundingAddresses[0]);
 
     // network appropriate BITBOX instance
     const BITBOX: any = this.returnBITBOXInstance(network)
@@ -42,17 +46,24 @@ class TokenType1 {
       batonReceiverAddress = createConfig.batonReceiverAddress
     else batonReceiverAddress = null
 
-    const balances: any = await bitboxNetwork.getAllSlpBalancesAndUtxos(
-      createConfig.fundingAddress
-    )
+    let balances: any = await bitboxNetwork.getAllSlpBalancesAndUtxos(
+      fundingAddresses
+    );
 
     let initialTokenQty: number = createConfig.initialTokenQty
 
     initialTokenQty = new BigNumber(initialTokenQty).times(
       10 ** createConfig.decimals
     )
-    balances.nonSlpUtxos.forEach(
-      (txo: any) => (txo.wif = createConfig.fundingWif)
+    const nonSlpUtxos = balances.reduce(
+      (previousNonSlpUtxos: any, currentBalance: any, index: number) => [
+        ...previousNonSlpUtxos,
+        ...currentBalance.result.nonSlpUtxos.map((utxo: any) => ({
+          ...utxo,
+          wif: fundingWifs[index]
+        }))
+      ],
+      []
     )
     const genesisTxid = await bitboxNetwork.simpleTokenGenesis(
       createConfig.name,
@@ -64,7 +75,7 @@ class TokenType1 {
       createConfig.tokenReceiverAddress,
       batonReceiverAddress,
       createConfig.bchChangeReceiverAddress,
-      balances.nonSlpUtxos
+      nonSlpUtxos
     )
     return genesisTxid
   }
@@ -73,8 +84,12 @@ class TokenType1 {
     // validate address formats
     this.validateAddressFormat(mintConfig)
 
+    // normalize funding properties
+    const fundingAddresses = [].concat(mintConfig.fundingAddress);
+    const fundingWifs = [].concat(mintConfig.fundingWif);
+
     // determine mainnet/testnet
-    const network: string = this.returnNetwork(mintConfig.fundingAddress)
+    const network: string = this.returnNetwork(fundingAddresses[0]);
 
     // network appropriate BITBOX instance
     const BITBOX: any = this.returnBITBOXInstance(network)
@@ -86,10 +101,14 @@ class TokenType1 {
       mintConfig.batonReceiverAddress
     )
 
-    const balances: any = await bitboxNetwork.getAllSlpBalancesAndUtxos(
-      mintConfig.fundingAddress
+    let balances: any = await bitboxNetwork.getAllSlpBalancesAndUtxos(
+      fundingAddresses
     )
-    if (!balances.slpBatonUtxos[mintConfig.tokenId])
+
+    let balanceWithBaton = balances
+      .find((balance: any) => balance.result.slpBatonUtxos[mintConfig.tokenId]);
+
+    if (!balanceWithBaton)
       throw Error("You don't have the minting baton for this token")
 
     const tokenInfo: any = await bitboxNetwork.getTokenInformation(
@@ -100,11 +119,23 @@ class TokenType1 {
       10 ** tokenInfo.decimals
     )
 
-    let inputUtxos = balances.slpBatonUtxos[mintConfig.tokenId]
+    const nonSlpUtxos = balances.reduce(
+      (previousNonSlpUtxos: any, currentBalance: any, index: number) => [
+        ...previousNonSlpUtxos,
+        ...currentBalance.result.nonSlpUtxos.map((utxo: any) => ({
+          ...utxo,
+          wif: fundingWifs[index]
+        }))
+      ],
+      []
+    )
 
-    inputUtxos = inputUtxos.concat(balances.nonSlpUtxos)
+    const slpBatonUtxos = balanceWithBaton
+      .result
+      .slpBatonUtxos[mintConfig.tokenId]
+      .map((utxo: any) => ({ ...utxo, wif: fundingWifs[balances.indexOf(balanceWithBaton)] }))
 
-    inputUtxos.forEach((txo: any) => (txo.wif = mintConfig.fundingWif))
+    const inputUtxos = [...nonSlpUtxos, ...slpBatonUtxos];
 
     const mintTxid = await bitboxNetwork.simpleTokenMint(
       mintConfig.tokenId,
@@ -121,11 +152,12 @@ class TokenType1 {
     // validate address formats
     this.validateAddressFormat(sendConfig)
 
+    // normalize funding properties
+    const fundingAddresses = [].concat(sendConfig.fundingAddress);
+    const fundingWifs = [].concat(sendConfig.fundingWif);
+
     // determine mainnet/testnet
-    let network: string
-    if (!Array.isArray(sendConfig.fundingAddress))
-      network = this.returnNetwork(sendConfig.fundingAddress)
-    else network = this.returnNetwork(sendConfig.fundingAddress[0])
+    const network: string = this.returnNetwork(fundingAddresses[0]);
 
     // network appropriate BITBOX instance
     const BITBOX: any = this.returnBITBOXInstance(network)
@@ -141,90 +173,13 @@ class TokenType1 {
 
     const tokenInfo: any = await bitboxNetwork.getTokenInformation(tokenId)
     const tokenDecimals: number = tokenInfo.decimals
-    if (!Array.isArray(sendConfig.fundingAddress)) {
-      let amount: any = sendConfig.amount
-
-      const balances: any = await bitboxNetwork.getAllSlpBalancesAndUtxos(
-        sendConfig.fundingAddress
-      )
-
-      if (!Array.isArray(amount)) {
-        amount = new BigNumber(amount).times(10 ** tokenDecimals) // Don't forget to account for token precision
-      } else {
-        amount.forEach((amt: number, index: number) => {
-          amount[index] = new BigNumber(amt).times(10 ** tokenDecimals) // Don't forget to account for token precision
-        })
-      }
-
-      let inputUtxos = balances.slpTokenUtxos[tokenId]
-      // console.log(`inputUtxos: ${JSON.stringify(inputUtxos, null, 2)}`)
-      // console.log(`balances.nonSlpUtxos: ${JSON.stringify(balances.nonSlpUtxos, null, 2)}`)
-
-      if(inputUtxos === undefined) throw new Error(`Could not find any SLP token UTXOs`)
-
-      inputUtxos = inputUtxos.concat(balances.nonSlpUtxos)
-
-      inputUtxos.forEach((txo: any) => (txo.wif = sendConfig.fundingWif))
-
-      const sendTxid = await bitboxNetwork.simpleTokenSend(
-        tokenId,
-        amount,
-        inputUtxos,
-        sendConfig.tokenReceiverAddress,
-        bchChangeReceiverAddress
-      )
-      return sendTxid
-    }
-
-    const utxos: any[] = []
-    const balances: any = await bitboxNetwork.getAllSlpBalancesAndUtxos(
-      sendConfig.fundingAddress
-    )
-
-    // Sign and add input token UTXOs
-    const tokenBalances = balances.filter((i: any) => {
-      try {
-        return i.result.slpTokenBalances[tokenId].isGreaterThan(0)
-      } catch (_) {
-        return false
-      }
-    })
-    tokenBalances.map((i: any) =>
-      i.result.slpTokenUtxos[tokenId].forEach(
-        (j: any) => (j.wif = sendConfig.fundingWif[<any>i.address])
-      )
-    )
-    tokenBalances.forEach((a: any) => {
-      try {
-        a.result.slpTokenUtxos[tokenId].forEach((txo: any) => utxos.push(txo))
-      } catch (_) {}
-    })
-
-    // Sign and add input BCH (non-token) UTXOs
-    const bchBalances = balances.filter(
-      (i: any) => i.result.nonSlpUtxos.length > 0
-    )
-    bchBalances.map((i: any) =>
-      i.result.nonSlpUtxos.forEach(
-        (j: any) => (j.wif = sendConfig.fundingWif[<any>i.address])
-      )
-    )
-    bchBalances.forEach((a: any) =>
-      a.result.nonSlpUtxos.forEach((txo: any) => utxos.push(txo))
-    )
-
-    utxos.forEach((txo: any) => {
-      if (Array.isArray(sendConfig.fundingAddress)) {
-        sendConfig.fundingAddress.forEach(
-          (address: string, index: number) => {
-            if (txo.cashAddress === addy.toCashAddress(address))
-              txo.wif = sendConfig.fundingWif[index]
-          }
-        )
-      }
-    })
 
     let amount: any = sendConfig.amount
+
+    const balances: any = await bitboxNetwork.getAllSlpBalancesAndUtxos(
+      fundingAddresses
+    )
+
     if (!Array.isArray(amount)) {
       amount = new BigNumber(amount).times(10 ** tokenDecimals) // Don't forget to account for token precision
     } else {
@@ -232,21 +187,54 @@ class TokenType1 {
         amount[index] = new BigNumber(amt).times(10 ** tokenDecimals) // Don't forget to account for token precision
       })
     }
-    return await bitboxNetwork.simpleTokenSend(
+
+    const nonSlpUtxos = balances.reduce(
+      (previousNonSlpUtxos: any, currentBalance: any, index: number) => [
+        ...previousNonSlpUtxos,
+        ...currentBalance.result.nonSlpUtxos.map((utxo: any) => ({
+          ...utxo,
+          wif: fundingWifs[index]
+        }))
+      ],
+      []
+    )
+
+    const slpTokenUtxos = balances.reduce(
+      (previousSlpTokenUtxos: any, currentBalance: any, index: number) => [
+        ...previousSlpTokenUtxos,
+        ...(currentBalance.result.slpTokenUtxos[tokenId] || []).map((utxo: any) => ({
+          ...utxo,
+          wif: fundingWifs[index]
+        }))
+      ],
+      []
+    )
+
+    if(slpTokenUtxos.length === 0) throw new Error(`Could not find any SLP token UTXOs`)
+
+    const inputUtxos = [...nonSlpUtxos, ...slpTokenUtxos]
+
+    const sendTxid = await bitboxNetwork.simpleTokenSend(
       tokenId,
       amount,
-      utxos,
+      inputUtxos,
       sendConfig.tokenReceiverAddress,
       bchChangeReceiverAddress
     )
+
+    return sendTxid
   }
 
   async burn(burnConfig: IBurnConfig) {
     // validate address formats
     this.validateAddressFormat(burnConfig)
 
+    // normalize funding properties
+    const fundingAddresses = [].concat(burnConfig.fundingAddress);
+    const fundingWifs = [].concat(burnConfig.fundingWif);
+
     // determine mainnet/testnet
-    const network: string = this.returnNetwork(burnConfig.fundingAddress)
+    const network: string = this.returnNetwork(fundingAddresses[0]);
 
     // network appropriate BITBOX instance
     const BITBOX: any = this.returnBITBOXInstance(network)
@@ -262,20 +250,41 @@ class TokenType1 {
     )
     const tokenDecimals = tokenInfo.decimals
     const balances = await bitboxNetwork.getAllSlpBalancesAndUtxos(
-      burnConfig.fundingAddress
+      fundingAddresses
     )
     const amount = new BigNumber(burnConfig.amount).times(10 ** tokenDecimals)
-    let inputUtxos = balances.slpTokenUtxos[burnConfig.tokenId]
 
-    inputUtxos = inputUtxos.concat(balances.nonSlpUtxos)
+    const nonSlpUtxos = balances.reduce(
+      (previousNonSlpUtxos: any, currentBalance: any, index: number) => [
+        ...previousNonSlpUtxos,
+        ...currentBalance.result.nonSlpUtxos.map((utxo: any) => ({
+          ...utxo,
+          wif: fundingWifs[index]
+        }))
+      ],
+      []
+    )
 
-    inputUtxos.forEach((txo: any) => (txo.wif = burnConfig.fundingWif))
+    const slpTokenUtxos = balances.reduce(
+      (previousSlpTokenUtxos: any, currentBalance: any, index: number) => [
+        ...previousSlpTokenUtxos,
+        ...(currentBalance.result.slpTokenUtxos[burnConfig.tokenId] || []).map((utxo: any) => ({
+          ...utxo,
+          wif: fundingWifs[index]
+        }))
+      ],
+      []
+    )
+
+    const inputUtxos = [...nonSlpUtxos, ...slpTokenUtxos]
+
     const burnTxid = await bitboxNetwork.simpleTokenBurn(
       burnConfig.tokenId,
       amount,
       inputUtxos,
       bchChangeReceiverAddress
     )
+
     return burnTxid
   }
 
@@ -298,9 +307,6 @@ class TokenType1 {
     // fundingAddress, tokenReceiverAddress and batonReceiverAddress must be simpleledger format
     // bchChangeReceiverAddress can be either simpleledger or cashAddr format
     // validate fundingAddress format
-    // single fundingAddress
-    if (config.fundingAddress && !addy.isSLPAddress(config.fundingAddress))
-      throw Error("Funding Address must be simpleledger format")
 
     // bulk fundingAddress
     if (config.fundingAddress && Array.isArray(config.fundingAddress)) {
@@ -308,7 +314,8 @@ class TokenType1 {
         if (!addy.isSLPAddress(address))
           throw Error("Funding Address must be simpleledger format")
       })
-    }
+    } else if (!config.fundingAddress || !addy.isSLPAddress(config.fundingAddress))
+      throw Error("Funding Address must be simpleledger format")
 
     // validate tokenReceiverAddress format
     // single tokenReceiverAddress

@@ -4,8 +4,8 @@ export interface IConfig {
 }
 
 export interface ICreateConfig {
-  fundingAddress: string
-  fundingWif: string
+  fundingAddress: string | string[]
+  fundingWif: string | string[]
   tokenReceiverAddress: string
   batonReceiverAddress: string
   bchChangeReceiverAddress: string
@@ -18,8 +18,8 @@ export interface ICreateConfig {
 }
 
 export interface IMintConfig {
-  fundingAddress: string
-  fundingWif: string
+  fundingAddress: string | string[]
+  fundingWif: string | string[]
   tokenReceiverAddress: string
   batonReceiverAddress: string
   bchChangeReceiverAddress: string
@@ -37,8 +37,8 @@ export interface ISendConfig {
 }
 
 export interface IBurnConfig {
-  fundingAddress: string
-  fundingWif: string
+  fundingAddress: string | string[]
+  fundingWif: string | string[]
   tokenId: string
   bchChangeReceiverAddress: string
   amount: number
