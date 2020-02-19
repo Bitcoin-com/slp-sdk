@@ -53,31 +53,25 @@ describe("#Utils", () => {
       }
 
       const list = await SLP.Utils.list()
-      //console.log(`list: ${JSON.stringify(list, null, 2)}`)
+      // console.log(`list: ${JSON.stringify(list, null, 2)}`)
 
       assert2.isArray(list)
-      assert2.hasAllKeys(list[0], [
-        "blockCreated",
-        "blockLastActiveMint",
-        "blockLastActiveSend",
-        "circulatingSupply",
-        "containsBaton",
-        "decimals",
-        "documentHash",
-        "documentUri",
-        "id",
-        "initialTokenQty",
-        "mintingBatonStatus",
-        "name",
-        "symbol",
-        "timestamp",
-        "timestampUnix",
-        "totalBurned",
-        "totalMinted",
-        "txnsSinceGenesis",
-        "validAddresses",
-        "versionType"
-      ])
+
+      assert2.property(list[0], "decimals")
+      assert2.property(list[0], "timestamp")
+      assert2.property(list[0], "versionType")
+      assert2.property(list[0], "documentUri")
+      assert2.property(list[0], "symbol")
+      assert2.property(list[0], "name")
+      assert2.property(list[0], "containsBaton")
+      assert2.property(list[0], "id")
+      assert2.property(list[0], "documentHash")
+      assert2.property(list[0], "initialTokenQty")
+      assert2.property(list[0], "blockCreated")
+      assert2.property(list[0], "totalMinted")
+      assert2.property(list[0], "totalBurned")
+      assert2.property(list[0], "circulatingSupply")
+      assert2.property(list[0], "timestampUnix")
     })
 
     it(`should list single SLP token by id: 4276533bb702e7f8c9afd8aa61ebf016e95011dc3d54e55faa847ac1dd461e84`, async () => {
@@ -92,34 +86,28 @@ describe("#Utils", () => {
         "4276533bb702e7f8c9afd8aa61ebf016e95011dc3d54e55faa847ac1dd461e84"
 
       const list = await SLP.Utils.list(tokenId)
-      //console.log(`list: ${JSON.stringify(list, null, 2)}`)
+      // console.log(`list: ${JSON.stringify(list, null, 2)}`)
 
-      assert2.hasAllKeys(list, [
-        "blockCreated",
-        "blockLastActiveMint",
-        "blockLastActiveSend",
-        "circulatingSupply",
-        "containsBaton",
-        "decimals",
-        "documentHash",
-        "documentUri",
-        "id",
-        "initialTokenQty",
-        "mintingBatonStatus",
-        "name",
-        "symbol",
-        "timestamp",
-        "timestampUnix",
-        "totalBurned",
-        "totalMinted",
-        "txnsSinceGenesis",
-        "validAddresses",
-        "versionType"
-      ])
+      assert2.property(list, "decimals")
+      assert2.property(list, "timestamp")
+      assert2.property(list, "versionType")
+      assert2.property(list, "documentUri")
+      assert2.property(list, "symbol")
+      assert2.property(list, "name")
+      assert2.property(list, "containsBaton")
+      assert2.property(list, "id")
+      assert2.property(list, "documentHash")
+      assert2.property(list, "initialTokenQty")
+      assert2.property(list, "blockCreated")
+      assert2.property(list, "totalMinted")
+      assert2.property(list, "totalBurned")
+      assert2.property(list, "circulatingSupply")
+      assert2.property(list, "timestampUnix")
+
       assert.equal(list.id, tokenId)
     })
 
-    it(`should list multople SLP tokens by array of ids`, async () => {
+    it(`should list multiple SLP tokens by array of ids`, async () => {
       // Mock the call to rest.bitcoin.com
       if (process.env.TEST === "unit") {
         nock(SERVER)
@@ -135,28 +123,22 @@ describe("#Utils", () => {
       const list = await SLP.Utils.list(tokenIds)
       // console.log(`list: ${JSON.stringify(list, null, 2)}`)
 
-      assert2.hasAllKeys(list[0], [
-        "blockCreated",
-        "blockLastActiveMint",
-        "blockLastActiveSend",
-        "circulatingSupply",
-        "containsBaton",
-        "decimals",
-        "documentHash",
-        "documentUri",
-        "id",
-        "initialTokenQty",
-        "mintingBatonStatus",
-        "name",
-        "symbol",
-        "timestamp",
-        "timestampUnix",
-        "totalBurned",
-        "totalMinted",
-        "txnsSinceGenesis",
-        "validAddresses",
-        "versionType"
-      ])
+      assert2.property(list[0], "decimals")
+      assert2.property(list[0], "timestamp")
+      assert2.property(list[0], "versionType")
+      assert2.property(list[0], "documentUri")
+      assert2.property(list[0], "symbol")
+      assert2.property(list[0], "name")
+      assert2.property(list[0], "containsBaton")
+      assert2.property(list[0], "id")
+      assert2.property(list[0], "documentHash")
+      assert2.property(list[0], "initialTokenQty")
+      assert2.property(list[0], "blockCreated")
+      assert2.property(list[0], "totalMinted")
+      assert2.property(list[0], "totalBurned")
+      assert2.property(list[0], "circulatingSupply")
+      assert2.property(list[0], "timestampUnix")
+
       assert.equal(list[0].id, tokenIds[0])
     })
   })

@@ -1,3 +1,8 @@
+/*
+  This library is concerned with the Token Type 1 defined in this specification:
+  https://github.com/simpleledger/slp-specifications/blob/master/slp-token-type-1.md
+*/
+
 // require deps
 // imports
 import { BITBOX } from "bitbox-sdk"
@@ -160,7 +165,8 @@ class TokenType1 {
       // console.log(`inputUtxos: ${JSON.stringify(inputUtxos, null, 2)}`)
       // console.log(`balances.nonSlpUtxos: ${JSON.stringify(balances.nonSlpUtxos, null, 2)}`)
 
-      if(inputUtxos === undefined) throw new Error(`Could not find any SLP token UTXOs`)
+      if (inputUtxos === undefined)
+        throw new Error(`Could not find any SLP token UTXOs`)
 
       inputUtxos = inputUtxos.concat(balances.nonSlpUtxos)
 
@@ -215,12 +221,10 @@ class TokenType1 {
 
     utxos.forEach((txo: any) => {
       if (Array.isArray(sendConfig.fundingAddress)) {
-        sendConfig.fundingAddress.forEach(
-          (address: string, index: number) => {
-            if (txo.cashAddress === addy.toCashAddress(address))
-              txo.wif = sendConfig.fundingWif[index]
-          }
-        )
+        sendConfig.fundingAddress.forEach((address: string, index: number) => {
+          if (txo.cashAddress === addy.toCashAddress(address))
+            txo.wif = sendConfig.fundingWif[index]
+        })
       }
     })
 
@@ -299,8 +303,11 @@ class TokenType1 {
     // bchChangeReceiverAddress can be either simpleledger or cashAddr format
     // validate fundingAddress format
     // single fundingAddress
-    if (config.fundingAddress && !addy.isSLPAddress(config.fundingAddress))
-      throw Error("Funding Address must be simpleledger format")
+
+    if (config.fundingAddress && !Array.isArray(config.fundingAddress)) {
+      if (!addy.isSLPAddress(config.fundingAddress))
+        throw Error("Token Receiver Address must be simpleledger format")
+    }
 
     // bulk fundingAddress
     if (config.fundingAddress && Array.isArray(config.fundingAddress)) {
@@ -314,9 +321,11 @@ class TokenType1 {
     // single tokenReceiverAddress
     if (
       config.tokenReceiverAddress &&
-      !addy.isSLPAddress(config.tokenReceiverAddress)
-    )
-      throw Error("Token Receiver Address must be simpleledger format")
+      !Array.isArray(config.tokenReceiverAddress)
+    ) {
+      if (!addy.isSLPAddress(config.tokenReceiverAddress))
+        throw Error("Token Receiver Address must be simpleledger format")
+    }
 
     // bulk tokenReceiverAddress
     if (
