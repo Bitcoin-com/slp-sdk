@@ -5,60 +5,60 @@
 
 // require deps
 // imports
-import { BITBOX } from "bitbox-sdk"
-import Address from "./Address"
+import { BITBOX } from "bitbox-sdk";
+import Address from "./Address";
 import {
   IBurnConfig,
   ICreateConfig,
   IMintConfig,
   ISendConfig
-} from "./interfaces/SLPInterfaces"
+} from "./interfaces/SLPInterfaces";
 
 // consts
-const BigNumber: any = require("bignumber.js")
-const slpjs: any = require("slpjs")
-const addy: any = new Address()
+const BigNumber: any = require("bignumber.js");
+const slpjs: any = require("slpjs");
+const addy: any = new Address();
 
 class TokenType1 {
-  restURL: string
+  restURL: string;
   constructor(restURL?: string) {
-    this.restURL = restURL
+    this.restURL = restURL;
   }
 
   async create(createConfig: ICreateConfig) {
     // validate address formats
-    this.validateAddressFormat(createConfig)
+    this.validateAddressFormat(createConfig);
 
     // determine mainnet/testnet
-    const network: string = this.returnNetwork(createConfig.fundingAddress)
+    const network: string = this.returnNetwork(createConfig.fundingAddress);
 
     // network appropriate BITBOX instance
-    const BITBOX: any = this.returnBITBOXInstance(network)
+    const BITBOX: any = this.returnBITBOXInstance(network);
 
     // slpjs BITBOX Network instance
-    const bitboxNetwork = new slpjs.BitboxNetwork(BITBOX)
+    const bitboxNetwork = new slpjs.BitboxNetwork(BITBOX);
 
-    let batonReceiverAddress: string
+    let batonReceiverAddress: string;
     if (
       createConfig.batonReceiverAddress !== undefined &&
       createConfig.batonReceiverAddress !== "" &&
       createConfig.batonReceiverAddress !== null
     )
-      batonReceiverAddress = createConfig.batonReceiverAddress
-    else batonReceiverAddress = null
+      batonReceiverAddress = createConfig.batonReceiverAddress;
+    else batonReceiverAddress = null;
 
     const balances: any = await bitboxNetwork.getAllSlpBalancesAndUtxos(
       createConfig.fundingAddress
-    )
+    );
 
-    let initialTokenQty: number = createConfig.initialTokenQty
+    let initialTokenQty: number = createConfig.initialTokenQty;
 
     initialTokenQty = new BigNumber(initialTokenQty).times(
       10 ** createConfig.decimals
-    )
+    );
     balances.nonSlpUtxos.forEach(
       (txo: any) => (txo.wif = createConfig.fundingWif)
-    )
+    );
     const genesisTxid = await bitboxNetwork.simpleTokenGenesis(
       createConfig.name,
       createConfig.symbol,
@@ -70,46 +70,130 @@ class TokenType1 {
       batonReceiverAddress,
       createConfig.bchChangeReceiverAddress,
       balances.nonSlpUtxos
-    )
-    return genesisTxid
+    );
+    return genesisTxid;
   }
 
   async mint(mintConfig: IMintConfig) {
     // validate address formats
-    this.validateAddressFormat(mintConfig)
+    this.validateAddressFormat(mintConfig);
 
     // determine mainnet/testnet
-    const network: string = this.returnNetwork(mintConfig.fundingAddress)
+    let network: string;
+    if (!Array.isArray(mintConfig.fundingAddress))
+      network = this.returnNetwork(mintConfig.fundingAddress);
+    else network = this.returnNetwork(mintConfig.fundingAddress[0]);
 
     // network appropriate BITBOX instance
-    const BITBOX: any = this.returnBITBOXInstance(network)
+    const BITBOX: any = this.returnBITBOXInstance(network);
 
     // slpjs BITBOX Network instance
-    const bitboxNetwork = new slpjs.BitboxNetwork(BITBOX)
+    const bitboxNetwork = new slpjs.BitboxNetwork(BITBOX);
 
     const batonReceiverAddress: string = addy.toSLPAddress(
       mintConfig.batonReceiverAddress
-    )
+    );
 
+    // TODO, MOD HERE FOR IF IT'S AN ARRAY
+    // Step one, if it's NOT an array, do what it currently does
+    // Else, write what to do if array
+    if (!Array.isArray(mintConfig.fundingAddress)) {
+      const balances: any = await bitboxNetwork.getAllSlpBalancesAndUtxos(
+        mintConfig.fundingAddress
+      );
+      if (!balances.slpBatonUtxos[mintConfig.tokenId])
+        throw Error("You don't have the minting baton for this token");
+
+      const tokenInfo: any = await bitboxNetwork.getTokenInformation(
+        mintConfig.tokenId
+      );
+
+      const mintQty = new BigNumber(mintConfig.additionalTokenQty).times(
+        10 ** tokenInfo.decimals
+      );
+
+      let inputUtxos = balances.slpBatonUtxos[mintConfig.tokenId];
+
+      inputUtxos = inputUtxos.concat(balances.nonSlpUtxos);
+
+      inputUtxos.forEach((txo: any) => (txo.wif = mintConfig.fundingWif));
+
+      const mintTxid = await bitboxNetwork.simpleTokenMint(
+        mintConfig.tokenId,
+        mintQty,
+        inputUtxos,
+        mintConfig.tokenReceiverAddress,
+        batonReceiverAddress,
+        mintConfig.bchChangeReceiverAddress
+      );
+      return mintTxid;
+    }
+    console.log(`fundingAddress is an array`);
+    // Process for array here
     const balances: any = await bitboxNetwork.getAllSlpBalancesAndUtxos(
       mintConfig.fundingAddress
-    )
-    if (!balances.slpBatonUtxos[mintConfig.tokenId])
-      throw Error("You don't have the minting baton for this token")
+    );
+
+    // Process balances array for the minting baton
+    let hasMintingBaton = false;
+    let inputUtxos = [];
+    let mintingBaton;
+    for (let i = 0; i < balances.length; i += 1) {
+      let balance = balances[i].result;
+      if (!balance.slpBatonUtxos[mintConfig.tokenId]) {
+        for (let j = 0; j < balance.nonSlpUtxos.length; j += 1) {
+          inputUtxos.push(balance.nonSlpUtxos[j]);
+        }
+      } else {
+        hasMintingBaton = true;
+        mintingBaton = balance.slpBatonUtxos[mintConfig.tokenId];
+        for (let k = 0; k < mintingBaton.length; k += 1) {
+          inputUtxos.push(mintingBaton[k]);
+        }
+      }
+    }
+
+    console.log(`balances:`);
+    console.log(balances);
+    console.log(`hasMintingBaton`);
+    console.log(hasMintingBaton);
+    console.log(`inputUtxos`);
+    console.log(inputUtxos);
+
+    if (!hasMintingBaton)
+      throw Error("You don't have the minting baton for this token");
 
     const tokenInfo: any = await bitboxNetwork.getTokenInformation(
       mintConfig.tokenId
-    )
+    );
 
     const mintQty = new BigNumber(mintConfig.additionalTokenQty).times(
       10 ** tokenInfo.decimals
-    )
+    );
 
-    let inputUtxos = balances.slpBatonUtxos[mintConfig.tokenId]
+    //was here
+    //let inputUtxos = balances.slpBatonUtxos[mintConfig.tokenId];
 
-    inputUtxos = inputUtxos.concat(balances.nonSlpUtxos)
+    //inputUtxos = inputUtxos.concat(balances.nonSlpUtxos);
 
-    inputUtxos.forEach((txo: any) => (txo.wif = mintConfig.fundingWif))
+    // Handle case where user includes array for fundingAddress, but not for fundingWif
+    if (!Array.isArray(mintConfig.fundingWif))
+      throw Error(
+        "If fundingAddress is an Array, fundingWif must be a corresponding array."
+      );
+
+    //TODO, this function needs to be different if mintConfig.fundingWif is an array
+    //inputUtxos.forEach((txo: any) => (txo.wif = mintConfig.fundingWif));
+    inputUtxos.forEach((txo: any) => {
+      if (Array.isArray(mintConfig.fundingAddress)) {
+        mintConfig.fundingAddress.forEach((address: string, index: number) => {
+          if (txo.cashAddress === addy.toCashAddress(address))
+            txo.wif = mintConfig.fundingWif[index];
+        });
+      }
+    });
+    console.log(`inputUtxos after forEach`);
+    console.log(inputUtxos);
 
     const mintTxid = await bitboxNetwork.simpleTokenMint(
       mintConfig.tokenId,
@@ -118,59 +202,59 @@ class TokenType1 {
       mintConfig.tokenReceiverAddress,
       batonReceiverAddress,
       mintConfig.bchChangeReceiverAddress
-    )
-    return mintTxid
+    );
+    return mintTxid;
   }
 
   async send(sendConfig: ISendConfig) {
     // validate address formats
-    this.validateAddressFormat(sendConfig)
+    this.validateAddressFormat(sendConfig);
 
     // determine mainnet/testnet
-    let network: string
+    let network: string;
     if (!Array.isArray(sendConfig.fundingAddress))
-      network = this.returnNetwork(sendConfig.fundingAddress)
-    else network = this.returnNetwork(sendConfig.fundingAddress[0])
+      network = this.returnNetwork(sendConfig.fundingAddress);
+    else network = this.returnNetwork(sendConfig.fundingAddress[0]);
 
     // network appropriate BITBOX instance
-    const BITBOX: any = this.returnBITBOXInstance(network)
+    const BITBOX: any = this.returnBITBOXInstance(network);
 
     // slpjs BITBOX Network instance
-    const bitboxNetwork = new slpjs.BitboxNetwork(BITBOX)
+    const bitboxNetwork = new slpjs.BitboxNetwork(BITBOX);
 
-    const tokenId: string = sendConfig.tokenId
+    const tokenId: string = sendConfig.tokenId;
 
     const bchChangeReceiverAddress: string = addy.toSLPAddress(
       sendConfig.bchChangeReceiverAddress
-    )
+    );
 
-    const tokenInfo: any = await bitboxNetwork.getTokenInformation(tokenId)
-    const tokenDecimals: number = tokenInfo.decimals
+    const tokenInfo: any = await bitboxNetwork.getTokenInformation(tokenId);
+    const tokenDecimals: number = tokenInfo.decimals;
     if (!Array.isArray(sendConfig.fundingAddress)) {
-      let amount: any = sendConfig.amount
+      let amount: any = sendConfig.amount;
 
       const balances: any = await bitboxNetwork.getAllSlpBalancesAndUtxos(
         sendConfig.fundingAddress
-      )
+      );
 
       if (!Array.isArray(amount)) {
-        amount = new BigNumber(amount).times(10 ** tokenDecimals) // Don't forget to account for token precision
+        amount = new BigNumber(amount).times(10 ** tokenDecimals); // Don't forget to account for token precision
       } else {
         amount.forEach((amt: number, index: number) => {
-          amount[index] = new BigNumber(amt).times(10 ** tokenDecimals) // Don't forget to account for token precision
-        })
+          amount[index] = new BigNumber(amt).times(10 ** tokenDecimals); // Don't forget to account for token precision
+        });
       }
 
-      let inputUtxos = balances.slpTokenUtxos[tokenId]
+      let inputUtxos = balances.slpTokenUtxos[tokenId];
       // console.log(`inputUtxos: ${JSON.stringify(inputUtxos, null, 2)}`)
       // console.log(`balances.nonSlpUtxos: ${JSON.stringify(balances.nonSlpUtxos, null, 2)}`)
 
       if (inputUtxos === undefined)
-        throw new Error(`Could not find any SLP token UTXOs`)
+        throw new Error(`Could not find any SLP token UTXOs`);
 
-      inputUtxos = inputUtxos.concat(balances.nonSlpUtxos)
+      inputUtxos = inputUtxos.concat(balances.nonSlpUtxos);
 
-      inputUtxos.forEach((txo: any) => (txo.wif = sendConfig.fundingWif))
+      inputUtxos.forEach((txo: any) => (txo.wif = sendConfig.fundingWif));
 
       const sendTxid = await bitboxNetwork.simpleTokenSend(
         tokenId,
@@ -178,63 +262,63 @@ class TokenType1 {
         inputUtxos,
         sendConfig.tokenReceiverAddress,
         bchChangeReceiverAddress
-      )
-      return sendTxid
+      );
+      return sendTxid;
     }
 
-    const utxos: any[] = []
+    const utxos: any[] = [];
     const balances: any = await bitboxNetwork.getAllSlpBalancesAndUtxos(
       sendConfig.fundingAddress
-    )
+    );
 
     // Sign and add input token UTXOs
     const tokenBalances = balances.filter((i: any) => {
       try {
-        return i.result.slpTokenBalances[tokenId].isGreaterThan(0)
+        return i.result.slpTokenBalances[tokenId].isGreaterThan(0);
       } catch (_) {
-        return false
+        return false;
       }
-    })
+    });
     tokenBalances.map((i: any) =>
       i.result.slpTokenUtxos[tokenId].forEach(
         (j: any) => (j.wif = sendConfig.fundingWif[<any>i.address])
       )
-    )
+    );
     tokenBalances.forEach((a: any) => {
       try {
-        a.result.slpTokenUtxos[tokenId].forEach((txo: any) => utxos.push(txo))
+        a.result.slpTokenUtxos[tokenId].forEach((txo: any) => utxos.push(txo));
       } catch (_) {}
-    })
+    });
 
     // Sign and add input BCH (non-token) UTXOs
     const bchBalances = balances.filter(
       (i: any) => i.result.nonSlpUtxos.length > 0
-    )
+    );
     bchBalances.map((i: any) =>
       i.result.nonSlpUtxos.forEach(
         (j: any) => (j.wif = sendConfig.fundingWif[<any>i.address])
       )
-    )
+    );
     bchBalances.forEach((a: any) =>
       a.result.nonSlpUtxos.forEach((txo: any) => utxos.push(txo))
-    )
+    );
 
     utxos.forEach((txo: any) => {
       if (Array.isArray(sendConfig.fundingAddress)) {
         sendConfig.fundingAddress.forEach((address: string, index: number) => {
           if (txo.cashAddress === addy.toCashAddress(address))
-            txo.wif = sendConfig.fundingWif[index]
-        })
+            txo.wif = sendConfig.fundingWif[index];
+        });
       }
-    })
+    });
 
-    let amount: any = sendConfig.amount
+    let amount: any = sendConfig.amount;
     if (!Array.isArray(amount)) {
-      amount = new BigNumber(amount).times(10 ** tokenDecimals) // Don't forget to account for token precision
+      amount = new BigNumber(amount).times(10 ** tokenDecimals); // Don't forget to account for token precision
     } else {
       amount.forEach((amt: number, index: number) => {
-        amount[index] = new BigNumber(amt).times(10 ** tokenDecimals) // Don't forget to account for token precision
-      })
+        amount[index] = new BigNumber(amt).times(10 ** tokenDecimals); // Don't forget to account for token precision
+      });
     }
     return await bitboxNetwork.simpleTokenSend(
       tokenId,
@@ -242,59 +326,59 @@ class TokenType1 {
       utxos,
       sendConfig.tokenReceiverAddress,
       bchChangeReceiverAddress
-    )
+    );
   }
 
   async burn(burnConfig: IBurnConfig) {
     // validate address formats
-    this.validateAddressFormat(burnConfig)
+    this.validateAddressFormat(burnConfig);
 
     // determine mainnet/testnet
-    const network: string = this.returnNetwork(burnConfig.fundingAddress)
+    const network: string = this.returnNetwork(burnConfig.fundingAddress);
 
     // network appropriate BITBOX instance
-    const BITBOX: any = this.returnBITBOXInstance(network)
+    const BITBOX: any = this.returnBITBOXInstance(network);
 
     // slpjs BITBOX Network instance
-    const bitboxNetwork = new slpjs.BitboxNetwork(BITBOX)
+    const bitboxNetwork = new slpjs.BitboxNetwork(BITBOX);
 
     const bchChangeReceiverAddress: string = addy.toSLPAddress(
       burnConfig.bchChangeReceiverAddress
-    )
+    );
     const tokenInfo = await bitboxNetwork.getTokenInformation(
       burnConfig.tokenId
-    )
-    const tokenDecimals = tokenInfo.decimals
+    );
+    const tokenDecimals = tokenInfo.decimals;
     const balances = await bitboxNetwork.getAllSlpBalancesAndUtxos(
       burnConfig.fundingAddress
-    )
-    const amount = new BigNumber(burnConfig.amount).times(10 ** tokenDecimals)
-    let inputUtxos = balances.slpTokenUtxos[burnConfig.tokenId]
+    );
+    const amount = new BigNumber(burnConfig.amount).times(10 ** tokenDecimals);
+    let inputUtxos = balances.slpTokenUtxos[burnConfig.tokenId];
 
-    inputUtxos = inputUtxos.concat(balances.nonSlpUtxos)
+    inputUtxos = inputUtxos.concat(balances.nonSlpUtxos);
 
-    inputUtxos.forEach((txo: any) => (txo.wif = burnConfig.fundingWif))
+    inputUtxos.forEach((txo: any) => (txo.wif = burnConfig.fundingWif));
     const burnTxid = await bitboxNetwork.simpleTokenBurn(
       burnConfig.tokenId,
       amount,
       inputUtxos,
       bchChangeReceiverAddress
-    )
-    return burnTxid
+    );
+    return burnTxid;
   }
 
   returnNetwork(address: string): string {
-    return addy.detectAddressNetwork(address)
+    return addy.detectAddressNetwork(address);
   }
 
   returnBITBOXInstance(network: string): any {
-    let tmpBITBOX: any
+    let tmpBITBOX: any;
 
-    let restURL: string
-    if (network === "mainnet") restURL = "https://rest.bitcoin.com/v2/"
-    else restURL = "https://trest.bitcoin.com/v2/"
+    let restURL: string;
+    if (network === "mainnet") restURL = "https://rest.bitcoin.com/v2/";
+    else restURL = "https://trest.bitcoin.com/v2/";
 
-    return new BITBOX({ restURL: restURL })
+    return new BITBOX({ restURL: restURL });
   }
 
   validateAddressFormat(config: any): string | void {
@@ -306,15 +390,15 @@ class TokenType1 {
 
     if (config.fundingAddress && !Array.isArray(config.fundingAddress)) {
       if (!addy.isSLPAddress(config.fundingAddress))
-        throw Error("Token Receiver Address must be simpleledger format")
+        throw Error("Token Receiver Address must be simpleledger format");
     }
 
     // bulk fundingAddress
     if (config.fundingAddress && Array.isArray(config.fundingAddress)) {
       config.fundingAddress.forEach((address: string) => {
         if (!addy.isSLPAddress(address))
-          throw Error("Funding Address must be simpleledger format")
-      })
+          throw Error("Funding Address must be simpleledger format");
+      });
     }
 
     // validate tokenReceiverAddress format
@@ -324,7 +408,7 @@ class TokenType1 {
       !Array.isArray(config.tokenReceiverAddress)
     ) {
       if (!addy.isSLPAddress(config.tokenReceiverAddress))
-        throw Error("Token Receiver Address must be simpleledger format")
+        throw Error("Token Receiver Address must be simpleledger format");
     }
 
     // bulk tokenReceiverAddress
@@ -334,8 +418,8 @@ class TokenType1 {
     ) {
       config.tokenReceiverAddress.forEach((address: string) => {
         if (!addy.isSLPAddress(address))
-          throw Error("Token Receiver Address must be simpleledger format")
-      })
+          throw Error("Token Receiver Address must be simpleledger format");
+      });
     }
 
     // validate bchChangeReceiverAddress format
@@ -343,15 +427,15 @@ class TokenType1 {
       config.bchChangeReceiverAddress &&
       !addy.isCashAddress(config.bchChangeReceiverAddress)
     )
-      throw Error("BCH Change Receiver Address must be cash address format")
+      throw Error("BCH Change Receiver Address must be cash address format");
 
     // validate batonReceiverAddress format
     if (
       config.batonReceiverAddress &&
       !addy.isSLPAddress(config.batonReceiverAddress)
     )
-      throw Error("Baton Receiver Address must be simpleledger format")
+      throw Error("Baton Receiver Address must be simpleledger format");
   }
 }
 
-export default TokenType1
+export default TokenType1;
