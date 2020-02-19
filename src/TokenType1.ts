@@ -94,10 +94,11 @@ class TokenType1 {
       mintConfig.batonReceiverAddress
     );
 
-    // TODO, MOD HERE FOR IF IT'S AN ARRAY
-    // Step one, if it's NOT an array, do what it currently does
-    // Else, write what to do if array
-    if (!Array.isArray(mintConfig.fundingAddress)) {
+    // If fundingAddress and fundingWif are not an arrays, process as before
+    if (
+      !Array.isArray(mintConfig.fundingAddress) &&
+      !Array.isArray(mintConfig.fundingWif)
+    ) {
       const balances: any = await bitboxNetwork.getAllSlpBalancesAndUtxos(
         mintConfig.fundingAddress
       );
@@ -128,7 +129,7 @@ class TokenType1 {
       );
       return mintTxid;
     }
-    console.log(`fundingAddress is an array`);
+
     // Process for array here
     const balances: any = await bitboxNetwork.getAllSlpBalancesAndUtxos(
       mintConfig.fundingAddress
@@ -140,11 +141,14 @@ class TokenType1 {
     let mintingBaton;
     for (let i = 0; i < balances.length; i += 1) {
       let balance = balances[i].result;
+
       if (!balance.slpBatonUtxos[mintConfig.tokenId]) {
+        // If this address does not have the minting baton, add its nonSlpUtxos to inputUtxos
         for (let j = 0; j < balance.nonSlpUtxos.length; j += 1) {
           inputUtxos.push(balance.nonSlpUtxos[j]);
         }
       } else {
+        // If this address has the minting baton, add the minting baton to inputUtxos
         hasMintingBaton = true;
         mintingBaton = balance.slpBatonUtxos[mintConfig.tokenId];
         for (let k = 0; k < mintingBaton.length; k += 1) {
@@ -153,13 +157,7 @@ class TokenType1 {
       }
     }
 
-    console.log(`balances:`);
-    console.log(balances);
-    console.log(`hasMintingBaton`);
-    console.log(hasMintingBaton);
-    console.log(`inputUtxos`);
-    console.log(inputUtxos);
-
+    // If there is no minting baton, throw an error
     if (!hasMintingBaton)
       throw Error("You don't have the minting baton for this token");
 
@@ -171,19 +169,12 @@ class TokenType1 {
       10 ** tokenInfo.decimals
     );
 
-    //was here
-    //let inputUtxos = balances.slpBatonUtxos[mintConfig.tokenId];
-
-    //inputUtxos = inputUtxos.concat(balances.nonSlpUtxos);
-
     // Handle case where user includes array for fundingAddress, but not for fundingWif
     if (!Array.isArray(mintConfig.fundingWif))
       throw Error(
         "If fundingAddress is an Array, fundingWif must be a corresponding array."
       );
 
-    //TODO, this function needs to be different if mintConfig.fundingWif is an array
-    //inputUtxos.forEach((txo: any) => (txo.wif = mintConfig.fundingWif));
     inputUtxos.forEach((txo: any) => {
       if (Array.isArray(mintConfig.fundingAddress)) {
         mintConfig.fundingAddress.forEach((address: string, index: number) => {
@@ -192,8 +183,6 @@ class TokenType1 {
         });
       }
     });
-    console.log(`inputUtxos after forEach`);
-    console.log(inputUtxos);
 
     const mintTxid = await bitboxNetwork.simpleTokenMint(
       mintConfig.tokenId,
