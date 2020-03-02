@@ -14,7 +14,7 @@ const SLPSDK = require("../../../lib/SLP")
 const slpsdk = new SLPSDK()
 
 const TEST_TOKEN_ID =
-  "f3fcb5eb95bb02e0532952ac4f209c55c8022ae24979a1c4098dd171a2a28b78"
+  "f16b1a32f0e7fc7f2c55e787e6b16461af1350c6b5070875606e30ba11f123a1"
 
 // Open a wallet and return an object with its address, BCH balance, and SLP
 // token balance.
@@ -22,11 +22,11 @@ async function openWallet(filename) {
   try {
     walletInfo = require(filename)
 
-    //const walletBalance = await getBalance(walletInfo)
+    // const walletBalance = await getBalance(walletInfo)
     // const walletBalance = await slpsdk.Utils.balancesForAddress(
     //   walletInfo.slpAddress
     // )
-    // // console.log(`walletBalance: ${JSON.stringify(walletBalance, null, 2)}`)
+    // console.log(`walletBalance: ${JSON.stringify(walletBalance, null, 2)}`)
     // walletInfo.tokenBalance = walletBalance
 
     return walletInfo
