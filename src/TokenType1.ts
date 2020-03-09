@@ -145,6 +145,8 @@ class TokenType1 {
     )
 
     const tokenInfo: any = await bitboxNetwork.getTokenInformation(tokenId)
+    console.log(`tokenInfo: ${JSON.stringify(tokenInfo, null, 2)}`)
+
     const tokenDecimals: number = tokenInfo.decimals
     if (!Array.isArray(sendConfig.fundingAddress)) {
       let amount: any = sendConfig.amount
@@ -152,6 +154,7 @@ class TokenType1 {
       const balances: any = await bitboxNetwork.getAllSlpBalancesAndUtxos(
         sendConfig.fundingAddress
       )
+      // console.log(`balances: ${JSON.stringify(balances, null, 2)}`)
 
       if (!Array.isArray(amount)) {
         amount = new BigNumber(amount).times(10 ** tokenDecimals) // Don't forget to account for token precision
@@ -161,6 +164,13 @@ class TokenType1 {
         })
       }
 
+      console.log(
+        `balances.slpTokenUtxos: ${JSON.stringify(
+          balances.slpTokenUtxos,
+          null,
+          2
+        )}`
+      )
       let inputUtxos = balances.slpTokenUtxos[tokenId]
       // console.log(`inputUtxos: ${JSON.stringify(inputUtxos, null, 2)}`)
       // console.log(`balances.nonSlpUtxos: ${JSON.stringify(balances.nonSlpUtxos, null, 2)}`)
@@ -186,6 +196,7 @@ class TokenType1 {
     const balances: any = await bitboxNetwork.getAllSlpBalancesAndUtxos(
       sendConfig.fundingAddress
     )
+    console.log(`balances: ${JSON.stringify(balances, null, 2)}`)
 
     // Sign and add input token UTXOs
     const tokenBalances = balances.filter((i: any) => {

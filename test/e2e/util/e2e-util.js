@@ -74,7 +74,7 @@ async function sendToken(wallet1, wallet2) {
       amount: 1
     }
 
-    //console.log(`createConfig: ${util.inspect(createConfig)}`)
+    console.log(`sendConfig: ${JSON.stringify(sendConfig, null, 2)}`)
 
     // Generate, sign, and broadcast a hex-encoded transaction for sending
     // the tokens.
