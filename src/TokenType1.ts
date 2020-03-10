@@ -145,7 +145,7 @@ class TokenType1 {
     )
 
     const tokenInfo: any = await bitboxNetwork.getTokenInformation(tokenId)
-    console.log(`tokenInfo: ${JSON.stringify(tokenInfo, null, 2)}`)
+    // console.log(`tokenInfo: ${JSON.stringify(tokenInfo, null, 2)}`)
 
     const tokenDecimals: number = tokenInfo.decimals
     if (!Array.isArray(sendConfig.fundingAddress)) {
@@ -164,13 +164,13 @@ class TokenType1 {
         })
       }
 
-      console.log(
-        `balances.slpTokenUtxos: ${JSON.stringify(
-          balances.slpTokenUtxos,
-          null,
-          2
-        )}`
-      )
+      // console.log(
+      //   `balances.slpTokenUtxos: ${JSON.stringify(
+      //     balances.slpTokenUtxos,
+      //     null,
+      //     2
+      //   )}`
+      // )
       let inputUtxos = balances.slpTokenUtxos[tokenId]
       // console.log(`inputUtxos: ${JSON.stringify(inputUtxos, null, 2)}`)
       // console.log(`balances.nonSlpUtxos: ${JSON.stringify(balances.nonSlpUtxos, null, 2)}`)
