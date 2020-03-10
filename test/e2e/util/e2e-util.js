@@ -14,7 +14,7 @@ const SLPSDK = require("../../../lib/SLP")
 const slpsdk = new SLPSDK()
 
 const TEST_TOKEN_ID =
-  "f16b1a32f0e7fc7f2c55e787e6b16461af1350c6b5070875606e30ba11f123a1"
+  "d6db17550f36fc944e2130d24806ab2a7aa646fba8cf1df7b659fe7ed8352924"
 
 // Open a wallet and return an object with its address, BCH balance, and SLP
 // token balance.
@@ -74,7 +74,7 @@ async function sendToken(wallet1, wallet2) {
       amount: 1
     }
 
-    //console.log(`createConfig: ${util.inspect(createConfig)}`)
+    // console.log(`sendConfig: ${JSON.stringify(sendConfig, null, 2)}`)
 
     // Generate, sign, and broadcast a hex-encoded transaction for sending
     // the tokens.
