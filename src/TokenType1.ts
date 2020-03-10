@@ -196,7 +196,7 @@ class TokenType1 {
     const balances: any = await bitboxNetwork.getAllSlpBalancesAndUtxos(
       sendConfig.fundingAddress
     )
-    console.log(`balances: ${JSON.stringify(balances, null, 2)}`)
+    // console.log(`balances: ${JSON.stringify(balances, null, 2)}`)
 
     // Sign and add input token UTXOs
     const tokenBalances = balances.filter((i: any) => {
