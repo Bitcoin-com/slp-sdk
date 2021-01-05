@@ -35,7 +35,7 @@
     "@types/bip39": "^2.4.2",
     "@types/randombytes": "^2.0.0",
     "@types/wif": "^2.0.1",
-    "axios": "0.19.0",
+    "axios": "0.21.1",
     "babel-register": "^6.26.0",
     "bignumber.js": "^8.0.2",
     "bitbox-sdk": "8.10.1",
